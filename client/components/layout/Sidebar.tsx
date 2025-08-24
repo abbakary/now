@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
@@ -55,6 +55,37 @@ const sidebarItems: SidebarItem[] = [
     requiredRoles: [UserRole.ADMIN, UserRole.OFFICE_MANAGER],
   },
   {
+    id: "orders",
+    label: "Order Management",
+    icon: ClipboardList,
+    children: [
+      {
+        id: "unified-orders",
+        label: "All Orders",
+        icon: ClipboardList,
+        href: "/orders",
+      },
+      {
+        id: "active-orders",
+        label: "Active Orders",
+        icon: Clock,
+        href: "/orders/active",
+      },
+      {
+        id: "completed-orders",
+        label: "Completed Orders",
+        icon: UserCheck,
+        href: "/orders/completed",
+      },
+      {
+        id: "job-cards",
+        label: "Job Cards",
+        icon: FileText,
+        href: "/orders/job-cards",
+      },
+    ],
+  },
+  {
     id: "services",
     label: "Service Management",
     icon: Wrench,
@@ -96,86 +127,17 @@ const sidebarItems: SidebarItem[] = [
     ],
   },
   {
+    id: "invoices",
+    label: "Invoice Management",
+    icon: Receipt,
+    href: "/invoices",
+    requiredRoles: [UserRole.ADMIN, UserRole.OFFICE_MANAGER],
+  },
+  {
     id: "sales",
     label: "Sales Management",
     icon: ShoppingCart,
     href: "/sales",
-  },
-  {
-    id: "white-light",
-    label: "White Light Status",
-    icon: ({ className, ...props }: { className?: string }) => {
-      const [isOn, setIsOn] = useState(true);
-      
-      // Simulate real-time status check (replace with actual implementation)
-      useEffect(() => {
-        const interval = setInterval(() => {
-          // In a real implementation, you would check the actual light status here
-          // For now, we'll just toggle it for demonstration
-          setIsOn(prev => !prev);
-        }, 1000);
-        
-        return () => clearInterval(interval);
-      }, []);
-      
-      return (
-        <div className="relative">
-          <div 
-            className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isOn ? 'bg-green-500' : 'bg-gray-400'}`}
-          />
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className={cn("h-4 w-4", className)}
-            {...props}
-          >
-            <path d="M12 2v2" />
-            <path d="m4.9 4.9 1.4 1.4" />
-            <path d="M2 12h2" />
-            <path d="m19.1 4.9-1.4 1.4" />
-            <path d="M22 12h-2" />
-            <path d="m6.3 17.7-1.4 1.4" />
-            <path d="M12 22v-2" />
-            <path d="m17.7 17.7-1.4-1.4" />
-            <path d="M12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4Z" />
-          </svg>
-        </div>
-      );
-    },
-    href: "#",
-    requiredRoles: [UserRole.ADMIN, UserRole.OFFICE_MANAGER, UserRole.TECHNICIAN],
-  },
-  {
-    id: "orders",
-    label: "Order Management",
-    icon: ClipboardList,
-    children: [
-      {
-        id: "active-orders",
-        label: "Active Orders",
-        icon: Clock,
-        href: "/orders/active",
-      },
-      {
-        id: "completed-orders",
-        label: "Completed Orders",
-        icon: UserCheck,
-        href: "/orders/completed",
-      },
-      {
-        id: "job-cards",
-        label: "Job Cards",
-        icon: FileText,
-        href: "/orders/job-cards",
-      },
-    ],
   },
   {
     id: "tracking",
@@ -293,6 +255,12 @@ const getRoleSpecificItems = (userRole: UserRole): SidebarItem[] => {
         icon: ClipboardList,
         children: [
           {
+            id: "unified-orders",
+            label: "All Orders",
+            icon: ClipboardList,
+            href: "/orders",
+          },
+          {
             id: "active-orders",
             label: "Active Orders",
             icon: Clock,
@@ -381,10 +349,23 @@ const getRoleSpecificItems = (userRole: UserRole): SidebarItem[] => {
     return [
       ...commonItems,
       {
-        id: "my-jobs",
-        label: "My Job Cards",
-        icon: FileText,
-        href: "/orders/job-cards",
+        id: "orders",
+        label: "Order Management",
+        icon: ClipboardList,
+        children: [
+          {
+            id: "unified-orders",
+            label: "All Orders",
+            icon: ClipboardList,
+            href: "/orders",
+          },
+          {
+            id: "my-jobs",
+            label: "My Job Cards",
+            icon: FileText,
+            href: "/orders/job-cards",
+          },
+        ],
       },
       {
         id: "time-tracking",
