@@ -1148,6 +1148,50 @@ export default function UnifiedOrderDashboard() {
                       Customer
                     </Link>
                   </Button>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button size="sm" variant="outline">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="w-48">
+                      <DropdownMenuLabel>More Actions</DropdownMenuLabel>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit Order
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Copy className="h-4 w-4 mr-2" />
+                        Duplicate
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Printer className="h-4 w-4 mr-2" />
+                        Print
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Receipt className="h-4 w-4 mr-2" />
+                        Invoice
+                      </DropdownMenuItem>
+                      {order.status === JobStatus.PENDING && (
+                        <DropdownMenuItem>
+                          <Play className="h-4 w-4 mr-2" />
+                          Start Work
+                        </DropdownMenuItem>
+                      )}
+                      {order.status === JobStatus.IN_PROGRESS && (
+                        <DropdownMenuItem>
+                          <CheckCircle className="h-4 w-4 mr-2" />
+                          Complete
+                        </DropdownMenuItem>
+                      )}
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem className="text-destructive">
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
               </CardContent>
             </Card>
