@@ -948,13 +948,81 @@ export default function UnifiedOrderDashboard() {
                               <MoreHorizontal className="h-4 w-4" />
                             </Button>
                           </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                          <DropdownMenuContent align="end" className="w-56">
+                            <DropdownMenuLabel>Order Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
+
+                            {/* View & Edit Actions */}
                             <DropdownMenuItem onClick={() => setSelectedOrder(order)}>
                               <Eye className="h-4 w-4 mr-2" />
                               View Details
                             </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Edit className="h-4 w-4 mr-2" />
+                              Edit Order
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Copy className="h-4 w-4 mr-2" />
+                              Duplicate Order
+                            </DropdownMenuItem>
+
+                            <DropdownMenuSeparator />
+
+                            {/* Status Actions */}
+                            {order.status === JobStatus.PENDING && (
+                              <>
+                                <DropdownMenuItem>
+                                  <Play className="h-4 w-4 mr-2" />
+                                  Start Work
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <CalendarSchedule className="h-4 w-4 mr-2" />
+                                  Schedule Order
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            {order.status === JobStatus.IN_PROGRESS && (
+                              <>
+                                <DropdownMenuItem>
+                                  <CheckCircle className="h-4 w-4 mr-2" />
+                                  Mark Complete
+                                </DropdownMenuItem>
+                                <DropdownMenuItem>
+                                  <Pause className="h-4 w-4 mr-2" />
+                                  Put On Hold
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            {order.status === JobStatus.ON_HOLD && (
+                              <DropdownMenuItem>
+                                <RotateCcw className="h-4 w-4 mr-2" />
+                                Resume Work
+                              </DropdownMenuItem>
+                            )}
+
+                            <DropdownMenuSeparator />
+
+                            {/* Assignment & Communication */}
+                            <DropdownMenuItem>
+                              <UserPlus className="h-4 w-4 mr-2" />
+                              Assign Technician
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Flag className="h-4 w-4 mr-2" />
+                              Update Priority
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <MessageSquare className="h-4 w-4 mr-2" />
+                              Add Notes
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Bell className="h-4 w-4 mr-2" />
+                              Send Notification
+                            </DropdownMenuItem>
+
+                            <DropdownMenuSeparator />
+
+                            {/* Customer Actions */}
                             <DropdownMenuItem asChild>
                               <Link to={`/customers/${order.customerId}`}>
                                 <User className="h-4 w-4 mr-2" />
@@ -962,21 +1030,45 @@ export default function UnifiedOrderDashboard() {
                               </Link>
                             </DropdownMenuItem>
                             <DropdownMenuItem>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit Order
+                              <Phone className="h-4 w-4 mr-2" />
+                              Call Customer
                             </DropdownMenuItem>
-                            {order.status === JobStatus.PENDING && (
-                              <DropdownMenuItem>
-                                <Play className="h-4 w-4 mr-2" />
-                                Start Work
+
+                            <DropdownMenuSeparator />
+
+                            {/* Document Actions */}
+                            <DropdownMenuItem>
+                              <Printer className="h-4 w-4 mr-2" />
+                              Print Order
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <Receipt className="h-4 w-4 mr-2" />
+                              Generate Invoice
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                              <FileDown className="h-4 w-4 mr-2" />
+                              Export PDF
+                            </DropdownMenuItem>
+
+                            <DropdownMenuSeparator />
+
+                            {/* Management Actions */}
+                            {order.status !== JobStatus.CANCELLED && (
+                              <DropdownMenuItem className="text-orange-600">
+                                <X className="h-4 w-4 mr-2" />
+                                Cancel Order
                               </DropdownMenuItem>
                             )}
-                            {order.status === JobStatus.IN_PROGRESS && (
+                            {order.status === JobStatus.COMPLETED && (
                               <DropdownMenuItem>
-                                <CheckCircle className="h-4 w-4 mr-2" />
-                                Mark Complete
+                                <Archive className="h-4 w-4 mr-2" />
+                                Archive Order
                               </DropdownMenuItem>
                             )}
+                            <DropdownMenuItem className="text-destructive">
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete Order
+                            </DropdownMenuItem>
                           </DropdownMenuContent>
                         </DropdownMenu>
                       </TableCell>
