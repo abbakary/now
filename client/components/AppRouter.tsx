@@ -237,6 +237,46 @@ export const AppRouter: React.FC = () => {
         }
       />
       <Route
+        path="/orders/active"
+        element={
+          <WrappedPlaceholder
+            title="Active Orders"
+            description="Monitor and manage all currently active service orders"
+            icon={Clock}
+          />
+        }
+      />
+      <Route
+        path="/orders/completed"
+        element={
+          <WrappedPlaceholder
+            title="Completed Orders"
+            description="Review completed orders and their service history"
+            icon={UserCheck}
+          />
+        }
+      />
+      <Route
+        path="/orders/job-cards"
+        element={
+          <WrappedPlaceholder
+            title="Job Cards Management"
+            description="Create, assign, and track job cards for service operations"
+            icon={FileText}
+          />
+        }
+      />
+      <Route
+        path="/orders/new"
+        element={
+          <WrappedPlaceholder
+            title="Create New Order"
+            description="Create a new service order for customers"
+            icon={FileText}
+          />
+        }
+      />
+      <Route
         path="/orders/:orderId"
         element={
           <WrappedPlaceholder
