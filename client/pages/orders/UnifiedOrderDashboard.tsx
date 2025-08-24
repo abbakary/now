@@ -942,12 +942,56 @@ export default function UnifiedOrderDashboard() {
                         </div>
                       </TableCell>
                       <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" size="sm">
-                              <MoreHorizontal className="h-4 w-4" />
+                        <div className="flex items-center justify-end gap-1">
+                          {/* Quick Action Buttons */}
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => setSelectedOrder(order)}
+                            className="h-8 w-8 p-0"
+                            title="View Details"
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+
+                          {order.status === JobStatus.PENDING && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 text-green-600 hover:text-green-700 hover:bg-green-50"
+                              title="Start Work"
+                            >
+                              <Play className="h-4 w-4" />
                             </Button>
-                          </DropdownMenuTrigger>
+                          )}
+
+                          {order.status === JobStatus.IN_PROGRESS && (
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="h-8 w-8 p-0 text-blue-600 hover:text-blue-700 hover:bg-blue-50"
+                              title="Mark Complete"
+                            >
+                              <CheckCircle className="h-4 w-4" />
+                            </Button>
+                          )}
+
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            className="h-8 w-8 p-0"
+                            title="Print Order"
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Button>
+
+                          {/* More Actions Dropdown */}
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" size="sm" className="h-8 w-8 p-0" title="More Actions">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
                           <DropdownMenuContent align="end" className="w-56">
                             <DropdownMenuLabel>Order Actions</DropdownMenuLabel>
                             <DropdownMenuSeparator />
@@ -1070,7 +1114,8 @@ export default function UnifiedOrderDashboard() {
                               Delete Order
                             </DropdownMenuItem>
                           </DropdownMenuContent>
-                        </DropdownMenu>
+                          </DropdownMenu>
+                        </div>
                       </TableCell>
                     </TableRow>
                   ))}
