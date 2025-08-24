@@ -1,0 +1,369 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  /**
+   * Tailwind CSS theme
+   * tailwind.config.ts expects the following color variables to be expressed as HSL values.
+   * A different format will require also updating the theme in tailwind.config.ts.
+  */
+  :root {
+    --background: 251 251 253;
+    --foreground: 8 8 16;
+
+    --card: 255 255 255;
+    --card-foreground: 8 8 16;
+
+    --popover: 255 255 255;
+    --popover-foreground: 8 8 16;
+
+    --primary: 37 99 235;
+    --primary-foreground: 248 250 252;
+
+    --secondary: 241 245 249;
+    --secondary-foreground: 51 65 85;
+
+    --muted: 248 250 252;
+    --muted-foreground: 100 116 139;
+
+    --accent: 239 246 255;
+    --accent-foreground: 30 64 175;
+
+    --destructive: 239 68 68;
+    --destructive-foreground: 248 250 252;
+
+    --warning: 245 158 11;
+    --warning-foreground: 248 250 252;
+
+    --success: 34 197 94;
+    --success-foreground: 248 250 252;
+
+    --info: 59 130 246;
+    --info-foreground: 248 250 252;
+
+    --border: 226 232 240;
+    --input: 226 232 240;
+    --ring: 37 99 235;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 15 23 42;
+    --sidebar-foreground: 241 245 249;
+    --sidebar-primary: 37 99 235;
+    --sidebar-primary-foreground: 248 250 252;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 241 245 249;
+    --sidebar-border: 30 41 59;
+    --sidebar-ring: 37 99 235;
+
+    --chart-1: 37 99 235;
+    --chart-2: 34 197 94;
+    --chart-3: 245 158 11;
+    --chart-4: 239 68 68;
+    --chart-5: 168 85 247;
+  }
+
+  .dark {
+    --background: 15 23 42;
+    --foreground: 241 245 249;
+
+    --card: 30 41 59;
+    --card-foreground: 241 245 249;
+
+    --popover: 30 41 59;
+    --popover-foreground: 241 245 249;
+
+    --primary: 59 130 246;
+    --primary-foreground: 15 23 42;
+
+    --secondary: 51 65 85;
+    --secondary-foreground: 241 245 249;
+
+    --muted: 51 65 85;
+    --muted-foreground: 148 163 184;
+
+    --accent: 51 65 85;
+    --accent-foreground: 59 130 246;
+
+    --destructive: 220 38 38;
+    --destructive-foreground: 241 245 249;
+
+    --warning: 217 119 6;
+    --warning-foreground: 241 245 249;
+
+    --success: 22 163 74;
+    --success-foreground: 241 245 249;
+
+    --info: 37 99 235;
+    --info-foreground: 241 245 249;
+
+    --border: 51 65 85;
+    --input: 51 65 85;
+    --ring: 59 130 246;
+
+    --sidebar-background: 15 23 42;
+    --sidebar-foreground: 241 245 249;
+    --sidebar-primary: 59 130 246;
+    --sidebar-primary-foreground: 15 23 42;
+    --sidebar-accent: 30 41 59;
+    --sidebar-accent-foreground: 241 245 249;
+    --sidebar-border: 30 41 59;
+    --sidebar-ring: 59 130 246;
+
+    --chart-1: 59 130 246;
+    --chart-2: 34 197 94;
+    --chart-3: 245 158 11;
+    --chart-4: 239 68 68;
+    --chart-5: 168 85 247;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+@layer utilities {
+  /* Dialog positioning fix */
+  [data-radix-dialog-content] {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    z-index: 9999 !important;
+  }
+
+  /* Floating animations */
+  .animate-float-gentle {
+    animation: floatGentle 3s ease-in-out infinite;
+  }
+
+  .animate-float-particle {
+    animation: floatParticle 4s ease-in-out infinite;
+  }
+
+  .animate-float-particle-delayed {
+    animation: floatParticle 4s ease-in-out infinite 1s;
+  }
+
+  .animate-float-particle-slow {
+    animation: floatParticle 6s ease-in-out infinite 2s;
+  }
+
+  /* Wave animations */
+  .animate-wave-1 {
+    animation: wave1 8s ease-in-out infinite;
+  }
+
+  .animate-wave-2 {
+    animation: wave2 10s ease-in-out infinite 1s;
+  }
+
+  .animate-wave-3 {
+    animation: wave3 12s ease-in-out infinite 2s;
+  }
+
+  /* Icon animations */
+  .animate-icon-bounce {
+    animation: iconBounce 0.6s ease-out;
+  }
+
+  .animate-icon-shake {
+    animation: iconShake 0.6s ease-out;
+  }
+
+  .animate-pulse-ring {
+    animation: pulseRing 2s ease-out infinite;
+  }
+
+  /* Text animations */
+  .animate-text-glow {
+    animation: textGlow 2s ease-in-out infinite alternate;
+  }
+
+  .animate-fade-in-up {
+    animation: fadeInUp 0.6s ease-out 0.2s both;
+  }
+
+  .animate-fade-in-up-delayed {
+    animation: fadeInUp 0.6s ease-out 0.4s both;
+  }
+}
+
+@keyframes floatGentle {
+  0%,
+  100% {
+    transform: translateY(0px) scale(1);
+  }
+  50% {
+    transform: translateY(-8px) scale(1.02);
+  }
+}
+
+@keyframes floatParticle {
+  0%,
+  100% {
+    transform: translateY(0px) translateX(0px);
+    opacity: 0.6;
+  }
+  25% {
+    transform: translateY(-10px) translateX(5px);
+    opacity: 0.8;
+  }
+  50% {
+    transform: translateY(-5px) translateX(-3px);
+    opacity: 1;
+  }
+  75% {
+    transform: translateY(-15px) translateX(2px);
+    opacity: 0.7;
+  }
+}
+
+@keyframes wave1 {
+  0%,
+  100% {
+    transform: translateX(0px) translateY(0px) scale(1);
+  }
+  25% {
+    transform: translateX(20px) translateY(-10px) scale(1.1);
+  }
+  50% {
+    transform: translateX(-15px) translateY(5px) scale(0.9);
+  }
+  75% {
+    transform: translateX(10px) translateY(-5px) scale(1.05);
+  }
+}
+
+@keyframes wave2 {
+  0%,
+  100% {
+    transform: translateX(0px) translateY(0px) scale(1) rotate(0deg);
+  }
+  33% {
+    transform: translateX(-25px) translateY(15px) scale(1.15) rotate(10deg);
+  }
+  66% {
+    transform: translateX(15px) translateY(-10px) scale(0.85) rotate(-5deg);
+  }
+}
+
+@keyframes wave3 {
+  0%,
+  100% {
+    transform: translateX(0px) translateY(0px) scale(1);
+  }
+  20% {
+    transform: translateX(15px) translateY(-20px) scale(1.2);
+  }
+  40% {
+    transform: translateX(-10px) translateY(10px) scale(0.8);
+  }
+  60% {
+    transform: translateX(20px) translateY(5px) scale(1.1);
+  }
+  80% {
+    transform: translateX(-5px) translateY(-15px) scale(0.9);
+  }
+}
+
+@keyframes iconBounce {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  70% {
+    transform: scale(0.9);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes iconShake {
+  0% {
+    transform: scale(0.3) translateX(0);
+    opacity: 0;
+  }
+  25% {
+    transform: scale(0.8) translateX(-5px);
+    opacity: 0.7;
+  }
+  50% {
+    transform: scale(1.05) translateX(5px);
+    opacity: 1;
+  }
+  75% {
+    transform: scale(0.95) translateX(-3px);
+  }
+  100% {
+    transform: scale(1) translateX(0);
+  }
+}
+
+@keyframes pulseRing {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  50% {
+    transform: scale(1.2);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(1.4);
+    opacity: 0;
+  }
+}
+
+@keyframes textGlow {
+  from {
+    text-shadow: 0 0 5px rgba(250, 204, 21, 0.5);
+  }
+  to {
+    text-shadow:
+      0 0 20px rgba(250, 204, 21, 0.8),
+      0 0 30px rgba(250, 204, 21, 0.4);
+  }
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Tyre rotation animation */
+@keyframes rotate {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin-slow {
+  animation: rotate 3s linear infinite;
+}
+
+/* Radial gradient utility */
+.bg-gradient-radial {
+  background: radial-gradient(circle, var(--tw-gradient-stops));
+}
