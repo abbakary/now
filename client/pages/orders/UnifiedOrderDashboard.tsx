@@ -919,9 +919,20 @@ export default function UnifiedOrderDashboard() {
                       </TableCell>
                       <TableCell>
                         <div className="space-y-2">
-                          <Badge className={getStatusColor(order.status)}>
-                            {order.status.replace('_', ' ')}
-                          </Badge>
+                          <div className="flex items-center gap-2">
+                            <Badge className={getStatusColor(order.status)}>
+                              {order.status.replace('_', ' ')}
+                            </Badge>
+                            {order.status === JobStatus.PENDING && (
+                              <div className="h-2 w-2 rounded-full bg-yellow-500 animate-pulse" title="Pending" />
+                            )}
+                            {order.status === JobStatus.IN_PROGRESS && (
+                              <div className="h-2 w-2 rounded-full bg-blue-500 animate-pulse" title="In Progress" />
+                            )}
+                            {order.status === JobStatus.COMPLETED && (
+                              <div className="h-2 w-2 rounded-full bg-green-500" title="Completed" />
+                            )}
+                          </div>
                           <Badge className={getPriorityColor(order.priority)}>
                             {order.priority}
                           </Badge>
