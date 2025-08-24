@@ -78,6 +78,21 @@ import {
   Tag,
   Calendar,
   BarChart3,
+  Copy,
+  Printer,
+  Receipt,
+  UserPlus,
+  MessageSquare,
+  Bell,
+  X,
+  Archive,
+  Flag,
+  Calendar as CalendarSchedule,
+  Trash2,
+  FileDown,
+  ClipboardList,
+  Pause,
+  RotateCcw,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useCustomerStore } from '@/context/CustomerStoreContext';
