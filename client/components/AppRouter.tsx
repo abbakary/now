@@ -21,6 +21,11 @@ import UnifiedOrderDashboard from "../pages/orders/UnifiedOrderDashboard";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 
+// Admin pages
+import UserManagement from "../pages/admin/UserManagement";
+import InventoryManagement from "../pages/admin/InventoryManagement";
+import Settings from "../pages/admin/Settings";
+
 // Icons for placeholders
 import {
   Users,
@@ -319,23 +324,25 @@ export const AppRouter: React.FC = () => {
       <Route
         path="/admin/users"
         element={
-          <WrappedPlaceholder
-            title="User Access Control"
-            description="Manage user permissions and access levels"
-            icon={Shield}
-            requiredRole={UserRole.ADMIN}
-          />
+          <ProtectedPage requiredRole={UserRole.ADMIN}>
+            <UserManagement />
+          </ProtectedPage>
+        }
+      />
+      <Route
+        path="/admin/inventory"
+        element={
+          <ProtectedPage requiredRole={UserRole.ADMIN}>
+            <InventoryManagement />
+          </ProtectedPage>
         }
       />
       <Route
         path="/admin/settings"
         element={
-          <WrappedPlaceholder
-            title="System Settings"
-            description="Configure system preferences and business settings"
-            icon={Settings}
-            requiredRole={UserRole.ADMIN}
-          />
+          <ProtectedPage requiredRole={UserRole.ADMIN}>
+            <Settings />
+          </ProtectedPage>
         }
       />
 
