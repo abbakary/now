@@ -411,7 +411,11 @@ export default function EnhancedCustomerManagement() {
   // Select customer for service
   const handleSelectCustomerForService = (customer: any) => {
     setSelectedCustomer(customer);
-    setActiveTab("service-order");
+    success(`Customer ${customer.name} selected for service order!`);
+    // Auto-switch to service order tab after a brief moment for user feedback
+    setTimeout(() => {
+      setActiveTab("service-order");
+    }, 500);
   };
 
   // Get customer type styling
@@ -491,10 +495,27 @@ export default function EnhancedCustomerManagement() {
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="customers">Customer Directory</TabsTrigger>
+          <TabsTrigger value="customers" className="relative">
+            Customer Directory
+            {selectedCustomer && (
+              <Badge variant="secondary" className="ml-2 text-xs">
+                1 Selected
+              </Badge>
+            )}
+          </TabsTrigger>
           <TabsTrigger value="new-customer">Add New Customer</TabsTrigger>
-          <TabsTrigger value="service-order" disabled={!selectedCustomer}>
-            Create Service Order {selectedCustomer && `(${selectedCustomer.name})`}
+          <TabsTrigger value="service-order" disabled={!selectedCustomer} className={cn(
+            "relative",
+            selectedCustomer && "text-blue-600 font-medium"
+          )}>
+            Create Service Order
+            {selectedCustomer && (
+              <div className="ml-2">
+                <Badge variant="default" className="text-xs bg-blue-100 text-blue-800">
+                  {selectedCustomer.name.split(' ')[0]}
+                </Badge>
+              </div>
+            )}
           </TabsTrigger>
         </TabsList>
 
@@ -508,7 +529,23 @@ export default function EnhancedCustomerManagement() {
                 Customer Directory
               </CardTitle>
               <CardDescription>
-                Browse existing customers and initiate service orders
+                Browse existing customers and click "Create Order" to initiate service orders
+                {selectedCustomer && (
+                  <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
+                    <div className="flex items-center gap-2 text-sm text-blue-800">
+                      <CheckCircle className="h-4 w-4" />
+                      <span className="font-medium">{selectedCustomer.name}</span> selected for service order.
+                      <Button
+                        variant="link"
+                        size="sm"
+                        onClick={() => setActiveTab("service-order")}
+                        className="p-0 h-auto text-blue-600 underline"
+                      >
+                        Continue to create order →
+                      </Button>
+                    </div>
+                  </div>
+                )}
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -622,45 +659,67 @@ export default function EnhancedCustomerManagement() {
                           </div>
                         </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex items-center justify-end gap-1">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleSelectCustomerForService(customer)}
-                            >
-                              <ClipboardList className="h-4 w-4 mr-1" />
-                              New Order
-                            </Button>
-                            
-                            <DropdownMenu>
-                              <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" size="sm">
-                                  <MoreHorizontal className="h-4 w-4" />
+                          <div className="flex items-center justify-end gap-2">
+                            {selectedCustomer?.id === customer.id ? (
+                              <div className="flex items-center gap-2">
+                                <Badge variant="default" className="bg-green-100 text-green-800 border-green-300">
+                                  <CheckCircle className="h-3 w-3 mr-1" />
+                                  Selected
+                                </Badge>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => setActiveTab("service-order")}
+                                  className="border-green-300 text-green-700 hover:bg-green-50"
+                                >
+                                  <ArrowRight className="h-4 w-4 mr-1" />
+                                  Continue to Order
                                 </Button>
-                              </DropdownMenuTrigger>
-                              <DropdownMenuContent align="end">
-                                <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                <DropdownMenuSeparator />
-                                <DropdownMenuItem asChild>
-                                  <Link to={`/customers/${customer.id}`}>
-                                    <Eye className="h-4 w-4 mr-2" />
-                                    View Details
-                                  </Link>
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Edit className="h-4 w-4 mr-2" />
-                                  Edit Customer
-                                </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => handleSelectCustomerForService(customer)}>
-                                  <ClipboardList className="h-4 w-4 mr-2" />
+                              </div>
+                            ) : (
+                              <>
+                                <Button
+                                  variant="default"
+                                  size="sm"
+                                  onClick={() => handleSelectCustomerForService(customer)}
+                                  className="bg-blue-600 hover:bg-blue-700"
+                                >
+                                  <ClipboardList className="h-4 w-4 mr-1" />
                                   Create Order
-                                </DropdownMenuItem>
-                                <DropdownMenuItem>
-                                  <Phone className="h-4 w-4 mr-2" />
-                                  Call Customer
-                                </DropdownMenuItem>
-                              </DropdownMenuContent>
-                            </DropdownMenu>
+                                </Button>
+
+                                <DropdownMenu>
+                                  <DropdownMenuTrigger asChild>
+                                    <Button variant="ghost" size="sm">
+                                      <MoreHorizontal className="h-4 w-4" />
+                                    </Button>
+                                  </DropdownMenuTrigger>
+                                  <DropdownMenuContent align="end">
+                                    <DropdownMenuLabel>Customer Actions</DropdownMenuLabel>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem asChild>
+                                      <Link to={`/customers/${customer.id}`}>
+                                        <Eye className="h-4 w-4 mr-2" />
+                                        View Details
+                                      </Link>
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <Edit className="h-4 w-4 mr-2" />
+                                      Edit Customer
+                                    </DropdownMenuItem>
+                                    <DropdownMenuSeparator />
+                                    <DropdownMenuItem onClick={() => handleSelectCustomerForService(customer)}>
+                                      <ClipboardList className="h-4 w-4 mr-2" />
+                                      Select for Service Order
+                                    </DropdownMenuItem>
+                                    <DropdownMenuItem>
+                                      <Phone className="h-4 w-4 mr-2" />
+                                      Call Customer
+                                    </DropdownMenuItem>
+                                  </DropdownMenuContent>
+                                </DropdownMenu>
+                              </>
+                            )}
                           </div>
                         </TableCell>
                       </TableRow>
