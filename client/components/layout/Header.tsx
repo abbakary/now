@@ -54,13 +54,13 @@ const pageConfigs: Record<string, {
     icon: LayoutDashboard,
   },
   '/customers': {
-    title: 'Customer Management',
-    description: 'Manage customers, view profiles, and track customer relationships.',
+    title: 'Customer & Service Management',
+    description: 'Integrated workflow: manage customers and create service orders seamlessly.',
     icon: Users,
   },
   '/orders': {
-    title: 'Advanced Order Management',
-    description: 'Unified dashboard for active and completed orders with customer integration.',
+    title: 'Order Workflow Management',
+    description: 'Complete order lifecycle with status tracking and customer integration.',
     icon: ClipboardList,
   },
   '/orders/active': {
