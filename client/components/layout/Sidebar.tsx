@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { cn } from "@/lib/utils";
 import { useAuth } from "@/context/AuthContext";
@@ -106,22 +106,22 @@ const sidebarItems: SidebarItem[] = [
     label: "White Light Status",
     icon: ({ className, ...props }: { className?: string }) => {
       const [isOn, setIsOn] = useState(true);
-      
+
       // Simulate real-time status check (replace with actual implementation)
       useEffect(() => {
         const interval = setInterval(() => {
           // In a real implementation, you would check the actual light status here
           // For now, we'll just toggle it for demonstration
-          setIsOn(prev => !prev);
+          setIsOn((prev) => !prev);
         }, 1000);
-        
+
         return () => clearInterval(interval);
       }, []);
-      
+
       return (
         <div className="relative">
-          <div 
-            className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isOn ? 'bg-green-500' : 'bg-gray-400'}`}
+          <div
+            className={`absolute top-1 right-1 w-2 h-2 rounded-full ${isOn ? "bg-green-500" : "bg-gray-400"}`}
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -150,7 +150,11 @@ const sidebarItems: SidebarItem[] = [
       );
     },
     href: "#",
-    requiredRoles: [UserRole.ADMIN, UserRole.OFFICE_MANAGER, UserRole.TECHNICIAN],
+    requiredRoles: [
+      UserRole.ADMIN,
+      UserRole.OFFICE_MANAGER,
+      UserRole.TECHNICIAN,
+    ],
   },
   {
     id: "orders",
@@ -240,9 +244,16 @@ const sidebarItems: SidebarItem[] = [
     children: [
       {
         id: "user-access",
-        label: "User Access Control",
-        icon: Shield,
+        label: "User Management",
+        icon: Users,
         href: "/admin/users",
+        requiredRoles: [UserRole.ADMIN],
+      },
+      {
+        id: "admin-inventory",
+        label: "Inventory & Pricing",
+        icon: Package,
+        href: "/admin/inventory",
         requiredRoles: [UserRole.ADMIN],
       },
       {
@@ -431,8 +442,13 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
     }
 
     // Check permission-based access
-    if (item.requiredPermission &&
-        !hasPermission(item.requiredPermission.module, item.requiredPermission.action)) {
+    if (
+      item.requiredPermission &&
+      !hasPermission(
+        item.requiredPermission.module,
+        item.requiredPermission.action,
+      )
+    ) {
       return false;
     }
 
@@ -446,7 +462,9 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
     }
 
     const hasChildren = item.children && item.children.length > 0;
-    const visibleChildren = hasChildren ? item.children!.filter(hasItemAccess) : [];
+    const visibleChildren = hasChildren
+      ? item.children!.filter(hasItemAccess)
+      : [];
     const hasVisibleChildren = visibleChildren.length > 0;
     const isExpanded = expandedItems.includes(item.id);
     const isItemActive = item.href ? isActive(item.href) : false;
@@ -540,7 +558,10 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
 
       {/* Navigation */}
       <nav className="p-4 space-y-2 flex-1">
-        {user && getRoleSpecificItems(user.role).map((item) => renderSidebarItem(item))}
+        {user &&
+          getRoleSpecificItems(user.role).map((item) =>
+            renderSidebarItem(item),
+          )}
       </nav>
 
       {/* Footer */}
@@ -560,7 +581,10 @@ export function Sidebar({ isCollapsed }: SidebarProps) {
                 {user.name}
               </p>
               <p className="text-xs text-sidebar-foreground/70">
-                {user.role.replace('_', ' ').toLowerCase().replace(/\b\w/g, l => l.toUpperCase())}
+                {user.role
+                  .replace("_", " ")
+                  .toLowerCase()
+                  .replace(/\b\w/g, (l) => l.toUpperCase())}
               </p>
             </div>
           )}
