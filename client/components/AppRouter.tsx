@@ -105,12 +105,22 @@ export const AppRouter: React.FC = () => {
       />
       {/* Legacy routes for backwards compatibility */}
       <Route
-        path="/customers/search"
+        path="/customers/legacy"
         element={
           <ProtectedPage
             requiredRole={[UserRole.ADMIN, UserRole.OFFICE_MANAGER]}
           >
             <UnifiedCustomerManagement />
+          </ProtectedPage>
+        }
+      />
+      <Route
+        path="/customers/search"
+        element={
+          <ProtectedPage
+            requiredRole={[UserRole.ADMIN, UserRole.OFFICE_MANAGER]}
+          >
+            <EnhancedCustomerManagement />
           </ProtectedPage>
         }
       />
