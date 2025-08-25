@@ -241,9 +241,16 @@ const sidebarItems: SidebarItem[] = [
     children: [
       {
         id: "user-access",
-        label: "User Access Control",
-        icon: Shield,
+        label: "User Management",
+        icon: Users,
         href: "/admin/users",
+        requiredRoles: [UserRole.ADMIN],
+      },
+      {
+        id: "admin-inventory",
+        label: "Inventory & Pricing",
+        icon: Package,
+        href: "/admin/inventory",
         requiredRoles: [UserRole.ADMIN],
       },
       {
