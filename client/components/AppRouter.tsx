@@ -229,9 +229,17 @@ export const AppRouter: React.FC = () => {
         }
       />
 
-      {/* Unified Order Management */}
+      {/* Enhanced Order Management */}
       <Route
         path="/orders"
+        element={
+          <ProtectedPage>
+            <EnhancedOrderManagement />
+          </ProtectedPage>
+        }
+      />
+      <Route
+        path="/orders/unified"
         element={
           <ProtectedPage>
             <UnifiedOrderDashboard />
