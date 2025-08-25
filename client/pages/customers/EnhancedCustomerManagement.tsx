@@ -504,6 +504,44 @@ export default function EnhancedCustomerManagement() {
         })}
       </div>
 
+      {/* Quick Action Cards */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveTab("customers")}>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
+                <Users className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg text-blue-900">Use Existing Customer</h3>
+                <p className="text-sm text-blue-700">
+                  Select from {allCustomers.length} registered customers
+                  {selectedCustomer && ` • ${selectedCustomer.name} selected`}
+                </p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-blue-600" />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveTab("new-customer")}>
+          <CardContent className="p-6">
+            <div className="flex items-center gap-4">
+              <div className="h-12 w-12 bg-green-600 rounded-lg flex items-center justify-center">
+                <Plus className="h-6 w-6 text-white" />
+              </div>
+              <div className="flex-1">
+                <h3 className="font-semibold text-lg text-green-900">Add New Customer</h3>
+                <p className="text-sm text-green-700">
+                  Register a new customer and create service order
+                </p>
+              </div>
+              <ArrowRight className="h-5 w-5 text-green-600" />
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
       {/* Main Content Tabs */}
       <Tabs value={activeTab} onValueChange={(v) => setActiveTab(v as any)}>
         <TabsList className="grid w-full grid-cols-3">
