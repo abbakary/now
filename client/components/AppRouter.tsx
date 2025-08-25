@@ -99,7 +99,7 @@ export const AppRouter: React.FC = () => {
           <ProtectedPage
             requiredRole={[UserRole.ADMIN, UserRole.OFFICE_MANAGER]}
           >
-            <UnifiedCustomerManagement />
+            <EnhancedCustomerManagement />
           </ProtectedPage>
         }
       />
