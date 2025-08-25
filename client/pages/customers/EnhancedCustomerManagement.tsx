@@ -521,6 +521,48 @@ export default function EnhancedCustomerManagement() {
 
         {/* Customer Directory Tab */}
         <TabsContent value="customers" className="space-y-4">
+          {/* Quick Selection Panel */}
+          <Card className="border-l-4 border-l-blue-500 bg-gradient-to-r from-blue-50 to-transparent">
+            <CardContent className="p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="h-10 w-10 bg-blue-100 rounded-full flex items-center justify-center">
+                    <ClipboardList className="h-5 w-5 text-blue-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-semibold text-gray-900">Create Service Order</h3>
+                    <p className="text-sm text-gray-600">
+                      {selectedCustomer
+                        ? `Ready to create order for ${selectedCustomer.name}`
+                        : "Select a customer below to create a service order"
+                      }
+                    </p>
+                  </div>
+                </div>
+                {selectedCustomer ? (
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="bg-green-100 text-green-800 border-green-300">
+                      <CheckCircle className="h-3 w-3 mr-1" />
+                      {selectedCustomer.name} Selected
+                    </Badge>
+                    <Button
+                      onClick={() => setActiveTab("service-order")}
+                      className="bg-blue-600 hover:bg-blue-700"
+                    >
+                      <ArrowRight className="h-4 w-4 mr-2" />
+                      Create Order
+                    </Button>
+                  </div>
+                ) : (
+                  <div className="text-sm text-gray-500 flex items-center gap-2">
+                    <div className="h-2 w-2 bg-amber-400 rounded-full animate-pulse"></div>
+                    Waiting for customer selection
+                  </div>
+                )}
+              </div>
+            </CardContent>
+          </Card>
+
           {/* Search and Filters */}
           <Card>
             <CardHeader>
