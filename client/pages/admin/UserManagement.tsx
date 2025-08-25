@@ -1,15 +1,39 @@
-import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import React, { useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Users,
   Plus,
@@ -23,103 +47,105 @@ import {
   Key,
   Mail,
   Phone,
-} from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { User, UserRole, Permission } from '@shared/types';
+} from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { User, UserRole, Permission } from "@shared/types";
 
 // Mock data - replace with actual API calls
 const mockUsers: User[] = [
   {
-    id: 'admin-1',
-    name: 'Admin User',
-    email: 'admin@company.com',
+    id: "admin-1",
+    name: "Admin User",
+    email: "admin@company.com",
     role: UserRole.ADMIN,
-    phone: '+1234567890',
+    phone: "+1234567890",
     isActive: true,
-    createdAt: new Date('2024-01-01'),
-    permissions: [{ module: '*', actions: ['*'] }]
+    createdAt: new Date("2024-01-01"),
+    permissions: [{ module: "*", actions: ["*"] }],
   },
   {
-    id: 'manager-1',
-    name: 'Office Manager',
-    email: 'manager@company.com',
+    id: "manager-1",
+    name: "Office Manager",
+    email: "manager@company.com",
     role: UserRole.OFFICE_MANAGER,
-    phone: '+1234567891',
+    phone: "+1234567891",
     isActive: true,
-    createdAt: new Date('2024-01-15'),
+    createdAt: new Date("2024-01-15"),
     permissions: [
-      { module: 'customers', actions: ['create', 'read', 'update', 'delete'] },
-      { module: 'orders', actions: ['create', 'read', 'update', 'delete'] },
-      { module: 'reports', actions: ['read'] },
-    ]
+      { module: "customers", actions: ["create", "read", "update", "delete"] },
+      { module: "orders", actions: ["create", "read", "update", "delete"] },
+      { module: "reports", actions: ["read"] },
+    ],
   },
   {
-    id: 'tech-1',
-    name: 'John Technician',
-    email: 'john@company.com',
+    id: "tech-1",
+    name: "John Technician",
+    email: "john@company.com",
     role: UserRole.TECHNICIAN,
-    phone: '+1234567892',
+    phone: "+1234567892",
     isActive: true,
-    createdAt: new Date('2024-02-01'),
+    createdAt: new Date("2024-02-01"),
     permissions: [
-      { module: 'job_cards', actions: ['read', 'update_assigned'] },
-      { module: 'time_tracking', actions: ['create', 'read', 'update'] },
-    ]
+      { module: "job_cards", actions: ["read", "update_assigned"] },
+      { module: "time_tracking", actions: ["create", "read", "update"] },
+    ],
   },
   {
-    id: 'tech-2',
-    name: 'Sarah Tech',
-    email: 'sarah@company.com',
+    id: "tech-2",
+    name: "Sarah Tech",
+    email: "sarah@company.com",
     role: UserRole.TECHNICIAN,
-    phone: '+1234567893',
+    phone: "+1234567893",
     isActive: false,
-    createdAt: new Date('2024-02-15'),
+    createdAt: new Date("2024-02-15"),
     permissions: [
-      { module: 'job_cards', actions: ['read', 'update_assigned'] },
-    ]
+      { module: "job_cards", actions: ["read", "update_assigned"] },
+    ],
   },
 ];
 
 const roleColors = {
-  [UserRole.ADMIN]: 'bg-red-100 text-red-800',
-  [UserRole.OFFICE_MANAGER]: 'bg-blue-100 text-blue-800',
-  [UserRole.TECHNICIAN]: 'bg-green-100 text-green-800',
+  [UserRole.ADMIN]: "bg-red-100 text-red-800",
+  [UserRole.OFFICE_MANAGER]: "bg-blue-100 text-blue-800",
+  [UserRole.TECHNICIAN]: "bg-green-100 text-green-800",
 };
 
 const defaultPermissions = {
-  [UserRole.ADMIN]: [{ module: '*', actions: ['*'] }],
+  [UserRole.ADMIN]: [{ module: "*", actions: ["*"] }],
   [UserRole.OFFICE_MANAGER]: [
-    { module: 'customers', actions: ['create', 'read', 'update', 'delete'] },
-    { module: 'orders', actions: ['create', 'read', 'update', 'delete'] },
-    { module: 'job_cards', actions: ['create', 'read', 'update', 'assign'] },
-    { module: 'services', actions: ['create', 'read', 'update', 'delete'] },
-    { module: 'reports', actions: ['read'] },
-    { module: 'invoices', actions: ['create', 'read', 'update'] },
-    { module: 'inventory', actions: ['read', 'update'] },
+    { module: "customers", actions: ["create", "read", "update", "delete"] },
+    { module: "orders", actions: ["create", "read", "update", "delete"] },
+    { module: "job_cards", actions: ["create", "read", "update", "assign"] },
+    { module: "services", actions: ["create", "read", "update", "delete"] },
+    { module: "reports", actions: ["read"] },
+    { module: "invoices", actions: ["create", "read", "update"] },
+    { module: "inventory", actions: ["read", "update"] },
   ],
   [UserRole.TECHNICIAN]: [
-    { module: 'job_cards', actions: ['read', 'update_assigned'] },
-    { module: 'orders', actions: ['read', 'update_status'] },
-    { module: 'time_tracking', actions: ['create', 'read', 'update'] },
-    { module: 'materials', actions: ['read', 'use'] },
-    { module: 'checklists', actions: ['read', 'update'] },
-    { module: 'sales_items', actions: ['create', 'read'] },
+    { module: "job_cards", actions: ["read", "update_assigned"] },
+    { module: "orders", actions: ["read", "update_status"] },
+    { module: "time_tracking", actions: ["create", "read", "update"] },
+    { module: "materials", actions: ["read", "use"] },
+    { module: "checklists", actions: ["read", "update"] },
+    { module: "sales_items", actions: ["create", "read"] },
   ],
 };
 
 export default function UserManagement() {
   const { user: currentUser } = useAuth();
   const [users, setUsers] = useState<User[]>(mockUsers);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [roleFilter, setRoleFilter] = useState<UserRole | 'all'>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [roleFilter, setRoleFilter] = useState<UserRole | "all">("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "inactive"
+  >("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | null>(null);
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: '',
+    name: "",
+    email: "",
+    phone: "",
     role: UserRole.TECHNICIAN,
     isActive: true,
     permissions: [] as Permission[],
@@ -127,16 +153,18 @@ export default function UserManagement() {
 
   // Filter users
   const filteredUsers = useMemo(() => {
-    return users.filter(user => {
-      const matchesSearch = searchTerm === '' || 
+    return users.filter((user) => {
+      const matchesSearch =
+        searchTerm === "" ||
         user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         user.email.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesRole = roleFilter === 'all' || user.role === roleFilter;
-      
-      const matchesStatus = statusFilter === 'all' || 
-        (statusFilter === 'active' && user.isActive) ||
-        (statusFilter === 'inactive' && !user.isActive);
+
+      const matchesRole = roleFilter === "all" || user.role === roleFilter;
+
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "active" && user.isActive) ||
+        (statusFilter === "inactive" && !user.isActive);
 
       return matchesSearch && matchesRole && matchesStatus;
     });
@@ -145,20 +173,20 @@ export default function UserManagement() {
   // User statistics
   const userStats = useMemo(() => {
     const total = users.length;
-    const active = users.filter(u => u.isActive).length;
+    const active = users.filter((u) => u.isActive).length;
     const byRole = {
-      admin: users.filter(u => u.role === UserRole.ADMIN).length,
-      manager: users.filter(u => u.role === UserRole.OFFICE_MANAGER).length,
-      technician: users.filter(u => u.role === UserRole.TECHNICIAN).length,
+      admin: users.filter((u) => u.role === UserRole.ADMIN).length,
+      manager: users.filter((u) => u.role === UserRole.OFFICE_MANAGER).length,
+      technician: users.filter((u) => u.role === UserRole.TECHNICIAN).length,
     };
     return { total, active, byRole };
   }, [users]);
 
   const resetForm = () => {
     setFormData({
-      name: '',
-      email: '',
-      phone: '',
+      name: "",
+      email: "",
+      phone: "",
       role: UserRole.TECHNICIAN,
       isActive: true,
       permissions: [],
@@ -174,7 +202,10 @@ export default function UserManagement() {
       role: formData.role,
       isActive: formData.isActive,
       createdAt: new Date(),
-      permissions: formData.permissions.length > 0 ? formData.permissions : defaultPermissions[formData.role],
+      permissions:
+        formData.permissions.length > 0
+          ? formData.permissions
+          : defaultPermissions[formData.role],
     };
 
     setUsers([...users, newUser]);
@@ -185,8 +216,8 @@ export default function UserManagement() {
   const handleEditUser = () => {
     if (!selectedUser) return;
 
-    const updatedUsers = users.map(user => 
-      user.id === selectedUser.id 
+    const updatedUsers = users.map((user) =>
+      user.id === selectedUser.id
         ? {
             ...user,
             name: formData.name,
@@ -194,9 +225,12 @@ export default function UserManagement() {
             phone: formData.phone,
             role: formData.role,
             isActive: formData.isActive,
-            permissions: formData.permissions.length > 0 ? formData.permissions : defaultPermissions[formData.role],
+            permissions:
+              formData.permissions.length > 0
+                ? formData.permissions
+                : defaultPermissions[formData.role],
           }
-        : user
+        : user,
     );
 
     setUsers(updatedUsers);
@@ -206,14 +240,14 @@ export default function UserManagement() {
   };
 
   const handleDeleteUser = (userId: string) => {
-    if (confirm('Are you sure you want to delete this user?')) {
-      setUsers(users.filter(user => user.id !== userId));
+    if (confirm("Are you sure you want to delete this user?")) {
+      setUsers(users.filter((user) => user.id !== userId));
     }
   };
 
   const handleToggleUserStatus = (userId: string) => {
-    const updatedUsers = users.map(user =>
-      user.id === userId ? { ...user, isActive: !user.isActive } : user
+    const updatedUsers = users.map((user) =>
+      user.id === userId ? { ...user, isActive: !user.isActive } : user,
     );
     setUsers(updatedUsers);
   };
@@ -223,7 +257,7 @@ export default function UserManagement() {
     setFormData({
       name: user.name,
       email: user.email,
-      phone: user.phone || '',
+      phone: user.phone || "",
       role: user.role,
       isActive: user.isActive,
       permissions: user.permissions,
@@ -250,7 +284,9 @@ export default function UserManagement() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">User Management</h1>
-          <p className="text-muted-foreground">Manage system users, roles, and permissions</p>
+          <p className="text-muted-foreground">
+            Manage system users, roles, and permissions
+          </p>
         </div>
         <Button onClick={openCreateDialog}>
           <Plus className="mr-2 h-4 w-4" />
@@ -267,13 +303,17 @@ export default function UserManagement() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{userStats.total}</div>
-            <p className="text-xs text-muted-foreground">{userStats.active} active users</p>
+            <p className="text-xs text-muted-foreground">
+              {userStats.active} active users
+            </p>
           </CardContent>
         </Card>
-        
+
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Administrators</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Administrators
+            </CardTitle>
             <Shield className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -284,7 +324,9 @@ export default function UserManagement() {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Office Managers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Office Managers
+            </CardTitle>
             <UserCheck className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -299,7 +341,9 @@ export default function UserManagement() {
             <UserX className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{userStats.byRole.technician}</div>
+            <div className="text-2xl font-bold">
+              {userStats.byRole.technician}
+            </div>
             <p className="text-xs text-muted-foreground">Field workers</p>
           </CardContent>
         </Card>
@@ -319,19 +363,29 @@ export default function UserManagement() {
               />
             </div>
             <div className="flex gap-2">
-              <Select value={roleFilter} onValueChange={(v) => setRoleFilter(v as UserRole | 'all')}>
+              <Select
+                value={roleFilter}
+                onValueChange={(v) => setRoleFilter(v as UserRole | "all")}
+              >
                 <SelectTrigger className="w-[150px]">
                   <SelectValue placeholder="Role" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">All Roles</SelectItem>
                   <SelectItem value={UserRole.ADMIN}>Admin</SelectItem>
-                  <SelectItem value={UserRole.OFFICE_MANAGER}>Manager</SelectItem>
-                  <SelectItem value={UserRole.TECHNICIAN}>Technician</SelectItem>
+                  <SelectItem value={UserRole.OFFICE_MANAGER}>
+                    Manager
+                  </SelectItem>
+                  <SelectItem value={UserRole.TECHNICIAN}>
+                    Technician
+                  </SelectItem>
                 </SelectContent>
               </Select>
 
-              <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+              <Select
+                value={statusFilter}
+                onValueChange={(v) => setStatusFilter(v as any)}
+              >
                 <SelectTrigger className="w-[120px]">
                   <SelectValue placeholder="Status" />
                 </SelectTrigger>
@@ -365,18 +419,23 @@ export default function UserManagement() {
                       <div className="flex items-center gap-3">
                         <div className="h-8 w-8 rounded-full bg-primary/10 flex items-center justify-center">
                           <span className="text-sm font-medium">
-                            {user.name.split(' ').map(n => n[0]).join('')}
+                            {user.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
                           </span>
                         </div>
                         <div>
                           <div className="font-medium">{user.name}</div>
-                          <div className="text-sm text-muted-foreground">{user.email}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {user.email}
+                          </div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
                       <Badge className={roleColors[user.role]}>
-                        {user.role.replace('_', ' ')}
+                        {user.role.replace("_", " ")}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -396,13 +455,11 @@ export default function UserManagement() {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant={user.isActive ? 'default' : 'secondary'}>
-                        {user.isActive ? 'Active' : 'Inactive'}
+                      <Badge variant={user.isActive ? "default" : "secondary"}>
+                        {user.isActive ? "Active" : "Inactive"}
                       </Badge>
                     </TableCell>
-                    <TableCell>
-                      {user.createdAt.toLocaleDateString()}
-                    </TableCell>
+                    <TableCell>{user.createdAt.toLocaleDateString()}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -411,11 +468,15 @@ export default function UserManagement() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => openEditDialog(user)}>
+                          <DropdownMenuItem
+                            onClick={() => openEditDialog(user)}
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleToggleUserStatus(user.id)}>
+                          <DropdownMenuItem
+                            onClick={() => handleToggleUserStatus(user.id)}
+                          >
                             {user.isActive ? (
                               <>
                                 <UserX className="mr-2 h-4 w-4" />
@@ -429,7 +490,7 @@ export default function UserManagement() {
                             )}
                           </DropdownMenuItem>
                           {user.id !== currentUser?.id && (
-                            <DropdownMenuItem 
+                            <DropdownMenuItem
                               onClick={() => handleDeleteUser(user.id)}
                               className="text-red-600"
                             >
@@ -460,18 +521,22 @@ export default function UserManagement() {
               <Input
                 id="name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="Enter full name"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="email">Email</Label>
               <Input
                 id="email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="Enter email address"
               />
             </div>
@@ -481,7 +546,9 @@ export default function UserManagement() {
               <Input
                 id="phone"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
                 placeholder="Enter phone number"
               />
             </div>
@@ -494,8 +561,12 @@ export default function UserManagement() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={UserRole.ADMIN}>Administrator</SelectItem>
-                  <SelectItem value={UserRole.OFFICE_MANAGER}>Office Manager</SelectItem>
-                  <SelectItem value={UserRole.TECHNICIAN}>Technician</SelectItem>
+                  <SelectItem value={UserRole.OFFICE_MANAGER}>
+                    Office Manager
+                  </SelectItem>
+                  <SelectItem value={UserRole.TECHNICIAN}>
+                    Technician
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -504,16 +575,21 @@ export default function UserManagement() {
               <Switch
                 id="active"
                 checked={formData.isActive}
-                onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                onCheckedChange={(checked) =>
+                  setFormData({ ...formData, isActive: checked })
+                }
               />
               <Label htmlFor="active">Active User</Label>
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsCreateDialogOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleCreateUser}
                 disabled={!formData.name || !formData.email}
               >
@@ -536,18 +612,22 @@ export default function UserManagement() {
               <Input
                 id="edit-name"
                 value={formData.name}
-                onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, name: e.target.value })
+                }
                 placeholder="Enter full name"
               />
             </div>
-            
+
             <div>
               <Label htmlFor="edit-email">Email</Label>
               <Input
                 id="edit-email"
                 type="email"
                 value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, email: e.target.value })
+                }
                 placeholder="Enter email address"
               />
             </div>
@@ -557,7 +637,9 @@ export default function UserManagement() {
               <Input
                 id="edit-phone"
                 value={formData.phone}
-                onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                onChange={(e) =>
+                  setFormData({ ...formData, phone: e.target.value })
+                }
                 placeholder="Enter phone number"
               />
             </div>
@@ -570,8 +652,12 @@ export default function UserManagement() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value={UserRole.ADMIN}>Administrator</SelectItem>
-                  <SelectItem value={UserRole.OFFICE_MANAGER}>Office Manager</SelectItem>
-                  <SelectItem value={UserRole.TECHNICIAN}>Technician</SelectItem>
+                  <SelectItem value={UserRole.OFFICE_MANAGER}>
+                    Office Manager
+                  </SelectItem>
+                  <SelectItem value={UserRole.TECHNICIAN}>
+                    Technician
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -580,16 +666,21 @@ export default function UserManagement() {
               <Switch
                 id="edit-active"
                 checked={formData.isActive}
-                onCheckedChange={(checked) => setFormData({ ...formData, isActive: checked })}
+                onCheckedChange={(checked) =>
+                  setFormData({ ...formData, isActive: checked })
+                }
               />
               <Label htmlFor="edit-active">Active User</Label>
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsEditDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsEditDialogOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleEditUser}
                 disabled={!formData.name || !formData.email}
               >

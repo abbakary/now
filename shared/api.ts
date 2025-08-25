@@ -15,7 +15,7 @@ export interface DemoResponse {
 
 // User Management API Types
 export interface AdminUserListResponse {
-  users: import('./types').User[];
+  users: import("./types").User[];
   total: number;
   page: number;
   limit: number;
@@ -23,7 +23,7 @@ export interface AdminUserListResponse {
 }
 
 export interface AdminUserResponse {
-  user: import('./types').User;
+  user: import("./types").User;
   message?: string;
 }
 
@@ -42,25 +42,25 @@ export interface CreateUserRequest {
   name: string;
   email: string;
   phone?: string;
-  role: import('./types').UserRole;
+  role: import("./types").UserRole;
   isActive?: boolean;
-  permissions?: import('./types').Permission[];
+  permissions?: import("./types").Permission[];
 }
 
 export interface UpdateUserRequest {
   name?: string;
   email?: string;
   phone?: string;
-  role?: import('./types').UserRole;
+  role?: import("./types").UserRole;
   isActive?: boolean;
-  permissions?: import('./types').Permission[];
+  permissions?: import("./types").Permission[];
 }
 
 // Inventory Management API Types
 export interface InventoryItem {
   id: string;
   name: string;
-  type: 'product' | 'service' | 'part';
+  type: "product" | "service" | "part";
   category: string;
   description: string;
   price: number;
@@ -76,7 +76,7 @@ export interface InventoryItem {
 export interface ServiceType {
   id: string;
   name: string;
-  category: 'car_service' | 'tire_service' | 'consultation' | 'custom';
+  category: "car_service" | "tire_service" | "consultation" | "custom";
   description: string;
   basePrice: number;
   estimatedDuration: number;
@@ -89,7 +89,7 @@ export interface ProductCategory {
   id: string;
   name: string;
   description: string;
-  type: 'product' | 'service' | 'part';
+  type: "product" | "service" | "part";
   isActive: boolean;
 }
 
@@ -128,7 +128,7 @@ export interface InventoryStatsResponse {
 
 export interface CreateInventoryItemRequest {
   name: string;
-  type: 'product' | 'service' | 'part';
+  type: "product" | "service" | "part";
   category: string;
   description?: string;
   price?: number;
@@ -141,7 +141,7 @@ export interface CreateInventoryItemRequest {
 
 export interface UpdateInventoryItemRequest {
   name?: string;
-  type?: 'product' | 'service' | 'part';
+  type?: "product" | "service" | "part";
   category?: string;
   description?: string;
   price?: number;
@@ -154,7 +154,7 @@ export interface UpdateInventoryItemRequest {
 
 export interface CreateServiceRequest {
   name: string;
-  category: 'car_service' | 'tire_service' | 'consultation' | 'custom';
+  category: "car_service" | "tire_service" | "consultation" | "custom";
   description?: string;
   basePrice?: number;
   estimatedDuration?: number;
@@ -165,7 +165,7 @@ export interface CreateServiceRequest {
 export interface CreateCategoryRequest {
   name: string;
   description?: string;
-  type: 'product' | 'service' | 'part';
+  type: "product" | "service" | "part";
   isActive?: boolean;
 }
 

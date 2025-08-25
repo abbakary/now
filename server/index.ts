@@ -34,8 +34,14 @@ export function createServer() {
   app.get("/api/admin/inventory/items", adminInventory.listInventoryItems);
   app.post("/api/admin/inventory/items", adminInventory.createInventoryItem);
   app.put("/api/admin/inventory/items/:id", adminInventory.updateInventoryItem);
-  app.delete("/api/admin/inventory/items/:id", adminInventory.deleteInventoryItem);
-  app.patch("/api/admin/inventory/items/bulk-update", adminInventory.bulkUpdateItems);
+  app.delete(
+    "/api/admin/inventory/items/:id",
+    adminInventory.deleteInventoryItem,
+  );
+  app.patch(
+    "/api/admin/inventory/items/bulk-update",
+    adminInventory.bulkUpdateItems,
+  );
 
   app.get("/api/admin/inventory/services", adminInventory.listServiceTypes);
   app.post("/api/admin/inventory/services", adminInventory.createServiceType);

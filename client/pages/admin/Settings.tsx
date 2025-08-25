@@ -1,13 +1,19 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Separator } from '@/components/ui/separator';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
 import {
   Settings as SettingsIcon,
   Building2,
@@ -22,7 +28,7 @@ import {
   Globe,
   Save,
   RotateCcw,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface SystemSettings {
   // Company Information
@@ -32,7 +38,7 @@ interface SystemSettings {
   companyEmail: string;
   companyWebsite: string;
   taxId: string;
-  
+
   // Business Settings
   businessHours: {
     monday: { open: string; close: string; closed: boolean };
@@ -45,20 +51,20 @@ interface SystemSettings {
   };
   timezone: string;
   currency: string;
-  
+
   // Service Settings
   defaultServiceDuration: number;
   enableOnlineBooking: boolean;
   requireApprovalForOrders: boolean;
   autoAssignTechnicians: boolean;
   enableTimeTracking: boolean;
-  
+
   // Pricing Settings
   defaultTaxRate: number;
   laborRate: number;
   enableDynamicPricing: boolean;
   discountThreshold: number;
-  
+
   // Notification Settings
   emailNotifications: {
     newOrders: boolean;
@@ -72,14 +78,14 @@ interface SystemSettings {
     statusUpdates: boolean;
     promotions: boolean;
   };
-  
+
   // System Settings
   enableAuditLog: boolean;
   dataRetentionDays: number;
   enableBackups: boolean;
-  backupFrequency: 'daily' | 'weekly' | 'monthly';
+  backupFrequency: "daily" | "weekly" | "monthly";
   enableMaintenanceMode: boolean;
-  
+
   // Integration Settings
   enablePaymentGateway: boolean;
   paymentProvider: string;
@@ -88,36 +94,36 @@ interface SystemSettings {
 }
 
 const defaultSettings: SystemSettings = {
-  companyName: 'Professional Auto Service',
-  companyAddress: '123 Main Street, City, State 12345',
-  companyPhone: '+1 (555) 123-4567',
-  companyEmail: 'info@autoservice.com',
-  companyWebsite: 'www.autoservice.com',
-  taxId: '12-3456789',
-  
+  companyName: "Professional Auto Service",
+  companyAddress: "123 Main Street, City, State 12345",
+  companyPhone: "+1 (555) 123-4567",
+  companyEmail: "info@autoservice.com",
+  companyWebsite: "www.autoservice.com",
+  taxId: "12-3456789",
+
   businessHours: {
-    monday: { open: '08:00', close: '18:00', closed: false },
-    tuesday: { open: '08:00', close: '18:00', closed: false },
-    wednesday: { open: '08:00', close: '18:00', closed: false },
-    thursday: { open: '08:00', close: '18:00', closed: false },
-    friday: { open: '08:00', close: '18:00', closed: false },
-    saturday: { open: '09:00', close: '17:00', closed: false },
-    sunday: { open: '10:00', close: '16:00', closed: true },
+    monday: { open: "08:00", close: "18:00", closed: false },
+    tuesday: { open: "08:00", close: "18:00", closed: false },
+    wednesday: { open: "08:00", close: "18:00", closed: false },
+    thursday: { open: "08:00", close: "18:00", closed: false },
+    friday: { open: "08:00", close: "18:00", closed: false },
+    saturday: { open: "09:00", close: "17:00", closed: false },
+    sunday: { open: "10:00", close: "16:00", closed: true },
   },
-  timezone: 'America/New_York',
-  currency: 'USD',
-  
+  timezone: "America/New_York",
+  currency: "USD",
+
   defaultServiceDuration: 60,
   enableOnlineBooking: true,
   requireApprovalForOrders: false,
   autoAssignTechnicians: true,
   enableTimeTracking: true,
-  
+
   defaultTaxRate: 8.5,
-  laborRate: 125.00,
+  laborRate: 125.0,
   enableDynamicPricing: false,
   discountThreshold: 1000,
-  
+
   emailNotifications: {
     newOrders: true,
     completedJobs: true,
@@ -130,21 +136,37 @@ const defaultSettings: SystemSettings = {
     statusUpdates: false,
     promotions: false,
   },
-  
+
   enableAuditLog: true,
   dataRetentionDays: 2555, // 7 years
   enableBackups: true,
-  backupFrequency: 'daily',
+  backupFrequency: "daily",
   enableMaintenanceMode: false,
-  
+
   enablePaymentGateway: false,
-  paymentProvider: 'stripe',
+  paymentProvider: "stripe",
   enableInventorySync: false,
   enableAccountingSync: false,
 };
 
-const dayNames = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
-const dayLabels = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
+const dayNames = [
+  "monday",
+  "tuesday",
+  "wednesday",
+  "thursday",
+  "friday",
+  "saturday",
+  "sunday",
+];
+const dayLabels = [
+  "Monday",
+  "Tuesday",
+  "Wednesday",
+  "Thursday",
+  "Friday",
+  "Saturday",
+  "Sunday",
+];
 
 export default function Settings() {
   const [settings, setSettings] = useState<SystemSettings>(defaultSettings);
@@ -152,15 +174,15 @@ export default function Settings() {
   const [isSaving, setIsSaving] = useState(false);
 
   const updateSetting = (path: string, value: any) => {
-    const keys = path.split('.');
+    const keys = path.split(".");
     const newSettings = { ...settings };
     let current = newSettings as any;
-    
+
     for (let i = 0; i < keys.length - 1; i++) {
       current = current[keys[i]];
     }
     current[keys[keys.length - 1]] = value;
-    
+
     setSettings(newSettings);
     setHasChanges(true);
   };
@@ -168,16 +190,18 @@ export default function Settings() {
   const handleSaveSettings = async () => {
     setIsSaving(true);
     // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
     setHasChanges(false);
     setIsSaving(false);
-    
+
     // Show success message (you could use a toast here)
-    alert('Settings saved successfully!');
+    alert("Settings saved successfully!");
   };
 
   const handleResetSettings = () => {
-    if (confirm('Are you sure you want to reset all settings to default values?')) {
+    if (
+      confirm("Are you sure you want to reset all settings to default values?")
+    ) {
       setSettings(defaultSettings);
       setHasChanges(true);
     }
@@ -189,19 +213,21 @@ export default function Settings() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">System Settings</h1>
-          <p className="text-muted-foreground">Configure system-wide settings and preferences</p>
+          <p className="text-muted-foreground">
+            Configure system-wide settings and preferences
+          </p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" onClick={handleResetSettings}>
             <RotateCcw className="mr-2 h-4 w-4" />
             Reset to Default
           </Button>
-          <Button 
+          <Button
             onClick={handleSaveSettings}
             disabled={!hasChanges || isSaving}
           >
             <Save className="mr-2 h-4 w-4" />
-            {isSaving ? 'Saving...' : 'Save Changes'}
+            {isSaving ? "Saving..." : "Save Changes"}
           </Button>
         </div>
       </div>
@@ -233,7 +259,9 @@ export default function Settings() {
                   <Input
                     id="company-name"
                     value={settings.companyName}
-                    onChange={(e) => updateSetting('companyName', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("companyName", e.target.value)
+                    }
                   />
                 </div>
                 <div>
@@ -241,17 +269,19 @@ export default function Settings() {
                   <Input
                     id="tax-id"
                     value={settings.taxId}
-                    onChange={(e) => updateSetting('taxId', e.target.value)}
+                    onChange={(e) => updateSetting("taxId", e.target.value)}
                   />
                 </div>
               </div>
-              
+
               <div>
                 <Label htmlFor="company-address">Address</Label>
                 <Textarea
                   id="company-address"
                   value={settings.companyAddress}
-                  onChange={(e) => updateSetting('companyAddress', e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("companyAddress", e.target.value)
+                  }
                   rows={3}
                 />
               </div>
@@ -262,7 +292,9 @@ export default function Settings() {
                   <Input
                     id="company-phone"
                     value={settings.companyPhone}
-                    onChange={(e) => updateSetting('companyPhone', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("companyPhone", e.target.value)
+                    }
                   />
                 </div>
                 <div>
@@ -271,7 +303,9 @@ export default function Settings() {
                     id="company-email"
                     type="email"
                     value={settings.companyEmail}
-                    onChange={(e) => updateSetting('companyEmail', e.target.value)}
+                    onChange={(e) =>
+                      updateSetting("companyEmail", e.target.value)
+                    }
                   />
                 </div>
               </div>
@@ -281,7 +315,9 @@ export default function Settings() {
                 <Input
                   id="company-website"
                   value={settings.companyWebsite}
-                  onChange={(e) => updateSetting('companyWebsite', e.target.value)}
+                  onChange={(e) =>
+                    updateSetting("companyWebsite", e.target.value)
+                  }
                 />
               </div>
             </CardContent>
@@ -307,26 +343,53 @@ export default function Settings() {
                       </div>
                       <div className="flex items-center gap-2">
                         <Switch
-                          checked={!settings.businessHours[day as keyof typeof settings.businessHours].closed}
-                          onCheckedChange={(checked) => 
-                            updateSetting(`businessHours.${day}.closed`, !checked)
+                          checked={
+                            !settings.businessHours[
+                              day as keyof typeof settings.businessHours
+                            ].closed
+                          }
+                          onCheckedChange={(checked) =>
+                            updateSetting(
+                              `businessHours.${day}.closed`,
+                              !checked,
+                            )
                           }
                         />
                         <span className="text-sm">Open</span>
                       </div>
-                      {!settings.businessHours[day as keyof typeof settings.businessHours].closed && (
+                      {!settings.businessHours[
+                        day as keyof typeof settings.businessHours
+                      ].closed && (
                         <>
                           <Input
                             type="time"
-                            value={settings.businessHours[day as keyof typeof settings.businessHours].open}
-                            onChange={(e) => updateSetting(`businessHours.${day}.open`, e.target.value)}
+                            value={
+                              settings.businessHours[
+                                day as keyof typeof settings.businessHours
+                              ].open
+                            }
+                            onChange={(e) =>
+                              updateSetting(
+                                `businessHours.${day}.open`,
+                                e.target.value,
+                              )
+                            }
                             className="w-32"
                           />
                           <span>to</span>
                           <Input
                             type="time"
-                            value={settings.businessHours[day as keyof typeof settings.businessHours].close}
-                            onChange={(e) => updateSetting(`businessHours.${day}.close`, e.target.value)}
+                            value={
+                              settings.businessHours[
+                                day as keyof typeof settings.businessHours
+                              ].close
+                            }
+                            onChange={(e) =>
+                              updateSetting(
+                                `businessHours.${day}.close`,
+                                e.target.value,
+                              )
+                            }
                             className="w-32"
                           />
                         </>
@@ -348,21 +411,35 @@ export default function Settings() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <Label htmlFor="timezone">Timezone</Label>
-                    <Select value={settings.timezone} onValueChange={(v) => updateSetting('timezone', v)}>
+                    <Select
+                      value={settings.timezone}
+                      onValueChange={(v) => updateSetting("timezone", v)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="America/New_York">Eastern Time</SelectItem>
-                        <SelectItem value="America/Chicago">Central Time</SelectItem>
-                        <SelectItem value="America/Denver">Mountain Time</SelectItem>
-                        <SelectItem value="America/Los_Angeles">Pacific Time</SelectItem>
+                        <SelectItem value="America/New_York">
+                          Eastern Time
+                        </SelectItem>
+                        <SelectItem value="America/Chicago">
+                          Central Time
+                        </SelectItem>
+                        <SelectItem value="America/Denver">
+                          Mountain Time
+                        </SelectItem>
+                        <SelectItem value="America/Los_Angeles">
+                          Pacific Time
+                        </SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
                   <div>
                     <Label htmlFor="currency">Currency</Label>
-                    <Select value={settings.currency} onValueChange={(v) => updateSetting('currency', v)}>
+                    <Select
+                      value={settings.currency}
+                      onValueChange={(v) => updateSetting("currency", v)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -391,12 +468,19 @@ export default function Settings() {
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <Label htmlFor="default-duration">Default Service Duration (minutes)</Label>
+                <Label htmlFor="default-duration">
+                  Default Service Duration (minutes)
+                </Label>
                 <Input
                   id="default-duration"
                   type="number"
                   value={settings.defaultServiceDuration}
-                  onChange={(e) => updateSetting('defaultServiceDuration', parseInt(e.target.value) || 60)}
+                  onChange={(e) =>
+                    updateSetting(
+                      "defaultServiceDuration",
+                      parseInt(e.target.value) || 60,
+                    )
+                  }
                 />
               </div>
 
@@ -404,48 +488,64 @@ export default function Settings() {
 
               <div className="space-y-4">
                 <h3 className="text-lg font-semibold">Service Features</h3>
-                
+
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Enable Online Booking</div>
-                    <div className="text-sm text-muted-foreground">Allow customers to book appointments online</div>
+                    <div className="text-sm text-muted-foreground">
+                      Allow customers to book appointments online
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableOnlineBooking}
-                    onCheckedChange={(checked) => updateSetting('enableOnlineBooking', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableOnlineBooking", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Require Order Approval</div>
-                    <div className="text-sm text-muted-foreground">All orders must be approved before work begins</div>
+                    <div className="text-sm text-muted-foreground">
+                      All orders must be approved before work begins
+                    </div>
                   </div>
                   <Switch
                     checked={settings.requireApprovalForOrders}
-                    onCheckedChange={(checked) => updateSetting('requireApprovalForOrders', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("requireApprovalForOrders", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Auto-assign Technicians</div>
-                    <div className="text-sm text-muted-foreground">Automatically assign available technicians to new jobs</div>
+                    <div className="text-sm text-muted-foreground">
+                      Automatically assign available technicians to new jobs
+                    </div>
                   </div>
                   <Switch
                     checked={settings.autoAssignTechnicians}
-                    onCheckedChange={(checked) => updateSetting('autoAssignTechnicians', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("autoAssignTechnicians", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Enable Time Tracking</div>
-                    <div className="text-sm text-muted-foreground">Track time spent on each job</div>
+                    <div className="text-sm text-muted-foreground">
+                      Track time spent on each job
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableTimeTracking}
-                    onCheckedChange={(checked) => updateSetting('enableTimeTracking', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableTimeTracking", checked)
+                    }
                   />
                 </div>
               </div>
@@ -471,7 +571,12 @@ export default function Settings() {
                     type="number"
                     step="0.01"
                     value={settings.defaultTaxRate}
-                    onChange={(e) => updateSetting('defaultTaxRate', parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      updateSetting(
+                        "defaultTaxRate",
+                        parseFloat(e.target.value) || 0,
+                      )
+                    }
                   />
                 </div>
                 <div>
@@ -481,18 +586,30 @@ export default function Settings() {
                     type="number"
                     step="0.01"
                     value={settings.laborRate}
-                    onChange={(e) => updateSetting('laborRate', parseFloat(e.target.value) || 0)}
+                    onChange={(e) =>
+                      updateSetting(
+                        "laborRate",
+                        parseFloat(e.target.value) || 0,
+                      )
+                    }
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="discount-threshold">Discount Threshold ($)</Label>
+                <Label htmlFor="discount-threshold">
+                  Discount Threshold ($)
+                </Label>
                 <Input
                   id="discount-threshold"
                   type="number"
                   value={settings.discountThreshold}
-                  onChange={(e) => updateSetting('discountThreshold', parseFloat(e.target.value) || 0)}
+                  onChange={(e) =>
+                    updateSetting(
+                      "discountThreshold",
+                      parseFloat(e.target.value) || 0,
+                    )
+                  }
                 />
                 <p className="text-sm text-muted-foreground mt-1">
                   Orders above this amount are eligible for discounts
@@ -504,11 +621,15 @@ export default function Settings() {
               <div className="flex items-center justify-between">
                 <div>
                   <div className="font-medium">Enable Dynamic Pricing</div>
-                  <div className="text-sm text-muted-foreground">Adjust prices based on demand and availability</div>
+                  <div className="text-sm text-muted-foreground">
+                    Adjust prices based on demand and availability
+                  </div>
                 </div>
                 <Switch
                   checked={settings.enableDynamicPricing}
-                  onCheckedChange={(checked) => updateSetting('enableDynamicPricing', checked)}
+                  onCheckedChange={(checked) =>
+                    updateSetting("enableDynamicPricing", checked)
+                  }
                 />
               </div>
             </CardContent>
@@ -529,55 +650,78 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">New Orders</div>
-                    <div className="text-sm text-muted-foreground">Notify when new orders are received</div>
+                    <div className="text-sm text-muted-foreground">
+                      Notify when new orders are received
+                    </div>
                   </div>
                   <Switch
                     checked={settings.emailNotifications.newOrders}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications.newOrders', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("emailNotifications.newOrders", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Completed Jobs</div>
-                    <div className="text-sm text-muted-foreground">Notify when jobs are completed</div>
+                    <div className="text-sm text-muted-foreground">
+                      Notify when jobs are completed
+                    </div>
                   </div>
                   <Switch
                     checked={settings.emailNotifications.completedJobs}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications.completedJobs', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("emailNotifications.completedJobs", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Low Inventory</div>
-                    <div className="text-sm text-muted-foreground">Notify when inventory is running low</div>
+                    <div className="text-sm text-muted-foreground">
+                      Notify when inventory is running low
+                    </div>
                   </div>
                   <Switch
                     checked={settings.emailNotifications.lowInventory}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications.lowInventory', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("emailNotifications.lowInventory", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Overdue Jobs</div>
-                    <div className="text-sm text-muted-foreground">Notify when jobs are overdue</div>
+                    <div className="text-sm text-muted-foreground">
+                      Notify when jobs are overdue
+                    </div>
                   </div>
                   <Switch
                     checked={settings.emailNotifications.overdueJobs}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications.overdueJobs', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("emailNotifications.overdueJobs", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Customer Reminders</div>
-                    <div className="text-sm text-muted-foreground">Send appointment reminders to customers</div>
+                    <div className="text-sm text-muted-foreground">
+                      Send appointment reminders to customers
+                    </div>
                   </div>
                   <Switch
                     checked={settings.emailNotifications.customerReminders}
-                    onCheckedChange={(checked) => updateSetting('emailNotifications.customerReminders', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting(
+                        "emailNotifications.customerReminders",
+                        checked,
+                      )
+                    }
                   />
                 </div>
               </CardContent>
@@ -594,33 +738,48 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Appointment Reminders</div>
-                    <div className="text-sm text-muted-foreground">Send SMS reminders for appointments</div>
+                    <div className="text-sm text-muted-foreground">
+                      Send SMS reminders for appointments
+                    </div>
                   </div>
                   <Switch
                     checked={settings.smsNotifications.appointmentReminders}
-                    onCheckedChange={(checked) => updateSetting('smsNotifications.appointmentReminders', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting(
+                        "smsNotifications.appointmentReminders",
+                        checked,
+                      )
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Status Updates</div>
-                    <div className="text-sm text-muted-foreground">Send status updates for ongoing jobs</div>
+                    <div className="text-sm text-muted-foreground">
+                      Send status updates for ongoing jobs
+                    </div>
                   </div>
                   <Switch
                     checked={settings.smsNotifications.statusUpdates}
-                    onCheckedChange={(checked) => updateSetting('smsNotifications.statusUpdates', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("smsNotifications.statusUpdates", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Promotions</div>
-                    <div className="text-sm text-muted-foreground">Send promotional messages</div>
+                    <div className="text-sm text-muted-foreground">
+                      Send promotional messages
+                    </div>
                   </div>
                   <Switch
                     checked={settings.smsNotifications.promotions}
-                    onCheckedChange={(checked) => updateSetting('smsNotifications.promotions', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("smsNotifications.promotions", checked)
+                    }
                   />
                 </div>
               </CardContent>
@@ -645,7 +804,12 @@ export default function Settings() {
                     id="retention-days"
                     type="number"
                     value={settings.dataRetentionDays}
-                    onChange={(e) => updateSetting('dataRetentionDays', parseInt(e.target.value) || 2555)}
+                    onChange={(e) =>
+                      updateSetting(
+                        "dataRetentionDays",
+                        parseInt(e.target.value) || 2555,
+                      )
+                    }
                   />
                   <p className="text-sm text-muted-foreground mt-1">
                     How long to keep historical data (default: 7 years)
@@ -655,29 +819,40 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Enable Audit Log</div>
-                    <div className="text-sm text-muted-foreground">Track all system changes and user actions</div>
+                    <div className="text-sm text-muted-foreground">
+                      Track all system changes and user actions
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableAuditLog}
-                    onCheckedChange={(checked) => updateSetting('enableAuditLog', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableAuditLog", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Enable Backups</div>
-                    <div className="text-sm text-muted-foreground">Automatically backup system data</div>
+                    <div className="text-sm text-muted-foreground">
+                      Automatically backup system data
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableBackups}
-                    onCheckedChange={(checked) => updateSetting('enableBackups', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableBackups", checked)
+                    }
                   />
                 </div>
 
                 {settings.enableBackups && (
                   <div>
                     <Label htmlFor="backup-frequency">Backup Frequency</Label>
-                    <Select value={settings.backupFrequency} onValueChange={(v) => updateSetting('backupFrequency', v)}>
+                    <Select
+                      value={settings.backupFrequency}
+                      onValueChange={(v) => updateSetting("backupFrequency", v)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -703,11 +878,15 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Maintenance Mode</div>
-                    <div className="text-sm text-muted-foreground">Temporarily disable access for maintenance</div>
+                    <div className="text-sm text-muted-foreground">
+                      Temporarily disable access for maintenance
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableMaintenanceMode}
-                    onCheckedChange={(checked) => updateSetting('enableMaintenanceMode', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableMaintenanceMode", checked)
+                    }
                   />
                 </div>
               </CardContent>
@@ -724,18 +903,25 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Payment Gateway</div>
-                    <div className="text-sm text-muted-foreground">Enable online payment processing</div>
+                    <div className="text-sm text-muted-foreground">
+                      Enable online payment processing
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enablePaymentGateway}
-                    onCheckedChange={(checked) => updateSetting('enablePaymentGateway', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enablePaymentGateway", checked)
+                    }
                   />
                 </div>
 
                 {settings.enablePaymentGateway && (
                   <div>
                     <Label htmlFor="payment-provider">Payment Provider</Label>
-                    <Select value={settings.paymentProvider} onValueChange={(v) => updateSetting('paymentProvider', v)}>
+                    <Select
+                      value={settings.paymentProvider}
+                      onValueChange={(v) => updateSetting("paymentProvider", v)}
+                    >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
@@ -751,22 +937,30 @@ export default function Settings() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Inventory Sync</div>
-                    <div className="text-sm text-muted-foreground">Sync with external inventory systems</div>
+                    <div className="text-sm text-muted-foreground">
+                      Sync with external inventory systems
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableInventorySync}
-                    onCheckedChange={(checked) => updateSetting('enableInventorySync', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableInventorySync", checked)
+                    }
                   />
                 </div>
 
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Accounting Sync</div>
-                    <div className="text-sm text-muted-foreground">Sync with accounting software</div>
+                    <div className="text-sm text-muted-foreground">
+                      Sync with accounting software
+                    </div>
                   </div>
                   <Switch
                     checked={settings.enableAccountingSync}
-                    onCheckedChange={(checked) => updateSetting('enableAccountingSync', checked)}
+                    onCheckedChange={(checked) =>
+                      updateSetting("enableAccountingSync", checked)
+                    }
                   />
                 </div>
               </CardContent>
@@ -782,7 +976,7 @@ export default function Settings() {
             <span className="text-sm">You have unsaved changes</span>
             <Button size="sm" onClick={handleSaveSettings} disabled={isSaving}>
               <Save className="mr-2 h-4 w-4" />
-              {isSaving ? 'Saving...' : 'Save'}
+              {isSaving ? "Saving..." : "Save"}
             </Button>
           </div>
         </div>

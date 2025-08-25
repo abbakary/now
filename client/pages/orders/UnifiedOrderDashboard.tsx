@@ -1,18 +1,18 @@
-import React, { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
-import { format, subDays } from 'date-fns';
-import { Link } from 'react-router-dom';
+import React, { useState, useMemo } from "react";
+import { useQuery } from "@tanstack/react-query";
+import { format, subDays } from "date-fns";
+import { Link } from "react-router-dom";
 import {
   Card,
   CardContent,
   CardHeader,
   CardTitle,
   CardDescription,
-} from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
 import {
   Table,
   TableBody,
@@ -20,20 +20,20 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
 import {
   Search,
   Filter,
@@ -45,9 +45,9 @@ import {
   Play,
   Plus,
   User,
-} from 'lucide-react';
-import { useAuth } from '@/context/AuthContext';
-import { JobCard, JobStatus, JobPriority } from '@shared/types';
+} from "lucide-react";
+import { useAuth } from "@/context/AuthContext";
+import { JobCard, JobStatus, JobPriority } from "@shared/types";
 
 // Mock data - replace with actual API calls
 const fetchAllOrders = async (): Promise<JobCard[]> => {
@@ -56,32 +56,40 @@ const fetchAllOrders = async (): Promise<JobCard[]> => {
 };
 
 const statusVariantMap: Record<JobStatus, string> = {
-  [JobStatus.PENDING]: 'bg-yellow-100 text-yellow-800',
-  [JobStatus.IN_PROGRESS]: 'bg-blue-100 text-blue-800',
-  [JobStatus.COMPLETED]: 'bg-green-100 text-green-800',
-  [JobStatus.CANCELLED]: 'bg-red-100 text-red-800',
-  [JobStatus.ON_HOLD]: 'bg-orange-100 text-orange-800',
-  [JobStatus.WAITING_APPROVAL]: 'bg-purple-100 text-purple-800',
-  [JobStatus.WAITING_PARTS]: 'bg-gray-100 text-gray-800',
+  [JobStatus.PENDING]: "bg-yellow-100 text-yellow-800",
+  [JobStatus.IN_PROGRESS]: "bg-blue-100 text-blue-800",
+  [JobStatus.COMPLETED]: "bg-green-100 text-green-800",
+  [JobStatus.CANCELLED]: "bg-red-100 text-red-800",
+  [JobStatus.ON_HOLD]: "bg-orange-100 text-orange-800",
+  [JobStatus.WAITING_APPROVAL]: "bg-purple-100 text-purple-800",
+  [JobStatus.WAITING_PARTS]: "bg-gray-100 text-gray-800",
 };
 
 const priorityVariantMap: Record<JobPriority, string> = {
-  [JobPriority.LOW]: 'bg-blue-100 text-blue-800',
-  [JobPriority.NORMAL]: 'bg-green-100 text-green-800',
-  [JobPriority.HIGH]: 'bg-yellow-100 text-yellow-800',
-  [JobPriority.URGENT]: 'bg-red-100 text-red-800',
+  [JobPriority.LOW]: "bg-blue-100 text-blue-800",
+  [JobPriority.NORMAL]: "bg-green-100 text-green-800",
+  [JobPriority.HIGH]: "bg-yellow-100 text-yellow-800",
+  [JobPriority.URGENT]: "bg-red-100 text-red-800",
 };
 
 export default function UnifiedOrderDashboard() {
   const { user } = useAuth();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<JobStatus | 'all'>('all');
-  const [priorityFilter, setPriorityFilter] = useState<JobPriority | 'all'>('all');
-  const [dateRange, setDateRange] = useState<'today' | 'week' | 'month' | 'all'>('week');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<JobStatus | "all">("all");
+  const [priorityFilter, setPriorityFilter] = useState<JobPriority | "all">(
+    "all",
+  );
+  const [dateRange, setDateRange] = useState<
+    "today" | "week" | "month" | "all"
+  >("week");
 
   // Fetch all orders
-  const { data: orders = [], isLoading, error } = useQuery<JobCard[]>({
-    queryKey: ['orders'],
+  const {
+    data: orders = [],
+    isLoading,
+    error,
+  } = useQuery<JobCard[]>({
+    queryKey: ["orders"],
     queryFn: fetchAllOrders,
   });
 
@@ -89,43 +97,52 @@ export default function UnifiedOrderDashboard() {
   const filteredOrders = useMemo(() => {
     return orders.filter((order) => {
       // Filter by search term
-      const matchesSearch = searchTerm === '' || 
+      const matchesSearch =
+        searchTerm === "" ||
         order.jobNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
         order.customer.name.toLowerCase().includes(searchTerm.toLowerCase());
 
       // Filter by status
-      const matchesStatus = statusFilter === 'all' || order.status === statusFilter;
-      
+      const matchesStatus =
+        statusFilter === "all" || order.status === statusFilter;
+
       // Filter by priority
-      const matchesPriority = priorityFilter === 'all' || order.priority === priorityFilter;
+      const matchesPriority =
+        priorityFilter === "all" || order.priority === priorityFilter;
 
       // Filter by date range
       const now = new Date();
       const orderDate = new Date(order.createdAt);
-      
+
       let matchesDateRange = true;
-      if (dateRange === 'today') {
+      if (dateRange === "today") {
         matchesDateRange = orderDate.toDateString() === now.toDateString();
-      } else if (dateRange === 'week') {
+      } else if (dateRange === "week") {
         const weekAgo = subDays(now, 7);
         matchesDateRange = orderDate >= weekAgo;
-      } else if (dateRange === 'month') {
+      } else if (dateRange === "month") {
         const monthAgo = subDays(now, 30);
         matchesDateRange = orderDate >= monthAgo;
       }
 
-      return matchesSearch && matchesStatus && matchesPriority && matchesDateRange;
+      return (
+        matchesSearch && matchesStatus && matchesPriority && matchesDateRange
+      );
     });
   }, [orders, searchTerm, statusFilter, priorityFilter, dateRange]);
 
   // Calculate order statistics
   const orderStats = useMemo(() => {
     const total = orders.length;
-    const completed = orders.filter(o => o.status === JobStatus.COMPLETED).length;
-    const inProgress = orders.filter(o => o.status === JobStatus.IN_PROGRESS).length;
-    const pending = orders.filter(o => o.status === JobStatus.PENDING).length;
-    
+    const completed = orders.filter(
+      (o) => o.status === JobStatus.COMPLETED,
+    ).length;
+    const inProgress = orders.filter(
+      (o) => o.status === JobStatus.IN_PROGRESS,
+    ).length;
+    const pending = orders.filter((o) => o.status === JobStatus.PENDING).length;
+
     return {
       total,
       completed,
@@ -147,7 +164,9 @@ export default function UnifiedOrderDashboard() {
     <div className="space-y-6 p-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-bold tracking-tight">Order Management</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            Order Management
+          </h1>
           <p className="text-muted-foreground">
             View and manage all service orders in one place
           </p>
@@ -169,7 +188,9 @@ export default function UnifiedOrderDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{orderStats.total}</div>
-            <p className="text-xs text-muted-foreground">All orders in the system</p>
+            <p className="text-xs text-muted-foreground">
+              All orders in the system
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -179,7 +200,9 @@ export default function UnifiedOrderDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{orderStats.inProgress}</div>
-            <p className="text-xs text-muted-foreground">Active service orders</p>
+            <p className="text-xs text-muted-foreground">
+              Active service orders
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -194,11 +217,15 @@ export default function UnifiedOrderDashboard() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Completion Rate</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Completion Rate
+            </CardTitle>
             <div className="h-4 w-4 text-blue-500">📈</div>
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{orderStats.completionRate}%</div>
+            <div className="text-2xl font-bold">
+              {orderStats.completionRate}%
+            </div>
             <div className="mt-2 flex items-center space-x-2">
               <Progress value={orderStats.completionRate} className="h-2" />
             </div>
@@ -221,7 +248,10 @@ export default function UnifiedOrderDashboard() {
               />
             </div>
             <div className="flex flex-wrap gap-2">
-              <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as JobStatus | 'all')}>
+              <Select
+                value={statusFilter}
+                onValueChange={(v) => setStatusFilter(v as JobStatus | "all")}
+              >
                 <SelectTrigger className="w-[180px]">
                   <Filter className="mr-2 h-4 w-4" />
                   <SelectValue placeholder="Status" />
@@ -235,8 +265,11 @@ export default function UnifiedOrderDashboard() {
                   ))}
                 </SelectContent>
               </Select>
-              
-              <Select value={dateRange} onValueChange={(v) => setDateRange(v as any)}>
+
+              <Select
+                value={dateRange}
+                onValueChange={(v) => setDateRange(v as any)}
+              >
                 <SelectTrigger className="w-[180px]">
                   <CalendarIcon className="mr-2 h-4 w-4" />
                   <SelectValue placeholder="Date Range" />
@@ -272,7 +305,10 @@ export default function UnifiedOrderDashboard() {
                   filteredOrders.map((order) => (
                     <TableRow key={order.id}>
                       <TableCell className="font-medium">
-                        <Link to={`/orders/${order.id}`} className="hover:underline">
+                        <Link
+                          to={`/orders/${order.id}`}
+                          className="hover:underline"
+                        >
                           {order.jobNumber}
                         </Link>
                       </TableCell>
@@ -294,10 +330,10 @@ export default function UnifiedOrderDashboard() {
                         </Badge>
                       </TableCell>
                       <TableCell>
-                        {order.assignedTechnician?.name || 'Unassigned'}
+                        {order.assignedTechnician?.name || "Unassigned"}
                       </TableCell>
                       <TableCell>
-                        {format(new Date(order.createdAt), 'MMM d, yyyy')}
+                        {format(new Date(order.createdAt), "MMM d, yyyy")}
                       </TableCell>
                       <TableCell>
                         <DropdownMenu>
@@ -308,7 +344,10 @@ export default function UnifiedOrderDashboard() {
                           </DropdownMenuTrigger>
                           <DropdownMenuContent align="end">
                             <DropdownMenuItem asChild>
-                              <Link to={`/orders/${order.id}`} className="flex items-center">
+                              <Link
+                                to={`/orders/${order.id}`}
+                                className="flex items-center"
+                              >
                                 <Eye className="mr-2 h-4 w-4" />
                                 View Details
                               </Link>

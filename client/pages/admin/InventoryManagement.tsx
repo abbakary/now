@@ -1,16 +1,39 @@
-import React, { useState, useMemo } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import React, { useState, useMemo } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Badge } from "@/components/ui/badge";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   Package,
   Plus,
@@ -26,13 +49,13 @@ import {
   CheckCircle,
   Box,
   Settings,
-} from 'lucide-react';
+} from "lucide-react";
 
 // Types for inventory items
 interface InventoryItem {
   id: string;
   name: string;
-  type: 'product' | 'service' | 'part';
+  type: "product" | "service" | "part";
   category: string;
   description: string;
   price: number;
@@ -48,7 +71,7 @@ interface InventoryItem {
 interface ServiceType {
   id: string;
   name: string;
-  category: 'car_service' | 'tire_service' | 'consultation' | 'custom';
+  category: "car_service" | "tire_service" | "consultation" | "custom";
   description: string;
   basePrice: number;
   estimatedDuration: number; // in minutes
@@ -61,151 +84,191 @@ interface ProductCategory {
   id: string;
   name: string;
   description: string;
-  type: 'product' | 'service' | 'part';
+  type: "product" | "service" | "part";
   isActive: boolean;
 }
 
 // Mock data
 const mockInventoryItems: InventoryItem[] = [
   {
-    id: 'item-1',
-    name: 'Michelin Tire 195/65R15',
-    type: 'product',
-    category: 'Tires',
-    description: 'Premium quality tire for passenger cars',
-    price: 120.00,
-    cost: 80.00,
+    id: "item-1",
+    name: "Michelin Tire 195/65R15",
+    type: "product",
+    category: "Tires",
+    description: "Premium quality tire for passenger cars",
+    price: 120.0,
+    cost: 80.0,
     quantity: 25,
     minQuantity: 5,
-    sku: 'MICH-195-65-15',
+    sku: "MICH-195-65-15",
     isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-15'),
+    createdAt: new Date("2024-01-01"),
+    updatedAt: new Date("2024-01-15"),
   },
   {
-    id: 'item-2',
-    name: 'Engine Oil 5W-30',
-    type: 'product',
-    category: 'Lubricants',
-    description: 'Synthetic engine oil for modern vehicles',
-    price: 45.00,
-    cost: 25.00,
+    id: "item-2",
+    name: "Engine Oil 5W-30",
+    type: "product",
+    category: "Lubricants",
+    description: "Synthetic engine oil for modern vehicles",
+    price: 45.0,
+    cost: 25.0,
     quantity: 50,
     minQuantity: 10,
-    sku: 'OIL-5W30-4L',
+    sku: "OIL-5W30-4L",
     isActive: true,
-    createdAt: new Date('2024-01-01'),
-    updatedAt: new Date('2024-01-10'),
+    createdAt: new Date("2024-01-01"),
+    updatedAt: new Date("2024-01-10"),
   },
   {
-    id: 'item-3',
-    name: 'Brake Pad Set',
-    type: 'part',
-    category: 'Brake Parts',
-    description: 'Ceramic brake pads for front wheels',
-    price: 85.00,
-    cost: 45.00,
+    id: "item-3",
+    name: "Brake Pad Set",
+    type: "part",
+    category: "Brake Parts",
+    description: "Ceramic brake pads for front wheels",
+    price: 85.0,
+    cost: 45.0,
     quantity: 15,
     minQuantity: 3,
-    sku: 'BRAKE-PAD-FRONT',
+    sku: "BRAKE-PAD-FRONT",
     isActive: true,
-    createdAt: new Date('2024-01-05'),
-    updatedAt: new Date('2024-01-20'),
+    createdAt: new Date("2024-01-05"),
+    updatedAt: new Date("2024-01-20"),
   },
 ];
 
 const mockServiceTypes: ServiceType[] = [
   {
-    id: 'service-1',
-    name: 'Oil Change Service',
-    category: 'car_service',
-    description: 'Complete oil change with filter replacement',
-    basePrice: 60.00,
+    id: "service-1",
+    name: "Oil Change Service",
+    category: "car_service",
+    description: "Complete oil change with filter replacement",
+    basePrice: 60.0,
     estimatedDuration: 30,
-    requiredSkills: ['basic_maintenance'],
+    requiredSkills: ["basic_maintenance"],
     isActive: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date("2024-01-01"),
   },
   {
-    id: 'service-2',
-    name: 'Tire Installation',
-    category: 'tire_service',
-    description: 'Tire mounting, balancing, and alignment',
-    basePrice: 25.00,
+    id: "service-2",
+    name: "Tire Installation",
+    category: "tire_service",
+    description: "Tire mounting, balancing, and alignment",
+    basePrice: 25.0,
     estimatedDuration: 45,
-    requiredSkills: ['tire_specialist'],
+    requiredSkills: ["tire_specialist"],
     isActive: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date("2024-01-01"),
   },
   {
-    id: 'service-3',
-    name: 'Brake System Inspection',
-    category: 'car_service',
-    description: 'Complete brake system check and testing',
-    basePrice: 50.00,
+    id: "service-3",
+    name: "Brake System Inspection",
+    category: "car_service",
+    description: "Complete brake system check and testing",
+    basePrice: 50.0,
     estimatedDuration: 60,
-    requiredSkills: ['brake_specialist'],
+    requiredSkills: ["brake_specialist"],
     isActive: true,
-    createdAt: new Date('2024-01-01'),
+    createdAt: new Date("2024-01-01"),
   },
 ];
 
 const mockCategories: ProductCategory[] = [
-  { id: 'cat-1', name: 'Tires', description: 'All types of vehicle tires', type: 'product', isActive: true },
-  { id: 'cat-2', name: 'Lubricants', description: 'Engine oils and fluids', type: 'product', isActive: true },
-  { id: 'cat-3', name: 'Brake Parts', description: 'Brake system components', type: 'part', isActive: true },
-  { id: 'cat-4', name: 'Car Services', description: 'Vehicle maintenance services', type: 'service', isActive: true },
-  { id: 'cat-5', name: 'Tire Services', description: 'Tire-related services', type: 'service', isActive: true },
+  {
+    id: "cat-1",
+    name: "Tires",
+    description: "All types of vehicle tires",
+    type: "product",
+    isActive: true,
+  },
+  {
+    id: "cat-2",
+    name: "Lubricants",
+    description: "Engine oils and fluids",
+    type: "product",
+    isActive: true,
+  },
+  {
+    id: "cat-3",
+    name: "Brake Parts",
+    description: "Brake system components",
+    type: "part",
+    isActive: true,
+  },
+  {
+    id: "cat-4",
+    name: "Car Services",
+    description: "Vehicle maintenance services",
+    type: "service",
+    isActive: true,
+  },
+  {
+    id: "cat-5",
+    name: "Tire Services",
+    description: "Tire-related services",
+    type: "service",
+    isActive: true,
+  },
 ];
 
 const typeColors = {
-  product: 'bg-blue-100 text-blue-800',
-  service: 'bg-green-100 text-green-800',
-  part: 'bg-purple-100 text-purple-800',
+  product: "bg-blue-100 text-blue-800",
+  service: "bg-green-100 text-green-800",
+  part: "bg-purple-100 text-purple-800",
 };
 
 const serviceCategories = {
-  car_service: 'Car Service',
-  tire_service: 'Tire Service',
-  consultation: 'Consultation',
-  custom: 'Custom Service',
+  car_service: "Car Service",
+  tire_service: "Tire Service",
+  consultation: "Consultation",
+  custom: "Custom Service",
 };
 
 export default function InventoryManagement() {
-  const [activeTab, setActiveTab] = useState('inventory');
-  const [inventoryItems, setInventoryItems] = useState<InventoryItem[]>(mockInventoryItems);
-  const [serviceTypes, setServiceTypes] = useState<ServiceType[]>(mockServiceTypes);
-  const [categories, setCategories] = useState<ProductCategory[]>(mockCategories);
-  
-  const [searchTerm, setSearchTerm] = useState('');
-  const [typeFilter, setTypeFilter] = useState<'all' | 'product' | 'service' | 'part'>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
-  
+  const [activeTab, setActiveTab] = useState("inventory");
+  const [inventoryItems, setInventoryItems] =
+    useState<InventoryItem[]>(mockInventoryItems);
+  const [serviceTypes, setServiceTypes] =
+    useState<ServiceType[]>(mockServiceTypes);
+  const [categories, setCategories] =
+    useState<ProductCategory[]>(mockCategories);
+
+  const [searchTerm, setSearchTerm] = useState("");
+  const [typeFilter, setTypeFilter] = useState<
+    "all" | "product" | "service" | "part"
+  >("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<
+    "all" | "active" | "inactive"
+  >("all");
+
   const [isItemDialogOpen, setIsItemDialogOpen] = useState(false);
   const [isServiceDialogOpen, setIsServiceDialogOpen] = useState(false);
   const [isCategoryDialogOpen, setIsCategoryDialogOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<InventoryItem | null>(null);
-  const [editingService, setEditingService] = useState<ServiceType | null>(null);
-  const [editingCategory, setEditingCategory] = useState<ProductCategory | null>(null);
+  const [editingService, setEditingService] = useState<ServiceType | null>(
+    null,
+  );
+  const [editingCategory, setEditingCategory] =
+    useState<ProductCategory | null>(null);
 
   const [itemFormData, setItemFormData] = useState({
-    name: '',
-    type: 'product' as const,
-    category: '',
-    description: '',
+    name: "",
+    type: "product" as const,
+    category: "",
+    description: "",
     price: 0,
     cost: 0,
     quantity: 0,
     minQuantity: 0,
-    sku: '',
+    sku: "",
     isActive: true,
   });
 
   const [serviceFormData, setServiceFormData] = useState({
-    name: '',
-    category: 'car_service' as const,
-    description: '',
+    name: "",
+    category: "car_service" as const,
+    description: "",
     basePrice: 0,
     estimatedDuration: 30,
     requiredSkills: [] as string[],
@@ -213,24 +276,27 @@ export default function InventoryManagement() {
   });
 
   const [categoryFormData, setCategoryFormData] = useState({
-    name: '',
-    description: '',
-    type: 'product' as const,
+    name: "",
+    description: "",
+    type: "product" as const,
     isActive: true,
   });
 
   // Filter inventory items
   const filteredItems = useMemo(() => {
-    return inventoryItems.filter(item => {
-      const matchesSearch = searchTerm === '' || 
+    return inventoryItems.filter((item) => {
+      const matchesSearch =
+        searchTerm === "" ||
         item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
         item.sku.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesType = typeFilter === 'all' || item.type === typeFilter;
-      const matchesCategory = categoryFilter === 'all' || item.category === categoryFilter;
-      const matchesStatus = statusFilter === 'all' || 
-        (statusFilter === 'active' && item.isActive) ||
-        (statusFilter === 'inactive' && !item.isActive);
+
+      const matchesType = typeFilter === "all" || item.type === typeFilter;
+      const matchesCategory =
+        categoryFilter === "all" || item.category === categoryFilter;
+      const matchesStatus =
+        statusFilter === "all" ||
+        (statusFilter === "active" && item.isActive) ||
+        (statusFilter === "inactive" && !item.isActive);
 
       return matchesSearch && matchesType && matchesCategory && matchesStatus;
     });
@@ -239,34 +305,39 @@ export default function InventoryManagement() {
   // Statistics
   const inventoryStats = useMemo(() => {
     const totalItems = inventoryItems.length;
-    const activeItems = inventoryItems.filter(item => item.isActive).length;
-    const lowStockItems = inventoryItems.filter(item => item.quantity <= item.minQuantity).length;
-    const totalValue = inventoryItems.reduce((sum, item) => sum + (item.price * item.quantity), 0);
-    
+    const activeItems = inventoryItems.filter((item) => item.isActive).length;
+    const lowStockItems = inventoryItems.filter(
+      (item) => item.quantity <= item.minQuantity,
+    ).length;
+    const totalValue = inventoryItems.reduce(
+      (sum, item) => sum + item.price * item.quantity,
+      0,
+    );
+
     return { totalItems, activeItems, lowStockItems, totalValue };
   }, [inventoryItems]);
 
   // Form handlers
   const resetItemForm = () => {
     setItemFormData({
-      name: '',
-      type: 'product',
-      category: '',
-      description: '',
+      name: "",
+      type: "product",
+      category: "",
+      description: "",
       price: 0,
       cost: 0,
       quantity: 0,
       minQuantity: 0,
-      sku: '',
+      sku: "",
       isActive: true,
     });
   };
 
   const resetServiceForm = () => {
     setServiceFormData({
-      name: '',
-      category: 'car_service',
-      description: '',
+      name: "",
+      category: "car_service",
+      description: "",
       basePrice: 0,
       estimatedDuration: 30,
       requiredSkills: [],
@@ -276,9 +347,9 @@ export default function InventoryManagement() {
 
   const resetCategoryForm = () => {
     setCategoryFormData({
-      name: '',
-      description: '',
-      type: 'product',
+      name: "",
+      description: "",
+      type: "product",
       isActive: true,
     });
   };
@@ -297,11 +368,11 @@ export default function InventoryManagement() {
 
   const handleEditItem = () => {
     if (!editingItem) return;
-    
-    const updatedItems = inventoryItems.map(item =>
-      item.id === editingItem.id 
+
+    const updatedItems = inventoryItems.map((item) =>
+      item.id === editingItem.id
         ? { ...item, ...itemFormData, updatedAt: new Date() }
-        : item
+        : item,
     );
     setInventoryItems(updatedItems);
     setIsItemDialogOpen(false);
@@ -354,14 +425,14 @@ export default function InventoryManagement() {
   };
 
   const handleDeleteItem = (itemId: string) => {
-    if (confirm('Are you sure you want to delete this item?')) {
-      setInventoryItems(inventoryItems.filter(item => item.id !== itemId));
+    if (confirm("Are you sure you want to delete this item?")) {
+      setInventoryItems(inventoryItems.filter((item) => item.id !== itemId));
     }
   };
 
   const handleToggleItemStatus = (itemId: string) => {
-    const updatedItems = inventoryItems.map(item =>
-      item.id === itemId ? { ...item, isActive: !item.isActive } : item
+    const updatedItems = inventoryItems.map((item) =>
+      item.id === itemId ? { ...item, isActive: !item.isActive } : item,
     );
     setInventoryItems(updatedItems);
   };
@@ -372,7 +443,9 @@ export default function InventoryManagement() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold">Inventory Management</h1>
-          <p className="text-muted-foreground">Manage products, services, and pricing</p>
+          <p className="text-muted-foreground">
+            Manage products, services, and pricing
+          </p>
         </div>
       </div>
 
@@ -384,18 +457,26 @@ export default function InventoryManagement() {
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{inventoryStats.totalItems}</div>
-            <p className="text-xs text-muted-foreground">{inventoryStats.activeItems} active</p>
+            <div className="text-2xl font-bold">
+              {inventoryStats.totalItems}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              {inventoryStats.activeItems} active
+            </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Low Stock Alert</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Low Stock Alert
+            </CardTitle>
             <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-orange-600">{inventoryStats.lowStockItems}</div>
+            <div className="text-2xl font-bold text-orange-600">
+              {inventoryStats.lowStockItems}
+            </div>
             <p className="text-xs text-muted-foreground">items below minimum</p>
           </CardContent>
         </Card>
@@ -406,7 +487,9 @@ export default function InventoryManagement() {
             <DollarSign className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">${inventoryStats.totalValue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              ${inventoryStats.totalValue.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">inventory value</p>
           </CardContent>
         </Card>
@@ -442,7 +525,7 @@ export default function InventoryManagement() {
                   Add Item
                 </Button>
               </div>
-              
+
               {/* Filters */}
               <div className="flex flex-col space-y-4 md:flex-row md:items-center md:justify-between md:space-y-0">
                 <div className="relative w-full md:max-w-sm">
@@ -455,7 +538,10 @@ export default function InventoryManagement() {
                   />
                 </div>
                 <div className="flex gap-2">
-                  <Select value={typeFilter} onValueChange={(v) => setTypeFilter(v as any)}>
+                  <Select
+                    value={typeFilter}
+                    onValueChange={(v) => setTypeFilter(v as any)}
+                  >
                     <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="Type" />
                     </SelectTrigger>
@@ -467,19 +553,27 @@ export default function InventoryManagement() {
                     </SelectContent>
                   </Select>
 
-                  <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                  <Select
+                    value={categoryFilter}
+                    onValueChange={setCategoryFilter}
+                  >
                     <SelectTrigger className="w-[150px]">
                       <SelectValue placeholder="Category" />
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="all">All Categories</SelectItem>
-                      {categories.map(cat => (
-                        <SelectItem key={cat.id} value={cat.name}>{cat.name}</SelectItem>
+                      {categories.map((cat) => (
+                        <SelectItem key={cat.id} value={cat.name}>
+                          {cat.name}
+                        </SelectItem>
                       ))}
                     </SelectContent>
                   </Select>
 
-                  <Select value={statusFilter} onValueChange={(v) => setStatusFilter(v as any)}>
+                  <Select
+                    value={statusFilter}
+                    onValueChange={(v) => setStatusFilter(v as any)}
+                  >
                     <SelectTrigger className="w-[120px]">
                       <SelectValue placeholder="Status" />
                     </SelectTrigger>
@@ -512,7 +606,9 @@ export default function InventoryManagement() {
                         <TableCell>
                           <div>
                             <div className="font-medium">{item.name}</div>
-                            <div className="text-sm text-muted-foreground">SKU: {item.sku}</div>
+                            <div className="text-sm text-muted-foreground">
+                              SKU: {item.sku}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -523,22 +619,32 @@ export default function InventoryManagement() {
                         <TableCell>{item.category}</TableCell>
                         <TableCell>
                           <div>
-                            <div className="font-medium">${item.price.toFixed(2)}</div>
-                            <div className="text-sm text-muted-foreground">Cost: ${item.cost.toFixed(2)}</div>
+                            <div className="font-medium">
+                              ${item.price.toFixed(2)}
+                            </div>
+                            <div className="text-sm text-muted-foreground">
+                              Cost: ${item.cost.toFixed(2)}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <div className={`${item.quantity <= item.minQuantity ? 'text-orange-600' : ''}`}>
+                          <div
+                            className={`${item.quantity <= item.minQuantity ? "text-orange-600" : ""}`}
+                          >
                             {item.quantity}
                             {item.quantity <= item.minQuantity && (
                               <span className="ml-1">⚠️</span>
                             )}
                           </div>
-                          <div className="text-sm text-muted-foreground">Min: {item.minQuantity}</div>
+                          <div className="text-sm text-muted-foreground">
+                            Min: {item.minQuantity}
+                          </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant={item.isActive ? 'default' : 'secondary'}>
-                            {item.isActive ? 'Active' : 'Inactive'}
+                          <Badge
+                            variant={item.isActive ? "default" : "secondary"}
+                          >
+                            {item.isActive ? "Active" : "Inactive"}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -549,11 +655,15 @@ export default function InventoryManagement() {
                               </Button>
                             </DropdownMenuTrigger>
                             <DropdownMenuContent align="end">
-                              <DropdownMenuItem onClick={() => openEditItemDialog(item)}>
+                              <DropdownMenuItem
+                                onClick={() => openEditItemDialog(item)}
+                              >
                                 <Edit className="mr-2 h-4 w-4" />
                                 Edit
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => handleToggleItemStatus(item.id)}>
+                              <DropdownMenuItem
+                                onClick={() => handleToggleItemStatus(item.id)}
+                              >
                                 {item.isActive ? (
                                   <>
                                     <CheckCircle className="mr-2 h-4 w-4" />
@@ -566,7 +676,7 @@ export default function InventoryManagement() {
                                   </>
                                 )}
                               </DropdownMenuItem>
-                              <DropdownMenuItem 
+                              <DropdownMenuItem
                                 onClick={() => handleDeleteItem(item.id)}
                                 className="text-red-600"
                               >
@@ -616,7 +726,9 @@ export default function InventoryManagement() {
                         <TableCell>
                           <div>
                             <div className="font-medium">{service.name}</div>
-                            <div className="text-sm text-muted-foreground">{service.description}</div>
+                            <div className="text-sm text-muted-foreground">
+                              {service.description}
+                            </div>
                           </div>
                         </TableCell>
                         <TableCell>
@@ -627,8 +739,10 @@ export default function InventoryManagement() {
                         <TableCell>${service.basePrice.toFixed(2)}</TableCell>
                         <TableCell>{service.estimatedDuration} min</TableCell>
                         <TableCell>
-                          <Badge variant={service.isActive ? 'default' : 'secondary'}>
-                            {service.isActive ? 'Active' : 'Inactive'}
+                          <Badge
+                            variant={service.isActive ? "default" : "secondary"}
+                          >
+                            {service.isActive ? "Active" : "Inactive"}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -686,7 +800,9 @@ export default function InventoryManagement() {
                   <TableBody>
                     {categories.map((category) => (
                       <TableRow key={category.id}>
-                        <TableCell className="font-medium">{category.name}</TableCell>
+                        <TableCell className="font-medium">
+                          {category.name}
+                        </TableCell>
                         <TableCell>
                           <Badge className={typeColors[category.type]}>
                             {category.type}
@@ -694,8 +810,12 @@ export default function InventoryManagement() {
                         </TableCell>
                         <TableCell>{category.description}</TableCell>
                         <TableCell>
-                          <Badge variant={category.isActive ? 'default' : 'secondary'}>
-                            {category.isActive ? 'Active' : 'Inactive'}
+                          <Badge
+                            variant={
+                              category.isActive ? "default" : "secondary"
+                            }
+                          >
+                            {category.isActive ? "Active" : "Inactive"}
                           </Badge>
                         </TableCell>
                         <TableCell>
@@ -731,7 +851,9 @@ export default function InventoryManagement() {
       <Dialog open={isItemDialogOpen} onOpenChange={setIsItemDialogOpen}>
         <DialogContent className="max-w-md">
           <DialogHeader>
-            <DialogTitle>{editingItem ? 'Edit Item' : 'Create New Item'}</DialogTitle>
+            <DialogTitle>
+              {editingItem ? "Edit Item" : "Create New Item"}
+            </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>
@@ -739,14 +861,21 @@ export default function InventoryManagement() {
               <Input
                 id="item-name"
                 value={itemFormData.name}
-                onChange={(e) => setItemFormData({ ...itemFormData, name: e.target.value })}
+                onChange={(e) =>
+                  setItemFormData({ ...itemFormData, name: e.target.value })
+                }
                 placeholder="Enter item name"
               />
             </div>
 
             <div>
               <Label htmlFor="item-type">Type</Label>
-              <Select value={itemFormData.type} onValueChange={(v) => setItemFormData({ ...itemFormData, type: v as any })}>
+              <Select
+                value={itemFormData.type}
+                onValueChange={(v) =>
+                  setItemFormData({ ...itemFormData, type: v as any })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -760,14 +889,23 @@ export default function InventoryManagement() {
 
             <div>
               <Label htmlFor="item-category">Category</Label>
-              <Select value={itemFormData.category} onValueChange={(v) => setItemFormData({ ...itemFormData, category: v })}>
+              <Select
+                value={itemFormData.category}
+                onValueChange={(v) =>
+                  setItemFormData({ ...itemFormData, category: v })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  {categories.filter(cat => cat.type === itemFormData.type).map(cat => (
-                    <SelectItem key={cat.id} value={cat.name}>{cat.name}</SelectItem>
-                  ))}
+                  {categories
+                    .filter((cat) => cat.type === itemFormData.type)
+                    .map((cat) => (
+                      <SelectItem key={cat.id} value={cat.name}>
+                        {cat.name}
+                      </SelectItem>
+                    ))}
                 </SelectContent>
               </Select>
             </div>
@@ -777,7 +915,9 @@ export default function InventoryManagement() {
               <Input
                 id="item-sku"
                 value={itemFormData.sku}
-                onChange={(e) => setItemFormData({ ...itemFormData, sku: e.target.value })}
+                onChange={(e) =>
+                  setItemFormData({ ...itemFormData, sku: e.target.value })
+                }
                 placeholder="Enter SKU"
               />
             </div>
@@ -790,7 +930,12 @@ export default function InventoryManagement() {
                   type="number"
                   step="0.01"
                   value={itemFormData.price}
-                  onChange={(e) => setItemFormData({ ...itemFormData, price: parseFloat(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setItemFormData({
+                      ...itemFormData,
+                      price: parseFloat(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
               <div>
@@ -800,7 +945,12 @@ export default function InventoryManagement() {
                   type="number"
                   step="0.01"
                   value={itemFormData.cost}
-                  onChange={(e) => setItemFormData({ ...itemFormData, cost: parseFloat(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setItemFormData({
+                      ...itemFormData,
+                      cost: parseFloat(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -812,7 +962,12 @@ export default function InventoryManagement() {
                   id="item-quantity"
                   type="number"
                   value={itemFormData.quantity}
-                  onChange={(e) => setItemFormData({ ...itemFormData, quantity: parseInt(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setItemFormData({
+                      ...itemFormData,
+                      quantity: parseInt(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
               <div>
@@ -821,7 +976,12 @@ export default function InventoryManagement() {
                   id="item-min-quantity"
                   type="number"
                   value={itemFormData.minQuantity}
-                  onChange={(e) => setItemFormData({ ...itemFormData, minQuantity: parseInt(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setItemFormData({
+                      ...itemFormData,
+                      minQuantity: parseInt(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -831,7 +991,12 @@ export default function InventoryManagement() {
               <Textarea
                 id="item-description"
                 value={itemFormData.description}
-                onChange={(e) => setItemFormData({ ...itemFormData, description: e.target.value })}
+                onChange={(e) =>
+                  setItemFormData({
+                    ...itemFormData,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Enter description"
               />
             </div>
@@ -840,20 +1005,25 @@ export default function InventoryManagement() {
               <Switch
                 id="item-active"
                 checked={itemFormData.isActive}
-                onCheckedChange={(checked) => setItemFormData({ ...itemFormData, isActive: checked })}
+                onCheckedChange={(checked) =>
+                  setItemFormData({ ...itemFormData, isActive: checked })
+                }
               />
               <Label htmlFor="item-active">Active</Label>
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsItemDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsItemDialogOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={editingItem ? handleEditItem : handleCreateItem}
                 disabled={!itemFormData.name || !itemFormData.sku}
               >
-                {editingItem ? 'Update' : 'Create'}
+                {editingItem ? "Update" : "Create"}
               </Button>
             </div>
           </div>
@@ -872,14 +1042,24 @@ export default function InventoryManagement() {
               <Input
                 id="service-name"
                 value={serviceFormData.name}
-                onChange={(e) => setServiceFormData({ ...serviceFormData, name: e.target.value })}
+                onChange={(e) =>
+                  setServiceFormData({
+                    ...serviceFormData,
+                    name: e.target.value,
+                  })
+                }
                 placeholder="Enter service name"
               />
             </div>
 
             <div>
               <Label htmlFor="service-category">Category</Label>
-              <Select value={serviceFormData.category} onValueChange={(v) => setServiceFormData({ ...serviceFormData, category: v as any })}>
+              <Select
+                value={serviceFormData.category}
+                onValueChange={(v) =>
+                  setServiceFormData({ ...serviceFormData, category: v as any })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -900,7 +1080,12 @@ export default function InventoryManagement() {
                   type="number"
                   step="0.01"
                   value={serviceFormData.basePrice}
-                  onChange={(e) => setServiceFormData({ ...serviceFormData, basePrice: parseFloat(e.target.value) || 0 })}
+                  onChange={(e) =>
+                    setServiceFormData({
+                      ...serviceFormData,
+                      basePrice: parseFloat(e.target.value) || 0,
+                    })
+                  }
                 />
               </div>
               <div>
@@ -909,7 +1094,12 @@ export default function InventoryManagement() {
                   id="service-duration"
                   type="number"
                   value={serviceFormData.estimatedDuration}
-                  onChange={(e) => setServiceFormData({ ...serviceFormData, estimatedDuration: parseInt(e.target.value) || 30 })}
+                  onChange={(e) =>
+                    setServiceFormData({
+                      ...serviceFormData,
+                      estimatedDuration: parseInt(e.target.value) || 30,
+                    })
+                  }
                 />
               </div>
             </div>
@@ -919,7 +1109,12 @@ export default function InventoryManagement() {
               <Textarea
                 id="service-description"
                 value={serviceFormData.description}
-                onChange={(e) => setServiceFormData({ ...serviceFormData, description: e.target.value })}
+                onChange={(e) =>
+                  setServiceFormData({
+                    ...serviceFormData,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Enter service description"
               />
             </div>
@@ -928,16 +1123,21 @@ export default function InventoryManagement() {
               <Switch
                 id="service-active"
                 checked={serviceFormData.isActive}
-                onCheckedChange={(checked) => setServiceFormData({ ...serviceFormData, isActive: checked })}
+                onCheckedChange={(checked) =>
+                  setServiceFormData({ ...serviceFormData, isActive: checked })
+                }
               />
               <Label htmlFor="service-active">Active</Label>
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsServiceDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsServiceDialogOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleCreateService}
                 disabled={!serviceFormData.name}
               >
@@ -949,7 +1149,10 @@ export default function InventoryManagement() {
       </Dialog>
 
       {/* Category Dialog */}
-      <Dialog open={isCategoryDialogOpen} onOpenChange={setIsCategoryDialogOpen}>
+      <Dialog
+        open={isCategoryDialogOpen}
+        onOpenChange={setIsCategoryDialogOpen}
+      >
         <DialogContent className="max-w-md">
           <DialogHeader>
             <DialogTitle>Create New Category</DialogTitle>
@@ -960,14 +1163,24 @@ export default function InventoryManagement() {
               <Input
                 id="category-name"
                 value={categoryFormData.name}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, name: e.target.value })}
+                onChange={(e) =>
+                  setCategoryFormData({
+                    ...categoryFormData,
+                    name: e.target.value,
+                  })
+                }
                 placeholder="Enter category name"
               />
             </div>
 
             <div>
               <Label htmlFor="category-type">Type</Label>
-              <Select value={categoryFormData.type} onValueChange={(v) => setCategoryFormData({ ...categoryFormData, type: v as any })}>
+              <Select
+                value={categoryFormData.type}
+                onValueChange={(v) =>
+                  setCategoryFormData({ ...categoryFormData, type: v as any })
+                }
+              >
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
@@ -984,7 +1197,12 @@ export default function InventoryManagement() {
               <Textarea
                 id="category-description"
                 value={categoryFormData.description}
-                onChange={(e) => setCategoryFormData({ ...categoryFormData, description: e.target.value })}
+                onChange={(e) =>
+                  setCategoryFormData({
+                    ...categoryFormData,
+                    description: e.target.value,
+                  })
+                }
                 placeholder="Enter category description"
               />
             </div>
@@ -993,16 +1211,24 @@ export default function InventoryManagement() {
               <Switch
                 id="category-active"
                 checked={categoryFormData.isActive}
-                onCheckedChange={(checked) => setCategoryFormData({ ...categoryFormData, isActive: checked })}
+                onCheckedChange={(checked) =>
+                  setCategoryFormData({
+                    ...categoryFormData,
+                    isActive: checked,
+                  })
+                }
               />
               <Label htmlFor="category-active">Active</Label>
             </div>
 
             <div className="flex justify-end space-x-2">
-              <Button variant="outline" onClick={() => setIsCategoryDialogOpen(false)}>
+              <Button
+                variant="outline"
+                onClick={() => setIsCategoryDialogOpen(false)}
+              >
                 Cancel
               </Button>
-              <Button 
+              <Button
                 onClick={handleCreateCategory}
                 disabled={!categoryFormData.name}
               >
