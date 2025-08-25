@@ -271,6 +271,15 @@ export default function EnhancedCustomerManagement() {
     return { total, newThisMonth, typeStats };
   }, [allCustomers]);
 
+  // Reset customer form
+  const resetCustomerForm = useCallback(() => {
+    setCustomerForm({
+      firstName: "", lastName: "", companyName: "", customerType: "",
+      subType: "", phone: "", email: "", address: "", city: "",
+      district: "", country: "Uganda", notes: "",
+    });
+  }, []);
+
   // Handle customer form submission
   const handleAddCustomer = useCallback(async () => {
     try {
@@ -317,14 +326,9 @@ export default function EnhancedCustomerManagement() {
 
       await addCustomer(newCustomer);
       success('Customer added successfully!');
-      
-      // Reset form
-      setCustomerForm({
-        firstName: "", lastName: "", companyName: "", customerType: "",
-        subType: "", phone: "", email: "", address: "", city: "",
-        district: "", country: "Uganda", notes: "",
-      });
-      
+
+      // Reset form and close dialog
+      resetCustomerForm();
       setShowCustomerForm(false);
       setSelectedCustomer(newCustomer);
       setActiveTab("service-order");
@@ -449,9 +453,17 @@ export default function EnhancedCustomerManagement() {
               View All Orders
             </Link>
           </Button>
+          <Button
+            variant="outline"
+            onClick={() => setActiveTab("customers")}
+            className="border-blue-200 text-blue-700 hover:bg-blue-50"
+          >
+            <Users className="h-4 w-4 mr-2" />
+            Use Existing Customer
+          </Button>
           <Button onClick={() => setShowCustomerForm(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Add Customer
+            Add New Customer
           </Button>
         </div>
       </div>
@@ -921,15 +933,9 @@ export default function EnhancedCustomerManagement() {
                   <Plus className="h-4 w-4 mr-2" />
                   Add Customer
                 </Button>
-                <Button 
-                  variant="outline" 
-                  onClick={() => {
-                    setCustomerForm({
-                      firstName: "", lastName: "", companyName: "", customerType: "",
-                      subType: "", phone: "", email: "", address: "", city: "",
-                      district: "", country: "Uganda", notes: "",
-                    });
-                  }}
+                <Button
+                  variant="outline"
+                  onClick={resetCustomerForm}
                 >
                   Reset
                 </Button>
@@ -1218,7 +1224,13 @@ export default function EnhancedCustomerManagement() {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setShowCustomerForm(false)}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowCustomerForm(false);
+                resetCustomerForm();
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={handleAddCustomer}>
