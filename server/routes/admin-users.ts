@@ -1,5 +1,5 @@
 import { RequestHandler } from "express";
-import { User, UserRole, Permission } from "@shared/types";
+import { User, UserRole, Permission } from "../../shared/types";
 
 // Mock database - in production this would be a real database
 let users: User[] = [
