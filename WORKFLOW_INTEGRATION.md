@@ -1,6 +1,7 @@
 # Integrated Customer-Service-Order Workflow System
 
 ## Overview
+
 This document describes the enhanced workflow system that integrates customer management, service selection, and order creation into a seamless process.
 
 ## System Architecture
@@ -19,6 +20,7 @@ The new workflow follows this logical progression:
 **File**: `client/pages/customers/EnhancedCustomerManagement.tsx`
 
 **Features**:
+
 - **Unified Dashboard** with customer directory, new customer registration, and service order creation
 - **Three-Tab Interface**:
   - **Customer Directory**: Browse existing customers with advanced search and filtering
@@ -34,6 +36,7 @@ The new workflow follows this logical progression:
 **File**: `client/pages/orders/EnhancedOrderManagement.tsx`
 
 **Features**:
+
 - **Complete Order Lifecycle Management**
 - **Real-time Status Updates** with quick action buttons
 - **Status Workflow**:
@@ -48,11 +51,13 @@ The new workflow follows this logical progression:
 ### 4. **Service Management Integration**
 
 **Service Categories**:
+
 - **Vehicle Maintenance**: Oil Change, Brake Service, Engine Repair, Transmission Service
 - **Tire Services**: Installation, Rotation, Alignment, Repair
 - **Consultation**: Vehicle Inspection, Cost Estimate, Maintenance Planning
 
 **Service Templates** include:
+
 - Service name and description
 - Estimated duration and cost
 - Required tasks
@@ -61,12 +66,14 @@ The new workflow follows this logical progression:
 ## Key Features
 
 ### Customer Workflow
+
 1. **Customer Directory**: View all customers with search and filtering
 2. **Customer Details**: Complete customer information with service history
 3. **Service Order Creation**: Select services and create orders for customers
 4. **Customer Types**: Proper categorization for different customer segments
 
 ### Order Workflow
+
 1. **Order Creation**: From customer management or direct order creation
 2. **Status Tracking**: Real-time status updates with workflow management
 3. **Quick Actions**: One-click status changes (Start, Complete, Hold, Resume)
@@ -74,12 +81,14 @@ The new workflow follows this logical progression:
 5. **Advanced Filtering**: Status, priority, customer type, date range filtering
 
 ### Status Management
+
 - **Quick Status Updates**: Single-click buttons for common status changes
 - **Detailed Updates**: Full status update dialog with notes and estimated completion
 - **Visual Indicators**: Color-coded status badges with animation for active states
 - **Workflow Validation**: Proper status transition logic
 
 ### Integration Features
+
 - **Customer-Order Linking**: Direct navigation between customers and their orders
 - **Service Integration**: Predefined service templates with cost and duration estimates
 - **Real-time Updates**: Immediate feedback on status changes
@@ -88,17 +97,20 @@ The new workflow follows this logical progression:
 ## User Experience Improvements
 
 ### Dashboard Navigation
+
 - **Contextual Headers**: Unique headers for each dashboard explaining purpose
 - **Integrated Actions**: Quick access to related functions from any dashboard
 - **Visual Hierarchy**: Clear information organization with proper visual feedback
 
 ### Workflow Efficiency
+
 - **Reduced Clicks**: Streamlined process from customer to order creation
 - **Quick Actions**: Most common actions available with single clicks
 - **Smart Defaults**: Automatic population of relevant information
 - **Progressive Disclosure**: Show relevant information based on current context
 
 ### Status Management
+
 - **Visual Feedback**: Clear status indicators with appropriate colors and animations
 - **Quick Updates**: Single-click status changes for common transitions
 - **Detailed Updates**: Full update dialog for complex status changes
@@ -107,17 +119,20 @@ The new workflow follows this logical progression:
 ## Technical Implementation
 
 ### State Management
+
 - React hooks for local state management
 - Context providers for shared data (customers, visits)
 - Real-time updates with query invalidation
 
 ### Data Flow
+
 1. Customer selection/creation in customer management
 2. Service selection from predefined templates
 3. Order creation with automatic customer linking
 4. Status management throughout order lifecycle
 
 ### UI Components
+
 - Reusable components for customer cards, order tables, status badges
 - Consistent design system with proper theming
 - Responsive design for different screen sizes
@@ -126,24 +141,28 @@ The new workflow follows this logical progression:
 ## API Integration Points
 
 ### Customer Management
+
 - `GET /api/customers` - Fetch all customers
 - `POST /api/customers` - Create new customer
 - `PUT /api/customers/:id` - Update customer
 - `GET /api/customers/:id` - Get customer details
 
 ### Order Management
+
 - `GET /api/orders` - Fetch all orders with filtering
 - `POST /api/orders` - Create new order
 - `PUT /api/orders/:id/status` - Update order status
 - `GET /api/orders/:id` - Get order details
 
 ### Service Management
+
 - `GET /api/services/templates` - Get service templates
 - `POST /api/orders/:id/services` - Add service to order
 
 ## Future Enhancements
 
 ### Planned Features
+
 1. **Technician Assignment**: Automatic technician assignment based on workload and skills
 2. **Scheduling Integration**: Calendar integration for appointment scheduling
 3. **Inventory Integration**: Real-time parts availability checking
@@ -151,6 +170,7 @@ The new workflow follows this logical progression:
 5. **Advanced Analytics**: Performance metrics and business intelligence
 
 ### Workflow Improvements
+
 1. **Bulk Operations**: Mass status updates and bulk actions
 2. **Template Management**: Custom service templates creation
 3. **Customer Preferences**: Saved customer service preferences

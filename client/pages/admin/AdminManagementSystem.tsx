@@ -1,8 +1,14 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Badge } from '@/components/ui/badge';
+import React, { useState } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import {
   Users,
   Package,
@@ -24,15 +30,15 @@ import {
   Filter,
   Download,
   Upload,
-} from 'lucide-react';
-import { UserRole } from '@shared/types';
-import { useAuth } from '@/context/AuthContext';
-import UserManagement from './UserManagement';
-import InventoryManagement from './InventoryManagement';
-import ServiceManagement from './ServiceManagement';
-import ProductTypeManagement from './ProductTypeManagement';
-import SystemSettings from './SystemSettings';
-import PricingManagement from './PricingManagement';
+} from "lucide-react";
+import { UserRole } from "@shared/types";
+import { useAuth } from "@/context/AuthContext";
+import UserManagement from "./UserManagement";
+import InventoryManagement from "./InventoryManagement";
+import ServiceManagement from "./ServiceManagement";
+import ProductTypeManagement from "./ProductTypeManagement";
+import SystemSettings from "./SystemSettings";
+import PricingManagement from "./PricingManagement";
 
 export default function AdminManagementSystem() {
   const { user } = useAuth();
@@ -44,8 +50,12 @@ export default function AdminManagementSystem() {
       <div className="flex items-center justify-center h-screen">
         <div className="text-center">
           <Shield className="h-16 w-16 text-red-500 mx-auto mb-4" />
-          <h2 className="text-2xl font-bold text-red-600 mb-2">Access Denied</h2>
-          <p className="text-gray-600">Only administrators can access this system.</p>
+          <h2 className="text-2xl font-bold text-red-600 mb-2">
+            Access Denied
+          </h2>
+          <p className="text-gray-600">
+            Only administrators can access this system.
+          </p>
         </div>
       </div>
     );
@@ -69,42 +79,42 @@ export default function AdminManagementSystem() {
       value: `${systemStats.systemHealth}%`,
       icon: CheckCircle,
       color: "green",
-      description: "All systems operational"
+      description: "All systems operational",
     },
     {
       title: "Total Users",
       value: systemStats.totalUsers.toString(),
       icon: Users,
       color: "blue",
-      description: `${Math.floor(systemStats.totalUsers * 0.8)} active users`
+      description: `${Math.floor(systemStats.totalUsers * 0.8)} active users`,
     },
     {
       title: "Total Products",
       value: systemStats.totalProducts.toLocaleString(),
       icon: Package,
       color: "purple",
-      description: `${systemStats.lowStockItems} low stock items`
+      description: `${systemStats.lowStockItems} low stock items`,
     },
     {
       title: "Active Services",
       value: systemStats.totalServices.toString(),
       icon: Wrench,
       color: "orange",
-      description: "Across all service types"
+      description: "Across all service types",
     },
     {
       title: "Monthly Revenue",
       value: `$${systemStats.monthlyRevenue.toLocaleString()}`,
       icon: DollarSign,
       color: "green",
-      description: "+12% from last month"
+      description: "+12% from last month",
     },
     {
       title: "Pending Orders",
       value: systemStats.pendingOrders.toString(),
       icon: ShoppingCart,
       color: "amber",
-      description: "Require attention"
+      description: "Require attention",
     },
   ];
 
@@ -119,7 +129,7 @@ export default function AdminManagementSystem() {
     },
     {
       id: "inventory",
-      title: "Inventory Management", 
+      title: "Inventory Management",
       description: "Manage all products, stock levels, and pricing",
       icon: Package,
       color: "purple",
@@ -177,9 +187,12 @@ export default function AdminManagementSystem() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Admin Management System</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Admin Management System
+          </h1>
           <p className="text-muted-foreground">
-            Complete administrative control over users, inventory, services, and system settings
+            Complete administrative control over users, inventory, services, and
+            system settings
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -191,7 +204,10 @@ export default function AdminManagementSystem() {
             <BarChart3 className="h-4 w-4 mr-2" />
             Analytics
           </Button>
-          <Badge variant="outline" className="bg-green-50 text-green-700 border-green-200">
+          <Badge
+            variant="outline"
+            className="bg-green-50 text-green-700 border-green-200"
+          >
             <CheckCircle className="h-3 w-3 mr-1" />
             System Healthy
           </Badge>
@@ -218,7 +234,9 @@ export default function AdminManagementSystem() {
               return (
                 <Card key={index}>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                    <CardTitle className="text-sm font-medium">{stat.title}</CardTitle>
+                    <CardTitle className="text-sm font-medium">
+                      {stat.title}
+                    </CardTitle>
                     <IconComponent className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
                   <CardContent>
@@ -237,18 +255,22 @@ export default function AdminManagementSystem() {
             {managementSections.map((section) => {
               const IconComponent = section.icon;
               return (
-                <Card 
-                  key={section.id} 
+                <Card
+                  key={section.id}
                   className="cursor-pointer hover:shadow-md transition-shadow border-2 hover:border-primary/20"
                   onClick={() => setActiveTab(section.id)}
                 >
                   <CardHeader>
                     <div className="flex items-center gap-3">
-                      <div className={`h-10 w-10 rounded-lg flex items-center justify-center ${getColorClasses(section.color)}`}>
+                      <div
+                        className={`h-10 w-10 rounded-lg flex items-center justify-center ${getColorClasses(section.color)}`}
+                      >
                         <IconComponent className="h-5 w-5" />
                       </div>
                       <div className="flex-1">
-                        <CardTitle className="text-lg">{section.title}</CardTitle>
+                        <CardTitle className="text-lg">
+                          {section.title}
+                        </CardTitle>
                         <Badge variant="outline" className="text-xs mt-1">
                           {section.stats}
                         </Badge>
@@ -272,27 +294,61 @@ export default function AdminManagementSystem() {
                 <FileText className="h-5 w-5" />
                 Recent Administrative Activities
               </CardTitle>
-              <CardDescription>Latest system changes and updates</CardDescription>
+              <CardDescription>
+                Latest system changes and updates
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {[
-                  { action: "New user created", details: "Tech User #15 added to system", time: "2 hours ago", type: "user" },
-                  { action: "Inventory updated", details: "245 tire products restocked", time: "4 hours ago", type: "inventory" },
-                  { action: "Service pricing updated", details: "Oil change service price modified", time: "6 hours ago", type: "pricing" },
-                  { action: "System backup completed", details: "Full system backup successful", time: "8 hours ago", type: "system" },
+                  {
+                    action: "New user created",
+                    details: "Tech User #15 added to system",
+                    time: "2 hours ago",
+                    type: "user",
+                  },
+                  {
+                    action: "Inventory updated",
+                    details: "245 tire products restocked",
+                    time: "4 hours ago",
+                    type: "inventory",
+                  },
+                  {
+                    action: "Service pricing updated",
+                    details: "Oil change service price modified",
+                    time: "6 hours ago",
+                    type: "pricing",
+                  },
+                  {
+                    action: "System backup completed",
+                    details: "Full system backup successful",
+                    time: "8 hours ago",
+                    type: "system",
+                  },
                 ].map((activity, index) => (
-                  <div key={index} className="flex items-start gap-3 p-3 border rounded-lg hover:bg-accent/50">
-                    <div className={`h-2 w-2 rounded-full mt-2 ${
-                      activity.type === 'user' ? 'bg-blue-500' :
-                      activity.type === 'inventory' ? 'bg-purple-500' :
-                      activity.type === 'pricing' ? 'bg-green-500' :
-                      'bg-gray-500'
-                    }`} />
+                  <div
+                    key={index}
+                    className="flex items-start gap-3 p-3 border rounded-lg hover:bg-accent/50"
+                  >
+                    <div
+                      className={`h-2 w-2 rounded-full mt-2 ${
+                        activity.type === "user"
+                          ? "bg-blue-500"
+                          : activity.type === "inventory"
+                            ? "bg-purple-500"
+                            : activity.type === "pricing"
+                              ? "bg-green-500"
+                              : "bg-gray-500"
+                      }`}
+                    />
                     <div className="flex-1">
                       <p className="font-medium text-sm">{activity.action}</p>
-                      <p className="text-sm text-muted-foreground">{activity.details}</p>
-                      <p className="text-xs text-muted-foreground">{activity.time}</p>
+                      <p className="text-sm text-muted-foreground">
+                        {activity.details}
+                      </p>
+                      <p className="text-xs text-muted-foreground">
+                        {activity.time}
+                      </p>
                     </div>
                   </div>
                 ))}

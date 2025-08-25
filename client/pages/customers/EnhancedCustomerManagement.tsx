@@ -87,42 +87,108 @@ import { JobStatus, JobPriority } from "@shared/types";
 
 // Service Templates
 const SERVICE_CATEGORIES = {
-  'Vehicle Maintenance': {
+  "Vehicle Maintenance": {
     services: [
-      { id: 'oil-change', name: 'Oil Change', duration: 60, cost: 80, description: 'Engine oil and filter replacement' },
-      { id: 'brake-service', name: 'Brake Service', duration: 120, cost: 150, description: 'Brake pads and system inspection' },
-      { id: 'engine-repair', name: 'Engine Repair', duration: 240, cost: 400, description: 'Engine diagnostics and repair' },
-      { id: 'transmission-service', name: 'Transmission Service', duration: 180, cost: 250, description: 'Transmission fluid and inspection' },
+      {
+        id: "oil-change",
+        name: "Oil Change",
+        duration: 60,
+        cost: 80,
+        description: "Engine oil and filter replacement",
+      },
+      {
+        id: "brake-service",
+        name: "Brake Service",
+        duration: 120,
+        cost: 150,
+        description: "Brake pads and system inspection",
+      },
+      {
+        id: "engine-repair",
+        name: "Engine Repair",
+        duration: 240,
+        cost: 400,
+        description: "Engine diagnostics and repair",
+      },
+      {
+        id: "transmission-service",
+        name: "Transmission Service",
+        duration: 180,
+        cost: 250,
+        description: "Transmission fluid and inspection",
+      },
     ],
     icon: Car,
-    color: 'blue',
+    color: "blue",
   },
-  'Tire Services': {
+  "Tire Services": {
     services: [
-      { id: 'tire-installation', name: 'Tire Installation', duration: 90, cost: 300, description: 'New tire installation with balancing' },
-      { id: 'tire-rotation', name: 'Tire Rotation', duration: 30, cost: 50, description: 'Rotate tires for even wear' },
-      { id: 'wheel-alignment', name: 'Wheel Alignment', duration: 60, cost: 100, description: 'Adjust wheel alignment' },
-      { id: 'tire-repair', name: 'Tire Repair', duration: 45, cost: 25, description: 'Patch or plug tire puncture' },
+      {
+        id: "tire-installation",
+        name: "Tire Installation",
+        duration: 90,
+        cost: 300,
+        description: "New tire installation with balancing",
+      },
+      {
+        id: "tire-rotation",
+        name: "Tire Rotation",
+        duration: 30,
+        cost: 50,
+        description: "Rotate tires for even wear",
+      },
+      {
+        id: "wheel-alignment",
+        name: "Wheel Alignment",
+        duration: 60,
+        cost: 100,
+        description: "Adjust wheel alignment",
+      },
+      {
+        id: "tire-repair",
+        name: "Tire Repair",
+        duration: 45,
+        cost: 25,
+        description: "Patch or plug tire puncture",
+      },
     ],
     icon: Shield,
-    color: 'orange',
+    color: "orange",
   },
-  'Consultation': {
+  Consultation: {
     services: [
-      { id: 'vehicle-inspection', name: 'Vehicle Inspection', duration: 60, cost: 80, description: 'Comprehensive safety inspection' },
-      { id: 'estimate-consultation', name: 'Cost Estimate', duration: 30, cost: 0, description: 'Detailed repair cost estimate' },
-      { id: 'maintenance-planning', name: 'Maintenance Planning', duration: 45, cost: 50, description: 'Long-term maintenance schedule' },
+      {
+        id: "vehicle-inspection",
+        name: "Vehicle Inspection",
+        duration: 60,
+        cost: 80,
+        description: "Comprehensive safety inspection",
+      },
+      {
+        id: "estimate-consultation",
+        name: "Cost Estimate",
+        duration: 30,
+        cost: 0,
+        description: "Detailed repair cost estimate",
+      },
+      {
+        id: "maintenance-planning",
+        name: "Maintenance Planning",
+        duration: 45,
+        cost: 50,
+        description: "Long-term maintenance schedule",
+      },
     ],
     icon: MessageCircle,
-    color: 'green',
+    color: "green",
   },
 };
 
 const CUSTOMER_TYPES = {
-  Personal: { icon: User, color: 'orange', label: 'Personal' },
-  Government: { icon: Building2, color: 'blue', label: 'Government' },
-  NGO: { icon: Globe, color: 'green', label: 'NGO' },
-  Private: { icon: Building2, color: 'purple', label: 'Private' },
+  Personal: { icon: User, color: "orange", label: "Personal" },
+  Government: { icon: Building2, color: "blue", label: "Government" },
+  NGO: { icon: Globe, color: "green", label: "NGO" },
+  Private: { icon: Building2, color: "purple", label: "Private" },
 };
 
 interface CustomerFormData {
@@ -201,13 +267,15 @@ export default function EnhancedCustomerManagement() {
   const navigate = useNavigate();
 
   // State management
-  const [activeTab, setActiveTab] = useState<"customers" | "new-customer" | "service-order">("customers");
+  const [activeTab, setActiveTab] = useState<
+    "customers" | "new-customer" | "service-order"
+  >("customers");
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
   const [showCustomerForm, setShowCustomerForm] = useState(false);
   const [showServiceDialog, setShowServiceDialog] = useState(false);
   const [selectedService, setSelectedService] = useState<any>(null);
-  
+
   // Form data
   const [customerForm, setCustomerForm] = useState<CustomerFormData>({
     firstName: "",
@@ -235,38 +303,46 @@ export default function EnhancedCustomerManagement() {
   // Combined customer data
   const allCustomers = useMemo(() => {
     const combined = [...storedCustomers, ...SAMPLE_CUSTOMERS];
-    return combined.filter((customer, index, self) => 
-      index === self.findIndex(c => c.id === customer.id)
+    return combined.filter(
+      (customer, index, self) =>
+        index === self.findIndex((c) => c.id === customer.id),
     );
   }, [storedCustomers]);
 
   // Filtered customers
   const filteredCustomers = useMemo(() => {
     if (!searchTerm.trim()) return allCustomers;
-    
+
     const term = searchTerm.toLowerCase();
-    return allCustomers.filter(customer =>
-      customer.name.toLowerCase().includes(term) ||
-      customer.phone.includes(term) ||
-      customer.email?.toLowerCase().includes(term) ||
-      customer.location?.toLowerCase().includes(term) ||
-      customer.type.toLowerCase().includes(term)
+    return allCustomers.filter(
+      (customer) =>
+        customer.name.toLowerCase().includes(term) ||
+        customer.phone.includes(term) ||
+        customer.email?.toLowerCase().includes(term) ||
+        customer.location?.toLowerCase().includes(term) ||
+        customer.type.toLowerCase().includes(term),
     );
   }, [allCustomers, searchTerm]);
 
   // Statistics
   const customerStats = useMemo(() => {
     const total = allCustomers.length;
-    const newThisMonth = allCustomers.filter(c => {
+    const newThisMonth = allCustomers.filter((c) => {
       const regDate = new Date(c.registeredDate || 0);
       const now = new Date();
-      return regDate.getMonth() === now.getMonth() && regDate.getFullYear() === now.getFullYear();
+      return (
+        regDate.getMonth() === now.getMonth() &&
+        regDate.getFullYear() === now.getFullYear()
+      );
     }).length;
 
-    const typeStats = allCustomers.reduce((acc, customer) => {
-      acc[customer.type] = (acc[customer.type] || 0) + 1;
-      return acc;
-    }, {} as Record<string, number>);
+    const typeStats = allCustomers.reduce(
+      (acc, customer) => {
+        acc[customer.type] = (acc[customer.type] || 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    );
 
     return { total, newThisMonth, typeStats };
   }, [allCustomers]);
@@ -274,9 +350,18 @@ export default function EnhancedCustomerManagement() {
   // Reset customer form
   const resetCustomerForm = useCallback(() => {
     setCustomerForm({
-      firstName: "", lastName: "", companyName: "", customerType: "",
-      subType: "", phone: "", email: "", address: "", city: "",
-      district: "", country: "Uganda", notes: "",
+      firstName: "",
+      lastName: "",
+      companyName: "",
+      customerType: "",
+      subType: "",
+      phone: "",
+      email: "",
+      address: "",
+      city: "",
+      district: "",
+      country: "Uganda",
+      notes: "",
     });
   }, []);
 
@@ -284,27 +369,27 @@ export default function EnhancedCustomerManagement() {
   const handleAddCustomer = useCallback(async () => {
     try {
       if (!customerForm.customerType) {
-        error('Please select a customer type');
+        error("Please select a customer type");
         return;
       }
 
       const isPersonal = customerForm.customerType === "Personal";
       if (isPersonal && (!customerForm.firstName || !customerForm.lastName)) {
-        error('First name and last name are required for personal customers');
+        error("First name and last name are required for personal customers");
         return;
       }
 
       if (!isPersonal && !customerForm.companyName) {
-        error('Company name is required for business customers');
+        error("Company name is required for business customers");
         return;
       }
 
       if (!customerForm.phone) {
-        error('Phone number is required');
+        error("Phone number is required");
         return;
       }
 
-      const customerName = isPersonal 
+      const customerName = isPersonal
         ? `${customerForm.firstName} ${customerForm.lastName}`.trim()
         : customerForm.companyName;
 
@@ -315,8 +400,14 @@ export default function EnhancedCustomerManagement() {
         subType: customerForm.subType,
         phone: customerForm.phone,
         email: customerForm.email,
-        location: [customerForm.address, customerForm.city, customerForm.district, customerForm.country]
-          .filter(Boolean).join(", "),
+        location: [
+          customerForm.address,
+          customerForm.city,
+          customerForm.district,
+          customerForm.country,
+        ]
+          .filter(Boolean)
+          .join(", "),
         registeredDate: new Date().toISOString(),
         lastVisit: new Date().toISOString(),
         totalOrders: 0,
@@ -325,17 +416,16 @@ export default function EnhancedCustomerManagement() {
       };
 
       await addCustomer(newCustomer);
-      success('Customer added successfully!');
+      success("Customer added successfully!");
 
       // Reset form and close dialog
       resetCustomerForm();
       setShowCustomerForm(false);
       setSelectedCustomer(newCustomer);
       setActiveTab("service-order");
-      
     } catch (err) {
-      console.error('Error adding customer:', err);
-      error('Failed to add customer. Please try again.');
+      console.error("Error adding customer:", err);
+      error("Failed to add customer. Please try again.");
     }
   }, [customerForm, addCustomer, success, error]);
 
@@ -343,20 +433,21 @@ export default function EnhancedCustomerManagement() {
   const handleCreateServiceOrder = useCallback(async () => {
     try {
       if (!selectedCustomer) {
-        error('No customer selected');
+        error("No customer selected");
         return;
       }
 
       if (!serviceOrderForm.serviceCategory || !serviceOrderForm.serviceId) {
-        error('Please select a service');
+        error("Please select a service");
         return;
       }
 
-      const service = SERVICE_CATEGORIES[serviceOrderForm.serviceCategory as keyof typeof SERVICE_CATEGORIES]
-        ?.services.find(s => s.id === serviceOrderForm.serviceId);
+      const service = SERVICE_CATEGORIES[
+        serviceOrderForm.serviceCategory as keyof typeof SERVICE_CATEGORIES
+      ]?.services.find((s) => s.id === serviceOrderForm.serviceId);
 
       if (!service) {
-        error('Selected service not found');
+        error("Selected service not found");
         return;
       }
 
@@ -364,7 +455,7 @@ export default function EnhancedCustomerManagement() {
       const visit = addVisit({
         customerId: selectedCustomer.id,
         customerName: selectedCustomer.name,
-        visitType: 'Service',
+        visitType: "Service",
         service: service.name,
         arrivedAt: new Date().toISOString(),
         notes: serviceOrderForm.notes,
@@ -388,27 +479,31 @@ export default function EnhancedCustomerManagement() {
         notes: serviceOrderForm.notes,
       };
 
-      success(`Service order created successfully! Order ID: ${orderData.jobNumber}`);
-      
+      success(
+        `Service order created successfully! Order ID: ${orderData.jobNumber}`,
+      );
+
       // Reset form
       setServiceOrderForm({
-        serviceCategory: "", serviceId: "", priority: JobPriority.NORMAL,
-        scheduledDate: "", notes: "",
+        serviceCategory: "",
+        serviceId: "",
+        priority: JobPriority.NORMAL,
+        scheduledDate: "",
+        notes: "",
       });
-      
+
       setShowServiceDialog(false);
-      
+
       // Navigate to order management
-      navigate('/orders', { 
-        state: { 
+      navigate("/orders", {
+        state: {
           newOrder: orderData,
-          highlightOrder: orderData.id 
-        }
+          highlightOrder: orderData.id,
+        },
       });
-      
     } catch (err) {
-      console.error('Error creating service order:', err);
-      error('Failed to create service order. Please try again.');
+      console.error("Error creating service order:", err);
+      error("Failed to create service order. Please try again.");
     }
   }, [selectedCustomer, serviceOrderForm, addVisit, success, error, navigate]);
 
@@ -425,14 +520,19 @@ export default function EnhancedCustomerManagement() {
   // Get customer type styling
   const getCustomerTypeColor = (type: string) => {
     const config = CUSTOMER_TYPES[type as keyof typeof CUSTOMER_TYPES];
-    if (!config) return 'bg-gray-100 text-gray-800';
-    
+    if (!config) return "bg-gray-100 text-gray-800";
+
     switch (config.color) {
-      case 'blue': return 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
-      case 'green': return 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
-      case 'purple': return 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300';
-      case 'orange': return 'bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300';
-      default: return 'bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300';
+      case "blue":
+        return "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300";
+      case "green":
+        return "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300";
+      case "purple":
+        return "bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-300";
+      case "orange":
+        return "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-300";
+      default:
+        return "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300";
     }
   };
 
@@ -441,9 +541,12 @@ export default function EnhancedCustomerManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Customer & Service Management</h1>
+          <h1 className="text-3xl font-bold tracking-tight">
+            Customer & Service Management
+          </h1>
           <p className="text-muted-foreground">
-            Manage customers and create service orders in one integrated workflow
+            Manage customers and create service orders in one integrated
+            workflow
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -472,7 +575,9 @@ export default function EnhancedCustomerManagement() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Customers
+            </CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -486,11 +591,13 @@ export default function EnhancedCustomerManagement() {
         {Object.entries(customerStats.typeStats).map(([type, count]) => {
           const config = CUSTOMER_TYPES[type as keyof typeof CUSTOMER_TYPES];
           const IconComponent = config?.icon || User;
-          
+
           return (
             <Card key={type}>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">{config?.label || type}</CardTitle>
+                <CardTitle className="text-sm font-medium">
+                  {config?.label || type}
+                </CardTitle>
                 <IconComponent className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -506,14 +613,19 @@ export default function EnhancedCustomerManagement() {
 
       {/* Quick Action Cards */}
       <div className="grid gap-4 md:grid-cols-2">
-        <Card className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveTab("customers")}>
+        <Card
+          className="border-2 border-blue-200 bg-gradient-to-br from-blue-50 to-blue-100/50 hover:shadow-md transition-shadow cursor-pointer"
+          onClick={() => setActiveTab("customers")}
+        >
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Users className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-blue-900">Use Existing Customer</h3>
+                <h3 className="font-semibold text-lg text-blue-900">
+                  Use Existing Customer
+                </h3>
                 <p className="text-sm text-blue-700">
                   Select from {allCustomers.length} registered customers
                   {selectedCustomer && ` • ${selectedCustomer.name} selected`}
@@ -524,14 +636,19 @@ export default function EnhancedCustomerManagement() {
           </CardContent>
         </Card>
 
-        <Card className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 hover:shadow-md transition-shadow cursor-pointer" onClick={() => setActiveTab("new-customer")}>
+        <Card
+          className="border-2 border-green-200 bg-gradient-to-br from-green-50 to-green-100/50 hover:shadow-md transition-shadow cursor-pointer"
+          onClick={() => setActiveTab("new-customer")}
+        >
           <CardContent className="p-6">
             <div className="flex items-center gap-4">
               <div className="h-12 w-12 bg-green-600 rounded-lg flex items-center justify-center">
                 <Plus className="h-6 w-6 text-white" />
               </div>
               <div className="flex-1">
-                <h3 className="font-semibold text-lg text-green-900">Add New Customer</h3>
+                <h3 className="font-semibold text-lg text-green-900">
+                  Add New Customer
+                </h3>
                 <p className="text-sm text-green-700">
                   Register a new customer and create service order
                 </p>
@@ -554,15 +671,22 @@ export default function EnhancedCustomerManagement() {
             )}
           </TabsTrigger>
           <TabsTrigger value="new-customer">Add New Customer</TabsTrigger>
-          <TabsTrigger value="service-order" disabled={!selectedCustomer} className={cn(
-            "relative",
-            selectedCustomer && "text-blue-600 font-medium"
-          )}>
+          <TabsTrigger
+            value="service-order"
+            disabled={!selectedCustomer}
+            className={cn(
+              "relative",
+              selectedCustomer && "text-blue-600 font-medium",
+            )}
+          >
             Create Service Order
             {selectedCustomer && (
               <div className="ml-2">
-                <Badge variant="default" className="text-xs bg-blue-100 text-blue-800">
-                  {selectedCustomer.name.split(' ')[0]}
+                <Badge
+                  variant="default"
+                  className="text-xs bg-blue-100 text-blue-800"
+                >
+                  {selectedCustomer.name.split(" ")[0]}
                 </Badge>
               </div>
             )}
@@ -580,18 +704,22 @@ export default function EnhancedCustomerManagement() {
                     <ClipboardList className="h-5 w-5 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-gray-900">Create Service Order</h3>
+                    <h3 className="font-semibold text-gray-900">
+                      Create Service Order
+                    </h3>
                     <p className="text-sm text-gray-600">
                       {selectedCustomer
                         ? `Ready to create order for ${selectedCustomer.name}`
-                        : "Select a customer below to create a service order"
-                      }
+                        : "Select a customer below to create a service order"}
                     </p>
                   </div>
                 </div>
                 {selectedCustomer ? (
                   <div className="flex items-center gap-2">
-                    <Badge variant="default" className="bg-green-100 text-green-800 border-green-300">
+                    <Badge
+                      variant="default"
+                      className="bg-green-100 text-green-800 border-green-300"
+                    >
                       <CheckCircle className="h-3 w-3 mr-1" />
                       {selectedCustomer.name} Selected
                     </Badge>
@@ -621,12 +749,16 @@ export default function EnhancedCustomerManagement() {
                 Customer Directory
               </CardTitle>
               <CardDescription>
-                Browse existing customers and click "Create Order" to initiate service orders
+                Browse existing customers and click "Create Order" to initiate
+                service orders
                 {selectedCustomer && (
                   <div className="mt-2 p-2 bg-blue-50 border border-blue-200 rounded-md">
                     <div className="flex items-center gap-2 text-sm text-blue-800">
                       <CheckCircle className="h-4 w-4" />
-                      <span className="font-medium">{selectedCustomer.name}</span> selected for service order.
+                      <span className="font-medium">
+                        {selectedCustomer.name}
+                      </span>{" "}
+                      selected for service order.
                       <Button
                         variant="link"
                         size="sm"
@@ -668,9 +800,7 @@ export default function EnhancedCustomerManagement() {
           {/* Customer Table */}
           <Card>
             <CardHeader>
-              <CardTitle>
-                Customers ({filteredCustomers.length})
-              </CardTitle>
+              <CardTitle>Customers ({filteredCustomers.length})</CardTitle>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -686,7 +816,10 @@ export default function EnhancedCustomerManagement() {
                   </TableHeader>
                   <TableBody>
                     {filteredCustomers.map((customer) => (
-                      <TableRow key={customer.id} className="hover:bg-accent/50">
+                      <TableRow
+                        key={customer.id}
+                        className="hover:bg-accent/50"
+                      >
                         <TableCell>
                           <div className="space-y-1">
                             <div className="font-medium">{customer.name}</div>
@@ -694,7 +827,10 @@ export default function EnhancedCustomerManagement() {
                               ID: {customer.id}
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              Registered: {new Date(customer.registeredDate).toLocaleDateString()}
+                              Registered:{" "}
+                              {new Date(
+                                customer.registeredDate,
+                              ).toLocaleDateString()}
                             </div>
                           </div>
                         </TableCell>
@@ -718,8 +854,8 @@ export default function EnhancedCustomerManagement() {
                         </TableCell>
                         <TableCell>
                           <div className="space-y-2">
-                            <Badge 
-                              variant="outline" 
+                            <Badge
+                              variant="outline"
                               className={getCustomerTypeColor(customer.type)}
                             >
                               {customer.type}
@@ -727,8 +863,12 @@ export default function EnhancedCustomerManagement() {
                             <div className="text-xs text-muted-foreground">
                               {customer.subType}
                             </div>
-                            <Badge 
-                              variant={customer.status === 'Active' ? 'default' : 'secondary'}
+                            <Badge
+                              variant={
+                                customer.status === "Active"
+                                  ? "default"
+                                  : "secondary"
+                              }
                               className="text-xs"
                             >
                               {customer.status}
@@ -741,7 +881,10 @@ export default function EnhancedCustomerManagement() {
                               {customer.totalOrders} orders
                             </div>
                             <div className="text-xs text-muted-foreground">
-                              Last visit: {new Date(customer.lastVisit).toLocaleDateString()}
+                              Last visit:{" "}
+                              {new Date(
+                                customer.lastVisit,
+                              ).toLocaleDateString()}
                             </div>
                             {customer.lastService && (
                               <div className="text-xs text-muted-foreground">
@@ -754,7 +897,10 @@ export default function EnhancedCustomerManagement() {
                           <div className="flex items-center justify-end gap-2">
                             {selectedCustomer?.id === customer.id ? (
                               <div className="flex items-center gap-2">
-                                <Badge variant="default" className="bg-green-100 text-green-800 border-green-300">
+                                <Badge
+                                  variant="default"
+                                  className="bg-green-100 text-green-800 border-green-300"
+                                >
                                   <CheckCircle className="h-3 w-3 mr-1" />
                                   Selected
                                 </Badge>
@@ -773,7 +919,9 @@ export default function EnhancedCustomerManagement() {
                                 <Button
                                   variant="default"
                                   size="sm"
-                                  onClick={() => handleSelectCustomerForService(customer)}
+                                  onClick={() =>
+                                    handleSelectCustomerForService(customer)
+                                  }
                                   className="bg-blue-600 hover:bg-blue-700"
                                 >
                                   <ClipboardList className="h-4 w-4 mr-1" />
@@ -787,7 +935,9 @@ export default function EnhancedCustomerManagement() {
                                     </Button>
                                   </DropdownMenuTrigger>
                                   <DropdownMenuContent align="end">
-                                    <DropdownMenuLabel>Customer Actions</DropdownMenuLabel>
+                                    <DropdownMenuLabel>
+                                      Customer Actions
+                                    </DropdownMenuLabel>
                                     <DropdownMenuSeparator />
                                     <DropdownMenuItem asChild>
                                       <Link to={`/customers/${customer.id}`}>
@@ -800,7 +950,11 @@ export default function EnhancedCustomerManagement() {
                                       Edit Customer
                                     </DropdownMenuItem>
                                     <DropdownMenuSeparator />
-                                    <DropdownMenuItem onClick={() => handleSelectCustomerForService(customer)}>
+                                    <DropdownMenuItem
+                                      onClick={() =>
+                                        handleSelectCustomerForService(customer)
+                                      }
+                                    >
                                       <ClipboardList className="h-4 w-4 mr-2" />
                                       Select for Service Order
                                     </DropdownMenuItem>
@@ -835,10 +989,17 @@ export default function EnhancedCustomerManagement() {
             <CardContent className="space-y-6">
               {/* Customer Type Selection */}
               <div className="space-y-3">
-                <Label className="text-base font-semibold">Customer Type *</Label>
+                <Label className="text-base font-semibold">
+                  Customer Type *
+                </Label>
                 <RadioGroup
                   value={customerForm.customerType}
-                  onValueChange={(value) => setCustomerForm(prev => ({ ...prev, customerType: value as any }))}
+                  onValueChange={(value) =>
+                    setCustomerForm((prev) => ({
+                      ...prev,
+                      customerType: value as any,
+                    }))
+                  }
                   className="grid grid-cols-2 gap-3"
                 >
                   {Object.entries(CUSTOMER_TYPES).map(([key, type]) => {
@@ -856,7 +1017,9 @@ export default function EnhancedCustomerManagement() {
                         <div className="flex items-center gap-2">
                           <RadioGroupItem value={key} id={key} />
                           <IconComponent className="h-4 w-4" />
-                          <span className="font-medium text-sm">{type.label}</span>
+                          <span className="font-medium text-sm">
+                            {type.label}
+                          </span>
                         </div>
                       </label>
                     );
@@ -873,7 +1036,12 @@ export default function EnhancedCustomerManagement() {
                       <Input
                         id="firstName"
                         value={customerForm.firstName}
-                        onChange={(e) => setCustomerForm(prev => ({ ...prev, firstName: e.target.value }))}
+                        onChange={(e) =>
+                          setCustomerForm((prev) => ({
+                            ...prev,
+                            firstName: e.target.value,
+                          }))
+                        }
                         placeholder="Enter first name"
                       />
                     </div>
@@ -882,18 +1050,30 @@ export default function EnhancedCustomerManagement() {
                       <Input
                         id="lastName"
                         value={customerForm.lastName}
-                        onChange={(e) => setCustomerForm(prev => ({ ...prev, lastName: e.target.value }))}
+                        onChange={(e) =>
+                          setCustomerForm((prev) => ({
+                            ...prev,
+                            lastName: e.target.value,
+                          }))
+                        }
                         placeholder="Enter last name"
                       />
                     </div>
                   </>
                 ) : (
                   <div className="md:col-span-2 space-y-2">
-                    <Label htmlFor="companyName">Organization/Company Name *</Label>
+                    <Label htmlFor="companyName">
+                      Organization/Company Name *
+                    </Label>
                     <Input
                       id="companyName"
                       value={customerForm.companyName}
-                      onChange={(e) => setCustomerForm(prev => ({ ...prev, companyName: e.target.value }))}
+                      onChange={(e) =>
+                        setCustomerForm((prev) => ({
+                          ...prev,
+                          companyName: e.target.value,
+                        }))
+                      }
                       placeholder="Enter organization or company name"
                     />
                   </div>
@@ -907,7 +1087,12 @@ export default function EnhancedCustomerManagement() {
                   <Input
                     id="phone"
                     value={customerForm.phone}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, phone: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        phone: e.target.value,
+                      }))
+                    }
                     placeholder="+256 700 123 456"
                   />
                 </div>
@@ -917,7 +1102,12 @@ export default function EnhancedCustomerManagement() {
                     id="email"
                     type="email"
                     value={customerForm.email}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, email: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        email: e.target.value,
+                      }))
+                    }
                     placeholder="email@example.com"
                   />
                 </div>
@@ -930,7 +1120,12 @@ export default function EnhancedCustomerManagement() {
                   <Input
                     id="city"
                     value={customerForm.city}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, city: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        city: e.target.value,
+                      }))
+                    }
                     placeholder="City"
                   />
                 </div>
@@ -939,7 +1134,12 @@ export default function EnhancedCustomerManagement() {
                   <Input
                     id="district"
                     value={customerForm.district}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, district: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        district: e.target.value,
+                      }))
+                    }
                     placeholder="District"
                   />
                 </div>
@@ -948,7 +1148,12 @@ export default function EnhancedCustomerManagement() {
                   <Input
                     id="country"
                     value={customerForm.country}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, country: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        country: e.target.value,
+                      }))
+                    }
                     placeholder="Uganda"
                   />
                 </div>
@@ -960,7 +1165,12 @@ export default function EnhancedCustomerManagement() {
                 <Textarea
                   id="notes"
                   value={customerForm.notes}
-                  onChange={(e) => setCustomerForm(prev => ({ ...prev, notes: e.target.value }))}
+                  onChange={(e) =>
+                    setCustomerForm((prev) => ({
+                      ...prev,
+                      notes: e.target.value,
+                    }))
+                  }
                   placeholder="Additional notes about the customer..."
                   rows={3}
                 />
@@ -971,10 +1181,7 @@ export default function EnhancedCustomerManagement() {
                   <Plus className="h-4 w-4 mr-2" />
                   Add Customer
                 </Button>
-                <Button
-                  variant="outline"
-                  onClick={resetCustomerForm}
-                >
+                <Button variant="outline" onClick={resetCustomerForm}>
                   Reset
                 </Button>
               </div>
@@ -997,20 +1204,31 @@ export default function EnhancedCustomerManagement() {
                 <CardContent>
                   <div className="flex items-center gap-4">
                     <div className="h-12 w-12 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center text-white font-medium">
-                      {selectedCustomer.name.split(' ').map((n: string) => n[0]).join('').substring(0, 2)}
+                      {selectedCustomer.name
+                        .split(" ")
+                        .map((n: string) => n[0])
+                        .join("")
+                        .substring(0, 2)}
                     </div>
                     <div className="flex-1">
-                      <h3 className="font-medium text-lg">{selectedCustomer.name}</h3>
+                      <h3 className="font-medium text-lg">
+                        {selectedCustomer.name}
+                      </h3>
                       <div className="flex items-center gap-4 text-sm text-muted-foreground">
                         <span>{selectedCustomer.phone}</span>
                         <span>{selectedCustomer.email}</span>
-                        <Badge variant="outline" className={getCustomerTypeColor(selectedCustomer.type)}>
+                        <Badge
+                          variant="outline"
+                          className={getCustomerTypeColor(
+                            selectedCustomer.type,
+                          )}
+                        >
                           {selectedCustomer.type}
                         </Badge>
                       </div>
                     </div>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       onClick={() => {
                         setSelectedCustomer(null);
                         setActiveTab("customers");
@@ -1036,23 +1254,31 @@ export default function EnhancedCustomerManagement() {
                     <Label>Service Category</Label>
                     <Select
                       value={serviceOrderForm.serviceCategory}
-                      onValueChange={(value) => setServiceOrderForm(prev => ({ ...prev, serviceCategory: value, serviceId: "" }))}
+                      onValueChange={(value) =>
+                        setServiceOrderForm((prev) => ({
+                          ...prev,
+                          serviceCategory: value,
+                          serviceId: "",
+                        }))
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue placeholder="Select service category" />
                       </SelectTrigger>
                       <SelectContent>
-                        {Object.entries(SERVICE_CATEGORIES).map(([key, category]) => {
-                          const IconComponent = category.icon;
-                          return (
-                            <SelectItem key={key} value={key}>
-                              <div className="flex items-center gap-2">
-                                <IconComponent className="h-4 w-4" />
-                                {key}
-                              </div>
-                            </SelectItem>
-                          );
-                        })}
+                        {Object.entries(SERVICE_CATEGORIES).map(
+                          ([key, category]) => {
+                            const IconComponent = category.icon;
+                            return (
+                              <SelectItem key={key} value={key}>
+                                <div className="flex items-center gap-2">
+                                  <IconComponent className="h-4 w-4" />
+                                  {key}
+                                </div>
+                              </SelectItem>
+                            );
+                          },
+                        )}
                       </SelectContent>
                     </Select>
                   </div>
@@ -1062,27 +1288,38 @@ export default function EnhancedCustomerManagement() {
                     <div className="space-y-3">
                       <Label>Specific Service</Label>
                       <div className="grid gap-3 md:grid-cols-2">
-                        {SERVICE_CATEGORIES[serviceOrderForm.serviceCategory as keyof typeof SERVICE_CATEGORIES]?.services.map((service) => (
-                          <Card 
+                        {SERVICE_CATEGORIES[
+                          serviceOrderForm.serviceCategory as keyof typeof SERVICE_CATEGORIES
+                        ]?.services.map((service) => (
+                          <Card
                             key={service.id}
                             className={cn(
                               "cursor-pointer transition-all hover:shadow-md",
-                              serviceOrderForm.serviceId === service.id 
-                                ? "ring-2 ring-primary bg-primary/5" 
-                                : "hover:bg-accent/50"
+                              serviceOrderForm.serviceId === service.id
+                                ? "ring-2 ring-primary bg-primary/5"
+                                : "hover:bg-accent/50",
                             )}
-                            onClick={() => setServiceOrderForm(prev => ({ ...prev, serviceId: service.id }))}
+                            onClick={() =>
+                              setServiceOrderForm((prev) => ({
+                                ...prev,
+                                serviceId: service.id,
+                              }))
+                            }
                           >
                             <CardContent className="p-4">
                               <div className="space-y-2">
                                 <div className="flex items-center justify-between">
-                                  <h4 className="font-medium">{service.name}</h4>
+                                  <h4 className="font-medium">
+                                    {service.name}
+                                  </h4>
                                   <Badge variant="outline" className="text-xs">
-                                    <DollarSign className="h-3 w-3 mr-1" />
-                                    ${service.cost}
+                                    <DollarSign className="h-3 w-3 mr-1" />$
+                                    {service.cost}
                                   </Badge>
                                 </div>
-                                <p className="text-sm text-muted-foreground">{service.description}</p>
+                                <p className="text-sm text-muted-foreground">
+                                  {service.description}
+                                </p>
                                 <div className="flex items-center gap-4 text-xs text-muted-foreground">
                                   <span className="flex items-center gap-1">
                                     <Clock className="h-3 w-3" />
@@ -1101,13 +1338,18 @@ export default function EnhancedCustomerManagement() {
                   {serviceOrderForm.serviceId && (
                     <div className="space-y-4 p-4 border rounded-lg bg-accent/20">
                       <h4 className="font-medium">Order Details</h4>
-                      
+
                       <div className="grid gap-4 md:grid-cols-2">
                         <div className="space-y-2">
                           <Label>Priority</Label>
                           <Select
                             value={serviceOrderForm.priority}
-                            onValueChange={(value) => setServiceOrderForm(prev => ({ ...prev, priority: value as JobPriority }))}
+                            onValueChange={(value) =>
+                              setServiceOrderForm((prev) => ({
+                                ...prev,
+                                priority: value as JobPriority,
+                              }))
+                            }
                           >
                             <SelectTrigger>
                               <SelectValue />
@@ -1115,19 +1357,25 @@ export default function EnhancedCustomerManagement() {
                             <SelectContent>
                               {Object.values(JobPriority).map((priority) => (
                                 <SelectItem key={priority} value={priority}>
-                                  {priority.charAt(0).toUpperCase() + priority.slice(1)}
+                                  {priority.charAt(0).toUpperCase() +
+                                    priority.slice(1)}
                                 </SelectItem>
                               ))}
                             </SelectContent>
                           </Select>
                         </div>
-                        
+
                         <div className="space-y-2">
                           <Label>Scheduled Date (Optional)</Label>
                           <Input
                             type="datetime-local"
                             value={serviceOrderForm.scheduledDate}
-                            onChange={(e) => setServiceOrderForm(prev => ({ ...prev, scheduledDate: e.target.value }))}
+                            onChange={(e) =>
+                              setServiceOrderForm((prev) => ({
+                                ...prev,
+                                scheduledDate: e.target.value,
+                              }))
+                            }
                           />
                         </div>
                       </div>
@@ -1136,21 +1384,37 @@ export default function EnhancedCustomerManagement() {
                         <Label>Additional Notes</Label>
                         <Textarea
                           value={serviceOrderForm.notes}
-                          onChange={(e) => setServiceOrderForm(prev => ({ ...prev, notes: e.target.value }))}
+                          onChange={(e) =>
+                            setServiceOrderForm((prev) => ({
+                              ...prev,
+                              notes: e.target.value,
+                            }))
+                          }
                           placeholder="Any special instructions or notes for this service order..."
                           rows={3}
                         />
                       </div>
 
                       <div className="flex gap-4">
-                        <Button onClick={handleCreateServiceOrder} className="flex-1">
+                        <Button
+                          onClick={handleCreateServiceOrder}
+                          className="flex-1"
+                        >
                           <CheckCircle className="h-4 w-4 mr-2" />
                           Create Service Order
                         </Button>
-                        <Button variant="outline" onClick={() => setServiceOrderForm({
-                          serviceCategory: "", serviceId: "", priority: JobPriority.NORMAL,
-                          scheduledDate: "", notes: "",
-                        })}>
+                        <Button
+                          variant="outline"
+                          onClick={() =>
+                            setServiceOrderForm({
+                              serviceCategory: "",
+                              serviceId: "",
+                              priority: JobPriority.NORMAL,
+                              scheduledDate: "",
+                              notes: "",
+                            })
+                          }
+                        >
                           Reset
                         </Button>
                       </div>
@@ -1163,15 +1427,21 @@ export default function EnhancedCustomerManagement() {
             <Card>
               <CardContent className="p-6 text-center">
                 <User className="h-12 w-12 mx-auto text-muted-foreground mb-4" />
-                <h3 className="text-lg font-medium mb-2">No Customer Selected</h3>
+                <h3 className="text-lg font-medium mb-2">
+                  No Customer Selected
+                </h3>
                 <p className="text-muted-foreground mb-4">
-                  Please select a customer from the directory or add a new customer first.
+                  Please select a customer from the directory or add a new
+                  customer first.
                 </p>
                 <div className="flex gap-2 justify-center">
                   <Button onClick={() => setActiveTab("customers")}>
                     Select Existing Customer
                   </Button>
-                  <Button variant="outline" onClick={() => setActiveTab("new-customer")}>
+                  <Button
+                    variant="outline"
+                    onClick={() => setActiveTab("new-customer")}
+                  >
                     Add New Customer
                   </Button>
                 </div>
@@ -1197,7 +1467,12 @@ export default function EnhancedCustomerManagement() {
               <Label>Customer Type *</Label>
               <Select
                 value={customerForm.customerType}
-                onValueChange={(value) => setCustomerForm(prev => ({ ...prev, customerType: value as any }))}
+                onValueChange={(value) =>
+                  setCustomerForm((prev) => ({
+                    ...prev,
+                    customerType: value as any,
+                  }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select customer type" />
@@ -1218,7 +1493,12 @@ export default function EnhancedCustomerManagement() {
                   <Label>First Name *</Label>
                   <Input
                     value={customerForm.firstName}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, firstName: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        firstName: e.target.value,
+                      }))
+                    }
                     placeholder="First name"
                   />
                 </div>
@@ -1226,7 +1506,12 @@ export default function EnhancedCustomerManagement() {
                   <Label>Last Name *</Label>
                   <Input
                     value={customerForm.lastName}
-                    onChange={(e) => setCustomerForm(prev => ({ ...prev, lastName: e.target.value }))}
+                    onChange={(e) =>
+                      setCustomerForm((prev) => ({
+                        ...prev,
+                        lastName: e.target.value,
+                      }))
+                    }
                     placeholder="Last name"
                   />
                 </div>
@@ -1236,7 +1521,12 @@ export default function EnhancedCustomerManagement() {
                 <Label>Company Name *</Label>
                 <Input
                   value={customerForm.companyName}
-                  onChange={(e) => setCustomerForm(prev => ({ ...prev, companyName: e.target.value }))}
+                  onChange={(e) =>
+                    setCustomerForm((prev) => ({
+                      ...prev,
+                      companyName: e.target.value,
+                    }))
+                  }
                   placeholder="Company name"
                 />
               </div>
@@ -1246,7 +1536,12 @@ export default function EnhancedCustomerManagement() {
               <Label>Phone Number *</Label>
               <Input
                 value={customerForm.phone}
-                onChange={(e) => setCustomerForm(prev => ({ ...prev, phone: e.target.value }))}
+                onChange={(e) =>
+                  setCustomerForm((prev) => ({
+                    ...prev,
+                    phone: e.target.value,
+                  }))
+                }
                 placeholder="+256 700 123 456"
               />
             </div>
@@ -1256,7 +1551,12 @@ export default function EnhancedCustomerManagement() {
               <Input
                 type="email"
                 value={customerForm.email}
-                onChange={(e) => setCustomerForm(prev => ({ ...prev, email: e.target.value }))}
+                onChange={(e) =>
+                  setCustomerForm((prev) => ({
+                    ...prev,
+                    email: e.target.value,
+                  }))
+                }
                 placeholder="email@example.com"
               />
             </div>

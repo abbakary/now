@@ -1,17 +1,23 @@
-import React, { useState, useCallback, useMemo } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState, useCallback, useMemo } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -19,7 +25,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 import {
   Dialog,
   DialogContent,
@@ -27,7 +33,7 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -35,8 +41,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+} from "@/components/ui/dropdown-menu";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Plus,
   Search,
@@ -54,9 +60,9 @@ import {
   Eye,
   Upload,
   Download,
-} from 'lucide-react';
-import { useFeedback } from '@/components/ui/status-popup';
-import { cn } from '@/lib/utils';
+} from "lucide-react";
+import { useFeedback } from "@/components/ui/status-popup";
+import { cn } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -65,46 +71,46 @@ interface Product {
   model?: string;
   category: string;
   subcategory?: string;
-  type: 'physical' | 'service_item' | 'consumable';
+  type: "physical" | "service_item" | "consumable";
   sku: string;
   barcode?: string;
   description: string;
-  
+
   // Stock Information
   currentStock: number;
   minStock: number;
   maxStock: number;
   reservedStock: number;
   availableStock: number;
-  
+
   // Pricing
   costPrice: number;
   sellingPrice: number;
   wholesalePrice?: number;
   margin: number;
   taxRate: number;
-  
+
   // Location & Supplier
   location: string;
   warehouse: string;
   supplier: string;
   supplierSku?: string;
-  
+
   // Tracking
   lastRestock: string;
   lastSale: string;
   soldThisMonth: number;
   soldTotal: number;
   turnoverRate: number;
-  
+
   // Status
-  status: 'active' | 'inactive' | 'discontinued' | 'out_of_stock' | 'low_stock';
+  status: "active" | "inactive" | "discontinued" | "out_of_stock" | "low_stock";
   isActive: boolean;
-  
+
   // Dates
   createdAt: string;
   updatedAt: string;
-  
+
   // Additional Info
   weight?: number;
   dimensions?: string;
@@ -116,7 +122,7 @@ interface StockMovement {
   id: string;
   productId: string;
   productName: string;
-  type: 'IN' | 'OUT' | 'ADJUSTMENT' | 'TRANSFER' | 'RETURN';
+  type: "IN" | "OUT" | "ADJUSTMENT" | "TRANSFER" | "RETURN";
   quantity: number;
   remainingStock: number;
   reason: string;
@@ -136,7 +142,7 @@ interface ProductFormData {
   model: string;
   category: string;
   subcategory: string;
-  type: 'physical' | 'service_item' | 'consumable';
+  type: "physical" | "service_item" | "consumable";
   sku: string;
   barcode: string;
   description: string;
@@ -160,25 +166,42 @@ interface ProductFormData {
 
 // Mock data
 const productCategories = [
-  'Tires', 'Engine Parts', 'Brake Components', 'Electrical', 'Filters', 
-  'Fluids & Lubricants', 'Tools & Equipment', 'Accessories', 'Body Parts', 
-  'Transmission', 'Suspension', 'Exhaust', 'Cooling System', 'Fuel System'
+  "Tires",
+  "Engine Parts",
+  "Brake Components",
+  "Electrical",
+  "Filters",
+  "Fluids & Lubricants",
+  "Tools & Equipment",
+  "Accessories",
+  "Body Parts",
+  "Transmission",
+  "Suspension",
+  "Exhaust",
+  "Cooling System",
+  "Fuel System",
 ];
 
-const warehouses = ['Main Warehouse', 'Shop Floor', 'Service Bay', 'Parts Counter', 'Storage Room'];
+const warehouses = [
+  "Main Warehouse",
+  "Shop Floor",
+  "Service Bay",
+  "Parts Counter",
+  "Storage Room",
+];
 
 const mockProducts: Product[] = [
   {
-    id: 'PROD-001',
-    name: 'Michelin Energy XM2',
-    brand: 'Michelin',
-    model: 'Energy XM2',
-    category: 'Tires',
-    subcategory: 'Passenger Tires',
-    type: 'physical',
-    sku: 'MICH-XM2-185-65R15',
-    barcode: '123456789012',
-    description: '185/65R15 All-Season Passenger Tire',
+    id: "PROD-001",
+    name: "Michelin Energy XM2",
+    brand: "Michelin",
+    model: "Energy XM2",
+    category: "Tires",
+    subcategory: "Passenger Tires",
+    type: "physical",
+    sku: "MICH-XM2-185-65R15",
+    barcode: "123456789012",
+    description: "185/65R15 All-Season Passenger Tire",
     currentStock: 24,
     minStock: 10,
     maxStock: 100,
@@ -189,35 +212,35 @@ const mockProducts: Product[] = [
     wholesalePrice: 200000,
     margin: 22.22,
     taxRate: 18,
-    location: 'A1-B2',
-    warehouse: 'Main Warehouse',
-    supplier: 'Michelin Uganda',
-    supplierSku: 'MICH-XM2-185',
-    lastRestock: '2024-01-15',
-    lastSale: '2024-01-20',
+    location: "A1-B2",
+    warehouse: "Main Warehouse",
+    supplier: "Michelin Uganda",
+    supplierSku: "MICH-XM2-185",
+    lastRestock: "2024-01-15",
+    lastSale: "2024-01-20",
     soldThisMonth: 12,
     soldTotal: 156,
     turnoverRate: 8.5,
-    status: 'active',
+    status: "active",
     isActive: true,
-    createdAt: '2024-01-01',
-    updatedAt: '2024-01-20',
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-20",
     weight: 8.5,
-    dimensions: '185x65x15',
-    notes: 'Popular all-season tire',
-    tags: ['best-seller', 'all-season', 'passenger']
+    dimensions: "185x65x15",
+    notes: "Popular all-season tire",
+    tags: ["best-seller", "all-season", "passenger"],
   },
   {
-    id: 'PROD-002',
-    name: 'Engine Oil 5W-30',
-    brand: 'Castrol',
-    model: 'GTX 5W-30',
-    category: 'Fluids & Lubricants',
-    subcategory: 'Engine Oil',
-    type: 'consumable',
-    sku: 'CAST-GTX-5W30-5L',
-    barcode: '123456789013',
-    description: '5L Castrol GTX 5W-30 Synthetic Engine Oil',
+    id: "PROD-002",
+    name: "Engine Oil 5W-30",
+    brand: "Castrol",
+    model: "GTX 5W-30",
+    category: "Fluids & Lubricants",
+    subcategory: "Engine Oil",
+    type: "consumable",
+    sku: "CAST-GTX-5W30-5L",
+    barcode: "123456789013",
+    description: "5L Castrol GTX 5W-30 Synthetic Engine Oil",
     currentStock: 48,
     minStock: 20,
     maxStock: 200,
@@ -228,35 +251,35 @@ const mockProducts: Product[] = [
     wholesalePrice: 75000,
     margin: 30.77,
     taxRate: 18,
-    location: 'C1-D3',
-    warehouse: 'Main Warehouse',
-    supplier: 'Castrol Distributor',
-    supplierSku: 'GTX-5W30-5L',
-    lastRestock: '2024-01-18',
-    lastSale: '2024-01-21',
+    location: "C1-D3",
+    warehouse: "Main Warehouse",
+    supplier: "Castrol Distributor",
+    supplierSku: "GTX-5W30-5L",
+    lastRestock: "2024-01-18",
+    lastSale: "2024-01-21",
     soldThisMonth: 32,
     soldTotal: 245,
     turnoverRate: 12.3,
-    status: 'active',
+    status: "active",
     isActive: true,
-    createdAt: '2024-01-01',
-    updatedAt: '2024-01-21',
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-21",
     weight: 5.2,
-    dimensions: '25x15x30',
-    notes: 'High demand item',
-    tags: ['fast-moving', 'synthetic', 'popular']
+    dimensions: "25x15x30",
+    notes: "High demand item",
+    tags: ["fast-moving", "synthetic", "popular"],
   },
   {
-    id: 'PROD-003',
-    name: 'Brake Pads Front Set',
-    brand: 'Brembo',
-    model: 'P56 047',
-    category: 'Brake Components',
-    subcategory: 'Brake Pads',
-    type: 'physical',
-    sku: 'BREM-P56047-FRONT',
-    barcode: '123456789014',
-    description: 'Front brake pads set for Toyota Corolla',
+    id: "PROD-003",
+    name: "Brake Pads Front Set",
+    brand: "Brembo",
+    model: "P56 047",
+    category: "Brake Components",
+    subcategory: "Brake Pads",
+    type: "physical",
+    sku: "BREM-P56047-FRONT",
+    barcode: "123456789014",
+    description: "Front brake pads set for Toyota Corolla",
     currentStock: 8,
     minStock: 15,
     maxStock: 60,
@@ -267,87 +290,88 @@ const mockProducts: Product[] = [
     wholesalePrice: 140000,
     margin: 33.33,
     taxRate: 18,
-    location: 'B2-C1',
-    warehouse: 'Shop Floor',
-    supplier: 'Brembo Parts',
-    supplierSku: 'P56047',
-    lastRestock: '2024-01-10',
-    lastSale: '2024-01-19',
+    location: "B2-C1",
+    warehouse: "Shop Floor",
+    supplier: "Brembo Parts",
+    supplierSku: "P56047",
+    lastRestock: "2024-01-10",
+    lastSale: "2024-01-19",
     soldThisMonth: 6,
     soldTotal: 89,
     turnoverRate: 6.2,
-    status: 'low_stock',
+    status: "low_stock",
     isActive: true,
-    createdAt: '2024-01-01',
-    updatedAt: '2024-01-19',
+    createdAt: "2024-01-01",
+    updatedAt: "2024-01-19",
     weight: 2.8,
-    dimensions: '15x10x5',
-    notes: 'Low stock - reorder soon',
-    tags: ['low-stock', 'toyota', 'brake-system']
+    dimensions: "15x10x5",
+    notes: "Low stock - reorder soon",
+    tags: ["low-stock", "toyota", "brake-system"],
   },
 ];
 
 const mockStockMovements: StockMovement[] = [
   {
-    id: 'MOV-001',
-    productId: 'PROD-001',
-    productName: 'Michelin Energy XM2',
-    type: 'OUT',
+    id: "MOV-001",
+    productId: "PROD-001",
+    productName: "Michelin Energy XM2",
+    type: "OUT",
     quantity: 4,
     remainingStock: 24,
-    reason: 'Sale to customer',
-    reference: 'INV-2024-001',
+    reason: "Sale to customer",
+    reference: "INV-2024-001",
     cost: 180000,
     totalValue: 720000,
-    location: 'A1-B2',
-    warehouse: 'Main Warehouse',
-    date: '2024-01-20',
-    user: 'Sarah Manager',
-    notes: 'Sold to John Doe - Cash payment'
+    location: "A1-B2",
+    warehouse: "Main Warehouse",
+    date: "2024-01-20",
+    user: "Sarah Manager",
+    notes: "Sold to John Doe - Cash payment",
   },
   {
-    id: 'MOV-002',
-    productId: 'PROD-002',
-    productName: 'Engine Oil 5W-30',
-    type: 'IN',
+    id: "MOV-002",
+    productId: "PROD-002",
+    productName: "Engine Oil 5W-30",
+    type: "IN",
     quantity: 20,
     remainingStock: 48,
-    reason: 'Purchase/Restock',
-    reference: 'PO-2024-005',
+    reason: "Purchase/Restock",
+    reference: "PO-2024-005",
     cost: 65000,
     totalValue: 1300000,
-    location: 'C1-D3',
-    warehouse: 'Main Warehouse',
-    date: '2024-01-18',
-    user: 'Admin User',
-    notes: 'Restock from Castrol Distributor'
+    location: "C1-D3",
+    warehouse: "Main Warehouse",
+    date: "2024-01-18",
+    user: "Admin User",
+    notes: "Restock from Castrol Distributor",
   },
   {
-    id: 'MOV-003',
-    productId: 'PROD-003',
-    productName: 'Brake Pads Front Set',
-    type: 'OUT',
+    id: "MOV-003",
+    productId: "PROD-003",
+    productName: "Brake Pads Front Set",
+    type: "OUT",
     quantity: 2,
     remainingStock: 8,
-    reason: 'Service installation',
-    reference: 'JOB-2024-012',
+    reason: "Service installation",
+    reference: "JOB-2024-012",
     cost: 120000,
     totalValue: 240000,
-    location: 'B2-C1',
-    warehouse: 'Shop Floor',
-    date: '2024-01-19',
-    user: 'Mike Technician',
-    notes: 'Used in brake service job'
+    location: "B2-C1",
+    warehouse: "Shop Floor",
+    date: "2024-01-19",
+    user: "Mike Technician",
+    notes: "Used in brake service job",
   },
 ];
 
 export default function InventoryManagement() {
   const { success, error } = useFeedback();
   const [products, setProducts] = useState<Product[]>(mockProducts);
-  const [stockMovements, setStockMovements] = useState<StockMovement[]>(mockStockMovements);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [stockMovements, setStockMovements] =
+    useState<StockMovement[]>(mockStockMovements);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [showAddDialog, setShowAddDialog] = useState(false);
   const [showEditDialog, setShowEditDialog] = useState(false);
   const [showStockDialog, setShowStockDialog] = useState(false);
@@ -355,34 +379,57 @@ export default function InventoryManagement() {
   const [activeTab, setActiveTab] = useState("inventory");
 
   const [productForm, setProductForm] = useState<ProductFormData>({
-    name: '', brand: '', model: '', category: '', subcategory: '', type: 'physical',
-    sku: '', barcode: '', description: '', currentStock: 0, minStock: 0, maxStock: 0,
-    costPrice: 0, sellingPrice: 0, wholesalePrice: 0, taxRate: 18, location: '',
-    warehouse: '', supplier: '', supplierSku: '', weight: 0, dimensions: '',
-    notes: '', tags: [], isActive: true,
+    name: "",
+    brand: "",
+    model: "",
+    category: "",
+    subcategory: "",
+    type: "physical",
+    sku: "",
+    barcode: "",
+    description: "",
+    currentStock: 0,
+    minStock: 0,
+    maxStock: 0,
+    costPrice: 0,
+    sellingPrice: 0,
+    wholesalePrice: 0,
+    taxRate: 18,
+    location: "",
+    warehouse: "",
+    supplier: "",
+    supplierSku: "",
+    weight: 0,
+    dimensions: "",
+    notes: "",
+    tags: [],
+    isActive: true,
   });
 
   const [stockForm, setStockForm] = useState({
-    type: 'IN' as 'IN' | 'OUT' | 'ADJUSTMENT',
+    type: "IN" as "IN" | "OUT" | "ADJUSTMENT",
     quantity: 0,
-    reason: '',
-    reference: '',
+    reason: "",
+    reference: "",
     cost: 0,
-    location: '',
-    warehouse: '',
-    notes: '',
+    location: "",
+    warehouse: "",
+    notes: "",
   });
 
   // Filter products
   const filteredProducts = useMemo(() => {
-    return products.filter(product => {
-      const matchesSearch = product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           product.barcode?.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesCategory = categoryFilter === 'all' || product.category === categoryFilter;
-      const matchesStatus = statusFilter === 'all' || product.status === statusFilter;
-      
+    return products.filter((product) => {
+      const matchesSearch =
+        product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.sku.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        product.barcode?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory =
+        categoryFilter === "all" || product.category === categoryFilter;
+      const matchesStatus =
+        statusFilter === "all" || product.status === statusFilter;
+
       return matchesSearch && matchesCategory && matchesStatus;
     });
   }, [products, searchTerm, categoryFilter, statusFilter]);
@@ -390,11 +437,17 @@ export default function InventoryManagement() {
   // Calculate inventory statistics
   const inventoryStats = useMemo(() => {
     const totalProducts = products.length;
-    const totalValue = products.reduce((sum, p) => sum + (p.currentStock * p.costPrice), 0);
-    const lowStockCount = products.filter(p => p.currentStock <= p.minStock).length;
-    const outOfStockCount = products.filter(p => p.currentStock === 0).length;
-    const inactiveCount = products.filter(p => !p.isActive).length;
-    const avgTurnover = products.reduce((sum, p) => sum + p.turnoverRate, 0) / totalProducts;
+    const totalValue = products.reduce(
+      (sum, p) => sum + p.currentStock * p.costPrice,
+      0,
+    );
+    const lowStockCount = products.filter(
+      (p) => p.currentStock <= p.minStock,
+    ).length;
+    const outOfStockCount = products.filter((p) => p.currentStock === 0).length;
+    const inactiveCount = products.filter((p) => !p.isActive).length;
+    const avgTurnover =
+      products.reduce((sum, p) => sum + p.turnoverRate, 0) / totalProducts;
 
     return {
       totalProducts,
@@ -409,43 +462,71 @@ export default function InventoryManagement() {
   // Reset forms
   const resetProductForm = useCallback(() => {
     setProductForm({
-      name: '', brand: '', model: '', category: '', subcategory: '', type: 'physical',
-      sku: '', barcode: '', description: '', currentStock: 0, minStock: 0, maxStock: 0,
-      costPrice: 0, sellingPrice: 0, wholesalePrice: 0, taxRate: 18, location: '',
-      warehouse: '', supplier: '', supplierSku: '', weight: 0, dimensions: '',
-      notes: '', tags: [], isActive: true,
+      name: "",
+      brand: "",
+      model: "",
+      category: "",
+      subcategory: "",
+      type: "physical",
+      sku: "",
+      barcode: "",
+      description: "",
+      currentStock: 0,
+      minStock: 0,
+      maxStock: 0,
+      costPrice: 0,
+      sellingPrice: 0,
+      wholesalePrice: 0,
+      taxRate: 18,
+      location: "",
+      warehouse: "",
+      supplier: "",
+      supplierSku: "",
+      weight: 0,
+      dimensions: "",
+      notes: "",
+      tags: [],
+      isActive: true,
     });
   }, []);
 
   const resetStockForm = useCallback(() => {
     setStockForm({
-      type: 'IN',
+      type: "IN",
       quantity: 0,
-      reason: '',
-      reference: '',
+      reason: "",
+      reference: "",
       cost: 0,
-      location: '',
-      warehouse: '',
-      notes: '',
+      location: "",
+      warehouse: "",
+      notes: "",
     });
   }, []);
 
   // Handle add product
   const handleAddProduct = useCallback(async () => {
     try {
-      if (!productForm.name || !productForm.brand || !productForm.category || !productForm.sku) {
-        error('Please fill in all required fields');
+      if (
+        !productForm.name ||
+        !productForm.brand ||
+        !productForm.category ||
+        !productForm.sku
+      ) {
+        error("Please fill in all required fields");
         return;
       }
 
-      if (products.some(p => p.sku === productForm.sku)) {
-        error('A product with this SKU already exists');
+      if (products.some((p) => p.sku === productForm.sku)) {
+        error("A product with this SKU already exists");
         return;
       }
 
-      const margin = productForm.costPrice > 0 
-        ? ((productForm.sellingPrice - productForm.costPrice) / productForm.sellingPrice * 100)
-        : 0;
+      const margin =
+        productForm.costPrice > 0
+          ? ((productForm.sellingPrice - productForm.costPrice) /
+              productForm.sellingPrice) *
+            100
+          : 0;
 
       const newProduct: Product = {
         id: `PROD-${Date.now()}`,
@@ -456,54 +537,73 @@ export default function InventoryManagement() {
         soldThisMonth: 0,
         soldTotal: 0,
         turnoverRate: 0,
-        status: productForm.currentStock === 0 ? 'out_of_stock' : 
-                productForm.currentStock <= productForm.minStock ? 'low_stock' : 'active',
-        lastRestock: new Date().toISOString().split('T')[0],
-        lastSale: '',
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0],
+        status:
+          productForm.currentStock === 0
+            ? "out_of_stock"
+            : productForm.currentStock <= productForm.minStock
+              ? "low_stock"
+              : "active",
+        lastRestock: new Date().toISOString().split("T")[0],
+        lastSale: "",
+        createdAt: new Date().toISOString().split("T")[0],
+        updatedAt: new Date().toISOString().split("T")[0],
       };
 
-      setProducts(prev => [...prev, newProduct]);
+      setProducts((prev) => [...prev, newProduct]);
       success(`Product ${newProduct.name} added successfully!`);
       resetProductForm();
       setShowAddDialog(false);
     } catch (err) {
-      console.error('Error adding product:', err);
-      error('Failed to add product. Please try again.');
+      console.error("Error adding product:", err);
+      error("Failed to add product. Please try again.");
     }
   }, [productForm, products, success, error, resetProductForm]);
 
   // Handle edit product
   const handleEditProduct = useCallback(async () => {
     try {
-      if (!selectedProduct || !productForm.name || !productForm.brand || !productForm.category) {
-        error('Please fill in all required fields');
+      if (
+        !selectedProduct ||
+        !productForm.name ||
+        !productForm.brand ||
+        !productForm.category
+      ) {
+        error("Please fill in all required fields");
         return;
       }
 
-      const margin = productForm.costPrice > 0 
-        ? ((productForm.sellingPrice - productForm.costPrice) / productForm.sellingPrice * 100)
-        : 0;
+      const margin =
+        productForm.costPrice > 0
+          ? ((productForm.sellingPrice - productForm.costPrice) /
+              productForm.sellingPrice) *
+            100
+          : 0;
 
       const updatedProduct: Product = {
         ...selectedProduct,
         ...productForm,
         margin: margin,
-        availableStock: productForm.currentStock - selectedProduct.reservedStock,
-        status: productForm.currentStock === 0 ? 'out_of_stock' : 
-                productForm.currentStock <= productForm.minStock ? 'low_stock' : 'active',
-        updatedAt: new Date().toISOString().split('T')[0],
+        availableStock:
+          productForm.currentStock - selectedProduct.reservedStock,
+        status:
+          productForm.currentStock === 0
+            ? "out_of_stock"
+            : productForm.currentStock <= productForm.minStock
+              ? "low_stock"
+              : "active",
+        updatedAt: new Date().toISOString().split("T")[0],
       };
 
-      setProducts(prev => prev.map(p => p.id === selectedProduct.id ? updatedProduct : p));
+      setProducts((prev) =>
+        prev.map((p) => (p.id === selectedProduct.id ? updatedProduct : p)),
+      );
       success(`Product ${updatedProduct.name} updated successfully!`);
       resetProductForm();
       setShowEditDialog(false);
       setSelectedProduct(null);
     } catch (err) {
-      console.error('Error updating product:', err);
-      error('Failed to update product. Please try again.');
+      console.error("Error updating product:", err);
+      error("Failed to update product. Please try again.");
     }
   }, [selectedProduct, productForm, success, error, resetProductForm]);
 
@@ -511,19 +611,20 @@ export default function InventoryManagement() {
   const handleStockAdjustment = useCallback(async () => {
     try {
       if (!selectedProduct || !stockForm.quantity || !stockForm.reason) {
-        error('Please fill in all required fields');
+        error("Please fill in all required fields");
         return;
       }
 
       const currentStock = selectedProduct.currentStock;
-      const newStock = stockForm.type === 'IN' ? 
-        currentStock + stockForm.quantity : 
-        stockForm.type === 'OUT' ? 
-        currentStock - stockForm.quantity : 
-        stockForm.quantity; // For ADJUSTMENT, quantity is the new total
+      const newStock =
+        stockForm.type === "IN"
+          ? currentStock + stockForm.quantity
+          : stockForm.type === "OUT"
+            ? currentStock - stockForm.quantity
+            : stockForm.quantity; // For ADJUSTMENT, quantity is the new total
 
       if (newStock < 0) {
-        error('Insufficient stock for this operation');
+        error("Insufficient stock for this operation");
         return;
       }
 
@@ -532,11 +633,21 @@ export default function InventoryManagement() {
         ...selectedProduct,
         currentStock: newStock,
         availableStock: newStock - selectedProduct.reservedStock,
-        status: newStock === 0 ? 'out_of_stock' : 
-                newStock <= selectedProduct.minStock ? 'low_stock' : 'active',
-        lastRestock: stockForm.type === 'IN' ? new Date().toISOString().split('T')[0] : selectedProduct.lastRestock,
-        lastSale: stockForm.type === 'OUT' ? new Date().toISOString().split('T')[0] : selectedProduct.lastSale,
-        updatedAt: new Date().toISOString().split('T')[0],
+        status:
+          newStock === 0
+            ? "out_of_stock"
+            : newStock <= selectedProduct.minStock
+              ? "low_stock"
+              : "active",
+        lastRestock:
+          stockForm.type === "IN"
+            ? new Date().toISOString().split("T")[0]
+            : selectedProduct.lastRestock,
+        lastSale:
+          stockForm.type === "OUT"
+            ? new Date().toISOString().split("T")[0]
+            : selectedProduct.lastSale,
+        updatedAt: new Date().toISOString().split("T")[0],
       };
 
       // Create stock movement record
@@ -550,23 +661,28 @@ export default function InventoryManagement() {
         reason: stockForm.reason,
         reference: stockForm.reference,
         cost: stockForm.cost || selectedProduct.costPrice,
-        totalValue: (stockForm.cost || selectedProduct.costPrice) * stockForm.quantity,
+        totalValue:
+          (stockForm.cost || selectedProduct.costPrice) * stockForm.quantity,
         location: stockForm.location || selectedProduct.location,
         warehouse: stockForm.warehouse || selectedProduct.warehouse,
-        date: new Date().toISOString().split('T')[0],
-        user: 'Admin User', // In real app, get from auth context
+        date: new Date().toISOString().split("T")[0],
+        user: "Admin User", // In real app, get from auth context
         notes: stockForm.notes,
       };
 
-      setProducts(prev => prev.map(p => p.id === selectedProduct.id ? updatedProduct : p));
-      setStockMovements(prev => [newMovement, ...prev]);
-      success(`Stock ${stockForm.type.toLowerCase()} completed for ${selectedProduct.name}`);
+      setProducts((prev) =>
+        prev.map((p) => (p.id === selectedProduct.id ? updatedProduct : p)),
+      );
+      setStockMovements((prev) => [newMovement, ...prev]);
+      success(
+        `Stock ${stockForm.type.toLowerCase()} completed for ${selectedProduct.name}`,
+      );
       resetStockForm();
       setShowStockDialog(false);
       setSelectedProduct(null);
     } catch (err) {
-      console.error('Error adjusting stock:', err);
-      error('Failed to adjust stock. Please try again.');
+      console.error("Error adjusting stock:", err);
+      error("Failed to adjust stock. Please try again.");
     }
   }, [selectedProduct, stockForm, success, error, resetStockForm]);
 
@@ -576,12 +692,12 @@ export default function InventoryManagement() {
     setProductForm({
       name: product.name,
       brand: product.brand,
-      model: product.model || '',
+      model: product.model || "",
       category: product.category,
-      subcategory: product.subcategory || '',
+      subcategory: product.subcategory || "",
       type: product.type,
       sku: product.sku,
-      barcode: product.barcode || '',
+      barcode: product.barcode || "",
       description: product.description,
       currentStock: product.currentStock,
       minStock: product.minStock,
@@ -593,10 +709,10 @@ export default function InventoryManagement() {
       location: product.location,
       warehouse: product.warehouse,
       supplier: product.supplier,
-      supplierSku: product.supplierSku || '',
+      supplierSku: product.supplierSku || "",
       weight: product.weight || 0,
-      dimensions: product.dimensions || '',
-      notes: product.notes || '',
+      dimensions: product.dimensions || "",
+      notes: product.notes || "",
       tags: product.tags,
       isActive: product.isActive,
     });
@@ -606,7 +722,7 @@ export default function InventoryManagement() {
   // Open stock dialog
   const openStockDialog = useCallback((product: Product) => {
     setSelectedProduct(product);
-    setStockForm(prev => ({
+    setStockForm((prev) => ({
       ...prev,
       location: product.location,
       warehouse: product.warehouse,
@@ -618,18 +734,18 @@ export default function InventoryManagement() {
   // Get status badge color
   const getStatusBadgeColor = (status: string) => {
     switch (status) {
-      case 'active':
-        return 'bg-green-100 text-green-800 border-green-300';
-      case 'low_stock':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-300';
-      case 'out_of_stock':
-        return 'bg-red-100 text-red-800 border-red-300';
-      case 'inactive':
-        return 'bg-gray-100 text-gray-800 border-gray-300';
-      case 'discontinued':
-        return 'bg-purple-100 text-purple-800 border-purple-300';
+      case "active":
+        return "bg-green-100 text-green-800 border-green-300";
+      case "low_stock":
+        return "bg-yellow-100 text-yellow-800 border-yellow-300";
+      case "out_of_stock":
+        return "bg-red-100 text-red-800 border-red-300";
+      case "inactive":
+        return "bg-gray-100 text-gray-800 border-gray-300";
+      case "discontinued":
+        return "bg-purple-100 text-purple-800 border-purple-300";
       default:
-        return 'bg-gray-100 text-gray-800 border-gray-300';
+        return "bg-gray-100 text-gray-800 border-gray-300";
     }
   };
 
@@ -638,9 +754,12 @@ export default function InventoryManagement() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Inventory Management</h2>
+          <h2 className="text-2xl font-bold tracking-tight">
+            Inventory Management
+          </h2>
           <p className="text-muted-foreground">
-            Manage all products, stock levels, and pricing across the entire inventory
+            Manage all products, stock levels, and pricing across the entire
+            inventory
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -663,21 +782,29 @@ export default function InventoryManagement() {
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Products</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Total Products
+            </CardTitle>
             <Package className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{inventoryStats.totalProducts}</div>
+            <div className="text-2xl font-bold">
+              {inventoryStats.totalProducts}
+            </div>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Inventory Value</CardTitle>
+            <CardTitle className="text-sm font-medium">
+              Inventory Value
+            </CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">UGX {inventoryStats.totalValue.toLocaleString()}</div>
+            <div className="text-2xl font-bold">
+              UGX {inventoryStats.totalValue.toLocaleString()}
+            </div>
           </CardContent>
         </Card>
 
@@ -687,7 +814,9 @@ export default function InventoryManagement() {
             <AlertTriangle className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-amber-600">{inventoryStats.lowStockCount}</div>
+            <div className="text-2xl font-bold text-amber-600">
+              {inventoryStats.lowStockCount}
+            </div>
           </CardContent>
         </Card>
 
@@ -697,7 +826,9 @@ export default function InventoryManagement() {
             <TrendingDown className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{inventoryStats.outOfStockCount}</div>
+            <div className="text-2xl font-bold text-red-600">
+              {inventoryStats.outOfStockCount}
+            </div>
           </CardContent>
         </Card>
 
@@ -707,7 +838,9 @@ export default function InventoryManagement() {
             <Package className="h-4 w-4 text-gray-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-gray-600">{inventoryStats.inactiveCount}</div>
+            <div className="text-2xl font-bold text-gray-600">
+              {inventoryStats.inactiveCount}
+            </div>
           </CardContent>
         </Card>
 
@@ -717,7 +850,9 @@ export default function InventoryManagement() {
             <TrendingUp className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{inventoryStats.avgTurnover}x</div>
+            <div className="text-2xl font-bold text-green-600">
+              {inventoryStats.avgTurnover}x
+            </div>
           </CardContent>
         </Card>
       </div>
@@ -725,7 +860,9 @@ export default function InventoryManagement() {
       {/* Main Content */}
       <Tabs value={activeTab} onValueChange={setActiveTab}>
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="inventory">Products ({filteredProducts.length})</TabsTrigger>
+          <TabsTrigger value="inventory">
+            Products ({filteredProducts.length})
+          </TabsTrigger>
           <TabsTrigger value="movements">Stock Movements</TabsTrigger>
           <TabsTrigger value="alerts">Alerts & Reports</TabsTrigger>
         </TabsList>
@@ -748,15 +885,20 @@ export default function InventoryManagement() {
                     className="pl-10"
                   />
                 </div>
-                
-                <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+
+                <Select
+                  value={categoryFilter}
+                  onValueChange={setCategoryFilter}
+                >
                   <SelectTrigger className="w-[200px]">
                     <SelectValue placeholder="All Categories" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Categories</SelectItem>
-                    {productCategories.map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                    {productCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -804,7 +946,8 @@ export default function InventoryManagement() {
                           <div className="space-y-1">
                             <div className="font-medium">{product.name}</div>
                             <div className="text-sm text-muted-foreground">
-                              {product.brand} {product.model && `• ${product.model}`}
+                              {product.brand}{" "}
+                              {product.model && `• ${product.model}`}
                             </div>
                             <div className="text-xs text-muted-foreground">
                               SKU: {product.sku}
@@ -815,13 +958,17 @@ export default function InventoryManagement() {
                           <div className="space-y-1">
                             <Badge variant="outline">{product.category}</Badge>
                             {product.subcategory && (
-                              <div className="text-xs text-muted-foreground">{product.subcategory}</div>
+                              <div className="text-xs text-muted-foreground">
+                                {product.subcategory}
+                              </div>
                             )}
                           </div>
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
-                            <div className="font-medium">{product.currentStock} units</div>
+                            <div className="font-medium">
+                              {product.currentStock} units
+                            </div>
                             <div className="text-xs text-muted-foreground">
                               Min: {product.minStock} • Max: {product.maxStock}
                             </div>
@@ -832,7 +979,9 @@ export default function InventoryManagement() {
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
-                            <div className="font-medium">UGX {product.sellingPrice.toLocaleString()}</div>
+                            <div className="font-medium">
+                              UGX {product.sellingPrice.toLocaleString()}
+                            </div>
                             <div className="text-xs text-muted-foreground">
                               Cost: UGX {product.costPrice.toLocaleString()}
                             </div>
@@ -842,13 +991,18 @@ export default function InventoryManagement() {
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge variant="outline" className={getStatusBadgeColor(product.status)}>
-                            {product.status.replace('_', ' ')}
+                          <Badge
+                            variant="outline"
+                            className={getStatusBadgeColor(product.status)}
+                          >
+                            {product.status.replace("_", " ")}
                           </Badge>
                         </TableCell>
                         <TableCell>
                           <div className="space-y-1">
-                            <div className="text-sm">Sold: {product.soldThisMonth}/mo</div>
+                            <div className="text-sm">
+                              Sold: {product.soldThisMonth}/mo
+                            </div>
                             <div className="text-xs text-muted-foreground">
                               Turnover: {product.turnoverRate}x
                             </div>
@@ -864,11 +1018,15 @@ export default function InventoryManagement() {
                             <DropdownMenuContent align="end">
                               <DropdownMenuLabel>Actions</DropdownMenuLabel>
                               <DropdownMenuSeparator />
-                              <DropdownMenuItem onClick={() => openEditDialog(product)}>
+                              <DropdownMenuItem
+                                onClick={() => openEditDialog(product)}
+                              >
                                 <Edit className="h-4 w-4 mr-2" />
                                 Edit Product
                               </DropdownMenuItem>
-                              <DropdownMenuItem onClick={() => openStockDialog(product)}>
+                              <DropdownMenuItem
+                                onClick={() => openStockDialog(product)}
+                              >
                                 <RefreshCw className="h-4 w-4 mr-2" />
                                 Adjust Stock
                               </DropdownMenuItem>
@@ -894,7 +1052,9 @@ export default function InventoryManagement() {
           <Card>
             <CardHeader>
               <CardTitle>Recent Stock Movements</CardTitle>
-              <CardDescription>Track all inventory changes and transactions</CardDescription>
+              <CardDescription>
+                Track all inventory changes and transactions
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
@@ -915,31 +1075,44 @@ export default function InventoryManagement() {
                       <TableRow key={movement.id}>
                         <TableCell>
                           <div className="space-y-1">
-                            <div className="font-medium">{movement.productName}</div>
+                            <div className="font-medium">
+                              {movement.productName}
+                            </div>
                             <div className="text-xs text-muted-foreground">
                               Stock after: {movement.remainingStock} units
                             </div>
                           </div>
                         </TableCell>
                         <TableCell>
-                          <Badge 
-                            variant="outline" 
+                          <Badge
+                            variant="outline"
                             className={
-                              movement.type === 'IN' ? 'bg-green-100 text-green-800' :
-                              movement.type === 'OUT' ? 'bg-red-100 text-red-800' :
-                              'bg-blue-100 text-blue-800'
+                              movement.type === "IN"
+                                ? "bg-green-100 text-green-800"
+                                : movement.type === "OUT"
+                                  ? "bg-red-100 text-red-800"
+                                  : "bg-blue-100 text-blue-800"
                             }
                           >
                             {movement.type}
                           </Badge>
                         </TableCell>
                         <TableCell>
-                          <div className={cn(
-                            "font-medium",
-                            movement.type === 'IN' ? 'text-green-600' : 
-                            movement.type === 'OUT' ? 'text-red-600' : 'text-blue-600'
-                          )}>
-                            {movement.type === 'IN' ? '+' : movement.type === 'OUT' ? '-' : ''}
+                          <div
+                            className={cn(
+                              "font-medium",
+                              movement.type === "IN"
+                                ? "text-green-600"
+                                : movement.type === "OUT"
+                                  ? "text-red-600"
+                                  : "text-blue-600",
+                            )}
+                          >
+                            {movement.type === "IN"
+                              ? "+"
+                              : movement.type === "OUT"
+                                ? "-"
+                                : ""}
                             {movement.quantity}
                           </div>
                         </TableCell>
@@ -951,7 +1124,9 @@ export default function InventoryManagement() {
                             </div>
                           )}
                         </TableCell>
-                        <TableCell>{new Date(movement.date).toLocaleDateString()}</TableCell>
+                        <TableCell>
+                          {new Date(movement.date).toLocaleDateString()}
+                        </TableCell>
                         <TableCell>{movement.user}</TableCell>
                       </TableRow>
                     ))}
@@ -974,19 +1149,28 @@ export default function InventoryManagement() {
               </CardHeader>
               <CardContent>
                 <div className="space-y-3">
-                  {products.filter(p => p.currentStock <= p.minStock).map(product => (
-                    <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg">
-                      <div>
-                        <div className="font-medium">{product.name}</div>
-                        <div className="text-sm text-muted-foreground">
-                          Current: {product.currentStock} • Min: {product.minStock}
+                  {products
+                    .filter((p) => p.currentStock <= p.minStock)
+                    .map((product) => (
+                      <div
+                        key={product.id}
+                        className="flex items-center justify-between p-3 border rounded-lg"
+                      >
+                        <div>
+                          <div className="font-medium">{product.name}</div>
+                          <div className="text-sm text-muted-foreground">
+                            Current: {product.currentStock} • Min:{" "}
+                            {product.minStock}
+                          </div>
                         </div>
+                        <Button
+                          size="sm"
+                          onClick={() => openStockDialog(product)}
+                        >
+                          Restock
+                        </Button>
                       </div>
-                      <Button size="sm" onClick={() => openStockDialog(product)}>
-                        Restock
-                      </Button>
-                    </div>
-                  ))}
+                    ))}
                 </div>
               </CardContent>
             </Card>
@@ -1003,15 +1187,21 @@ export default function InventoryManagement() {
                   {products
                     .sort((a, b) => b.soldThisMonth - a.soldThisMonth)
                     .slice(0, 5)
-                    .map(product => (
-                      <div key={product.id} className="flex items-center justify-between p-3 border rounded-lg">
+                    .map((product) => (
+                      <div
+                        key={product.id}
+                        className="flex items-center justify-between p-3 border rounded-lg"
+                      >
                         <div>
                           <div className="font-medium">{product.name}</div>
                           <div className="text-sm text-muted-foreground">
                             {product.soldThisMonth} sold this month
                           </div>
                         </div>
-                        <Badge variant="outline" className="bg-green-100 text-green-800">
+                        <Badge
+                          variant="outline"
+                          className="bg-green-100 text-green-800"
+                        >
                           {product.turnoverRate}x turnover
                         </Badge>
                       </div>
@@ -1029,10 +1219,11 @@ export default function InventoryManagement() {
           <DialogHeader>
             <DialogTitle>Add New Product</DialogTitle>
             <DialogDescription>
-              Add a new product to the inventory with pricing and stock information.
+              Add a new product to the inventory with pricing and stock
+              information.
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-4">
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
@@ -1040,17 +1231,27 @@ export default function InventoryManagement() {
                 <Input
                   id="name"
                   value={productForm.name}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
                   placeholder="Enter product name"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="brand">Brand *</Label>
                 <Input
                   id="brand"
                   value={productForm.brand}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, brand: e.target.value }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      brand: e.target.value,
+                    }))
+                  }
                   placeholder="Enter brand name"
                 />
               </div>
@@ -1059,26 +1260,32 @@ export default function InventoryManagement() {
             <div className="grid gap-4 md:grid-cols-3">
               <div className="space-y-2">
                 <Label htmlFor="category">Category *</Label>
-                <Select 
-                  value={productForm.category} 
-                  onValueChange={(value) => setProductForm(prev => ({ ...prev, category: value }))}
+                <Select
+                  value={productForm.category}
+                  onValueChange={(value) =>
+                    setProductForm((prev) => ({ ...prev, category: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
                   </SelectTrigger>
                   <SelectContent>
-                    {productCategories.map(category => (
-                      <SelectItem key={category} value={category}>{category}</SelectItem>
+                    {productCategories.map((category) => (
+                      <SelectItem key={category} value={category}>
+                        {category}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="type">Type *</Label>
-                <Select 
-                  value={productForm.type} 
-                  onValueChange={(value) => setProductForm(prev => ({ ...prev, type: value as any }))}
+                <Select
+                  value={productForm.type}
+                  onValueChange={(value) =>
+                    setProductForm((prev) => ({ ...prev, type: value as any }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -1096,7 +1303,9 @@ export default function InventoryManagement() {
                 <Input
                   id="sku"
                   value={productForm.sku}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, sku: e.target.value }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({ ...prev, sku: e.target.value }))
+                  }
                   placeholder="Product SKU"
                 />
               </div>
@@ -1109,18 +1318,28 @@ export default function InventoryManagement() {
                   id="currentStock"
                   type="number"
                   value={productForm.currentStock}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, currentStock: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      currentStock: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="minStock">Min Stock *</Label>
                 <Input
                   id="minStock"
                   type="number"
                   value={productForm.minStock}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, minStock: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      minStock: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
@@ -1131,7 +1350,12 @@ export default function InventoryManagement() {
                   id="maxStock"
                   type="number"
                   value={productForm.maxStock}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, maxStock: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      maxStock: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
@@ -1144,18 +1368,28 @@ export default function InventoryManagement() {
                   id="costPrice"
                   type="number"
                   value={productForm.costPrice}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, costPrice: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      costPrice: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="sellingPrice">Selling Price *</Label>
                 <Input
                   id="sellingPrice"
                   type="number"
                   value={productForm.sellingPrice}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, sellingPrice: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      sellingPrice: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
@@ -1166,7 +1400,12 @@ export default function InventoryManagement() {
                   id="taxRate"
                   type="number"
                   value={productForm.taxRate}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, taxRate: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      taxRate: Number(e.target.value),
+                    }))
+                  }
                   placeholder="18"
                 />
               </div>
@@ -1175,27 +1414,36 @@ export default function InventoryManagement() {
             <div className="grid gap-4 md:grid-cols-2">
               <div className="space-y-2">
                 <Label htmlFor="warehouse">Warehouse</Label>
-                <Select 
-                  value={productForm.warehouse} 
-                  onValueChange={(value) => setProductForm(prev => ({ ...prev, warehouse: value }))}
+                <Select
+                  value={productForm.warehouse}
+                  onValueChange={(value) =>
+                    setProductForm((prev) => ({ ...prev, warehouse: value }))
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select warehouse" />
                   </SelectTrigger>
                   <SelectContent>
-                    {warehouses.map(warehouse => (
-                      <SelectItem key={warehouse} value={warehouse}>{warehouse}</SelectItem>
+                    {warehouses.map((warehouse) => (
+                      <SelectItem key={warehouse} value={warehouse}>
+                        {warehouse}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="supplier">Supplier</Label>
                 <Input
                   id="supplier"
                   value={productForm.supplier}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, supplier: e.target.value }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      supplier: e.target.value,
+                    }))
+                  }
                   placeholder="Supplier name"
                 />
               </div>
@@ -1206,7 +1454,12 @@ export default function InventoryManagement() {
               <Textarea
                 id="description"
                 value={productForm.description}
-                onChange={(e) => setProductForm(prev => ({ ...prev, description: e.target.value }))}
+                onChange={(e) =>
+                  setProductForm((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
                 placeholder="Product description..."
                 rows={3}
               />
@@ -1214,10 +1467,13 @@ export default function InventoryManagement() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setShowAddDialog(false);
-              resetProductForm();
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowAddDialog(false);
+                resetProductForm();
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={handleAddProduct}>
@@ -1237,7 +1493,7 @@ export default function InventoryManagement() {
               Update product information, pricing, and stock details.
             </DialogDescription>
           </DialogHeader>
-          
+
           {/* Same form content as Add Dialog but for editing */}
           <div className="space-y-4 py-4">
             {/* Similar form fields as Add dialog... */}
@@ -1247,17 +1503,27 @@ export default function InventoryManagement() {
                 <Input
                   id="edit-name"
                   value={productForm.name}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, name: e.target.value }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      name: e.target.value,
+                    }))
+                  }
                   placeholder="Enter product name"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="edit-brand">Brand *</Label>
                 <Input
                   id="edit-brand"
                   value={productForm.brand}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, brand: e.target.value }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      brand: e.target.value,
+                    }))
+                  }
                   placeholder="Enter brand name"
                 />
               </div>
@@ -1270,18 +1536,28 @@ export default function InventoryManagement() {
                   id="edit-costPrice"
                   type="number"
                   value={productForm.costPrice}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, costPrice: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      costPrice: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
-              
+
               <div className="space-y-2">
                 <Label htmlFor="edit-sellingPrice">Selling Price *</Label>
                 <Input
                   id="edit-sellingPrice"
                   type="number"
                   value={productForm.sellingPrice}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, sellingPrice: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      sellingPrice: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
@@ -1292,7 +1568,12 @@ export default function InventoryManagement() {
                   id="edit-currentStock"
                   type="number"
                   value={productForm.currentStock}
-                  onChange={(e) => setProductForm(prev => ({ ...prev, currentStock: Number(e.target.value) }))}
+                  onChange={(e) =>
+                    setProductForm((prev) => ({
+                      ...prev,
+                      currentStock: Number(e.target.value),
+                    }))
+                  }
                   placeholder="0"
                 />
               </div>
@@ -1300,11 +1581,14 @@ export default function InventoryManagement() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setShowEditDialog(false);
-              setSelectedProduct(null);
-              resetProductForm();
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowEditDialog(false);
+                setSelectedProduct(null);
+                resetProductForm();
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={handleEditProduct}>
@@ -1324,13 +1608,15 @@ export default function InventoryManagement() {
               {selectedProduct && `Adjust stock for ${selectedProduct.name}`}
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4 py-4">
             <div className="space-y-2">
               <Label htmlFor="stock-type">Movement Type *</Label>
-              <Select 
-                value={stockForm.type} 
-                onValueChange={(value) => setStockForm(prev => ({ ...prev, type: value as any }))}
+              <Select
+                value={stockForm.type}
+                onValueChange={(value) =>
+                  setStockForm((prev) => ({ ...prev, type: value as any }))
+                }
               >
                 <SelectTrigger>
                   <SelectValue />
@@ -1349,7 +1635,12 @@ export default function InventoryManagement() {
                 id="stock-quantity"
                 type="number"
                 value={stockForm.quantity}
-                onChange={(e) => setStockForm(prev => ({ ...prev, quantity: Number(e.target.value) }))}
+                onChange={(e) =>
+                  setStockForm((prev) => ({
+                    ...prev,
+                    quantity: Number(e.target.value),
+                  }))
+                }
                 placeholder="0"
               />
             </div>
@@ -1359,7 +1650,9 @@ export default function InventoryManagement() {
               <Input
                 id="stock-reason"
                 value={stockForm.reason}
-                onChange={(e) => setStockForm(prev => ({ ...prev, reason: e.target.value }))}
+                onChange={(e) =>
+                  setStockForm((prev) => ({ ...prev, reason: e.target.value }))
+                }
                 placeholder="Reason for stock movement"
               />
             </div>
@@ -1369,7 +1662,12 @@ export default function InventoryManagement() {
               <Input
                 id="stock-reference"
                 value={stockForm.reference}
-                onChange={(e) => setStockForm(prev => ({ ...prev, reference: e.target.value }))}
+                onChange={(e) =>
+                  setStockForm((prev) => ({
+                    ...prev,
+                    reference: e.target.value,
+                  }))
+                }
                 placeholder="PO number, invoice, etc."
               />
             </div>
@@ -1379,7 +1677,9 @@ export default function InventoryManagement() {
               <Textarea
                 id="stock-notes"
                 value={stockForm.notes}
-                onChange={(e) => setStockForm(prev => ({ ...prev, notes: e.target.value }))}
+                onChange={(e) =>
+                  setStockForm((prev) => ({ ...prev, notes: e.target.value }))
+                }
                 placeholder="Additional notes..."
                 rows={2}
               />
@@ -1387,11 +1687,14 @@ export default function InventoryManagement() {
           </div>
 
           <DialogFooter>
-            <Button variant="outline" onClick={() => {
-              setShowStockDialog(false);
-              setSelectedProduct(null);
-              resetStockForm();
-            }}>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setShowStockDialog(false);
+                setSelectedProduct(null);
+                resetStockForm();
+              }}
+            >
               Cancel
             </Button>
             <Button onClick={handleStockAdjustment}>

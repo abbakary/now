@@ -1,20 +1,26 @@
-import React, { useState, useCallback } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Badge } from '@/components/ui/badge';
-import { Textarea } from '@/components/ui/textarea';
+import React, { useState, useCallback } from "react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Badge } from "@/components/ui/badge";
+import { Textarea } from "@/components/ui/textarea";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Switch } from '@/components/ui/switch';
-import { Progress } from '@/components/ui/progress';
+} from "@/components/ui/select";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Switch } from "@/components/ui/switch";
+import { Progress } from "@/components/ui/progress";
 import {
   Settings,
   Globe,
@@ -40,8 +46,8 @@ import {
   Calendar,
   Clock,
   DollarSign,
-} from 'lucide-react';
-import { useFeedback } from '@/components/ui/status-popup';
+} from "lucide-react";
+import { useFeedback } from "@/components/ui/status-popup";
 
 interface SystemConfig {
   // Company Information
@@ -76,7 +82,7 @@ interface SystemConfig {
     jobCardPrefix: string;
     receiptPrefix: string;
     autoBackup: boolean;
-    backupFrequency: 'daily' | 'weekly' | 'monthly';
+    backupFrequency: "daily" | "weekly" | "monthly";
   };
 
   // Inventory Settings
@@ -129,46 +135,46 @@ interface SystemConfig {
 
   // Integration Settings
   integrations: {
-    emailService: 'smtp' | 'sendgrid' | 'mailgun';
-    smsService: 'twilio' | 'africas_talking' | 'custom';
-    paymentGateway: 'stripe' | 'paypal' | 'flutterwave' | 'pesapal';
-    accountingSystem: 'quickbooks' | 'sage' | 'xero' | 'none';
-    backupService: 'dropbox' | 'google_drive' | 'aws_s3' | 'local';
+    emailService: "smtp" | "sendgrid" | "mailgun";
+    smsService: "twilio" | "africas_talking" | "custom";
+    paymentGateway: "stripe" | "paypal" | "flutterwave" | "pesapal";
+    accountingSystem: "quickbooks" | "sage" | "xero" | "none";
+    backupService: "dropbox" | "google_drive" | "aws_s3" | "local";
   };
 }
 
 // Mock system configuration
 const mockSystemConfig: SystemConfig = {
   company: {
-    name: 'Auto Service Pro',
-    logo: '/company-logo.png',
-    address: 'Plot 123, Industrial Area, Kampala',
-    phone: '+256 414 123 456',
-    email: 'info@autoservicepro.ug',
-    website: 'www.autoservicepro.ug',
-    taxId: 'TIN-123456789',
-    currency: 'UGX',
-    timezone: 'Africa/Kampala',
-    language: 'en',
+    name: "Auto Service Pro",
+    logo: "/company-logo.png",
+    address: "Plot 123, Industrial Area, Kampala",
+    phone: "+256 414 123 456",
+    email: "info@autoservicepro.ug",
+    website: "www.autoservicepro.ug",
+    taxId: "TIN-123456789",
+    currency: "UGX",
+    timezone: "Africa/Kampala",
+    language: "en",
   },
   business: {
     businessHours: {
-      monday: { open: '08:00', close: '18:00', closed: false },
-      tuesday: { open: '08:00', close: '18:00', closed: false },
-      wednesday: { open: '08:00', close: '18:00', closed: false },
-      thursday: { open: '08:00', close: '18:00', closed: false },
-      friday: { open: '08:00', close: '18:00', closed: false },
-      saturday: { open: '08:00', close: '14:00', closed: false },
-      sunday: { open: '10:00', close: '16:00', closed: true },
+      monday: { open: "08:00", close: "18:00", closed: false },
+      tuesday: { open: "08:00", close: "18:00", closed: false },
+      wednesday: { open: "08:00", close: "18:00", closed: false },
+      thursday: { open: "08:00", close: "18:00", closed: false },
+      friday: { open: "08:00", close: "18:00", closed: false },
+      saturday: { open: "08:00", close: "14:00", closed: false },
+      sunday: { open: "10:00", close: "16:00", closed: true },
     },
     defaultTaxRate: 18,
     defaultMarkup: 25,
     defaultWarranty: 90,
-    invoicePrefix: 'INV',
-    jobCardPrefix: 'JOB',
-    receiptPrefix: 'RCP',
+    invoicePrefix: "INV",
+    jobCardPrefix: "JOB",
+    receiptPrefix: "RCP",
     autoBackup: true,
-    backupFrequency: 'daily',
+    backupFrequency: "daily",
   },
   inventory: {
     enableLowStockAlerts: true,
@@ -178,7 +184,7 @@ const mockSystemConfig: SystemConfig = {
     enableBarcodeScanning: true,
     enableSerialTracking: true,
     enableExpiryTracking: true,
-    defaultStockLocation: 'Main Warehouse',
+    defaultStockLocation: "Main Warehouse",
   },
   payment: {
     enableCash: true,
@@ -187,8 +193,14 @@ const mockSystemConfig: SystemConfig = {
     enableCredit: true,
     creditTerms: 30,
     creditLimit: 1000000,
-    paymentMethods: ['Cash', 'Visa', 'Mastercard', 'MTN Mobile Money', 'Airtel Money'],
-    mobileMoneyCodes: ['*165#', '*185#'],
+    paymentMethods: [
+      "Cash",
+      "Visa",
+      "Mastercard",
+      "MTN Mobile Money",
+      "Airtel Money",
+    ],
+    mobileMoneyCodes: ["*165#", "*185#"],
   },
   notifications: {
     emailNotifications: true,
@@ -211,11 +223,11 @@ const mockSystemConfig: SystemConfig = {
     enableDataEncryption: true,
   },
   integrations: {
-    emailService: 'smtp',
-    smsService: 'africas_talking',
-    paymentGateway: 'flutterwave',
-    accountingSystem: 'none',
-    backupService: 'local',
+    emailService: "smtp",
+    smsService: "africas_talking",
+    paymentGateway: "flutterwave",
+    accountingSystem: "none",
+    backupService: "local",
   },
 };
 
@@ -226,40 +238,51 @@ export default function SystemSettings() {
   const [isSaving, setIsSaving] = useState(false);
 
   // Handle configuration updates
-  const updateConfig = useCallback((section: keyof SystemConfig, field: string, value: any) => {
-    setConfig(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [field]: value,
-      },
-    }));
-  }, []);
-
-  // Handle nested configuration updates
-  const updateNestedConfig = useCallback((section: keyof SystemConfig, subsection: string, field: string, value: any) => {
-    setConfig(prev => ({
-      ...prev,
-      [section]: {
-        ...prev[section],
-        [subsection]: {
-          ...(prev[section] as any)[subsection],
+  const updateConfig = useCallback(
+    (section: keyof SystemConfig, field: string, value: any) => {
+      setConfig((prev) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
           [field]: value,
         },
-      },
-    }));
-  }, []);
+      }));
+    },
+    [],
+  );
+
+  // Handle nested configuration updates
+  const updateNestedConfig = useCallback(
+    (
+      section: keyof SystemConfig,
+      subsection: string,
+      field: string,
+      value: any,
+    ) => {
+      setConfig((prev) => ({
+        ...prev,
+        [section]: {
+          ...prev[section],
+          [subsection]: {
+            ...(prev[section] as any)[subsection],
+            [field]: value,
+          },
+        },
+      }));
+    },
+    [],
+  );
 
   // Handle saving configuration
   const handleSaveConfig = useCallback(async () => {
     setIsSaving(true);
     try {
       // In real app, this would call an API
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      success('System configuration updated successfully!');
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      success("System configuration updated successfully!");
     } catch (err) {
-      console.error('Error saving configuration:', err);
-      error('Failed to save configuration. Please try again.');
+      console.error("Error saving configuration:", err);
+      error("Failed to save configuration. Please try again.");
     } finally {
       setIsSaving(false);
     }
@@ -269,22 +292,26 @@ export default function SystemSettings() {
   const handleBackup = useCallback(async () => {
     try {
       // In real app, this would trigger a backup
-      success('System backup initiated successfully!');
+      success("System backup initiated successfully!");
     } catch (err) {
-      console.error('Error creating backup:', err);
-      error('Failed to create backup. Please try again.');
+      console.error("Error creating backup:", err);
+      error("Failed to create backup. Please try again.");
     }
   }, [success, error]);
 
   // Handle system restore
   const handleRestore = useCallback(async () => {
-    if (window.confirm('Are you sure you want to restore from backup? This will overwrite current data.')) {
+    if (
+      window.confirm(
+        "Are you sure you want to restore from backup? This will overwrite current data.",
+      )
+    ) {
       try {
         // In real app, this would restore from backup
-        success('System restored from backup successfully!');
+        success("System restored from backup successfully!");
       } catch (err) {
-        console.error('Error restoring backup:', err);
-        error('Failed to restore from backup. Please try again.');
+        console.error("Error restoring backup:", err);
+        error("Failed to restore from backup. Please try again.");
       }
     }
   }, [success, error]);
@@ -294,11 +321,11 @@ export default function SystemSettings() {
     diskUsage: 68,
     memoryUsage: 45,
     cpuUsage: 23,
-    uptime: '15 days, 8 hours',
-    lastBackup: '2024-01-22 02:30:00',
-    version: 'v2.1.4',
-    database: 'Connected',
-    apiStatus: 'Healthy',
+    uptime: "15 days, 8 hours",
+    lastBackup: "2024-01-22 02:30:00",
+    version: "v2.1.4",
+    database: "Connected",
+    apiStatus: "Healthy",
   };
 
   return (
@@ -338,7 +365,9 @@ export default function SystemSettings() {
             <Server className="h-5 w-5" />
             System Status
           </CardTitle>
-          <CardDescription>Current system health and performance metrics</CardDescription>
+          <CardDescription>
+            Current system health and performance metrics
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -349,7 +378,7 @@ export default function SystemSettings() {
               </div>
               <Progress value={systemStatus.diskUsage} className="h-2" />
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span>Memory Usage</span>
@@ -357,7 +386,7 @@ export default function SystemSettings() {
               </div>
               <Progress value={systemStatus.memoryUsage} className="h-2" />
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex items-center justify-between text-sm">
                 <span>CPU Usage</span>
@@ -369,7 +398,10 @@ export default function SystemSettings() {
             <div className="space-y-2 text-sm">
               <div className="flex items-center justify-between">
                 <span>Uptime</span>
-                <Badge variant="outline" className="bg-green-100 text-green-800">
+                <Badge
+                  variant="outline"
+                  className="bg-green-100 text-green-800"
+                >
                   {systemStatus.uptime}
                 </Badge>
               </div>
@@ -397,7 +429,9 @@ export default function SystemSettings() {
             </div>
             <div className="flex items-center justify-between">
               <span>Last Backup</span>
-              <span className="text-muted-foreground">{systemStatus.lastBackup}</span>
+              <span className="text-muted-foreground">
+                {systemStatus.lastBackup}
+              </span>
             </div>
           </div>
         </CardContent>
@@ -423,7 +457,9 @@ export default function SystemSettings() {
                 <Globe className="h-5 w-5" />
                 Company Information
               </CardTitle>
-              <CardDescription>Basic company details and contact information</CardDescription>
+              <CardDescription>
+                Basic company details and contact information
+              </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid gap-4 md:grid-cols-2">
@@ -432,17 +468,21 @@ export default function SystemSettings() {
                   <Input
                     id="company-name"
                     value={config.company.name}
-                    onChange={(e) => updateConfig('company', 'name', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("company", "name", e.target.value)
+                    }
                     placeholder="Your Company Name"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="tax-id">Tax ID / TIN</Label>
                   <Input
                     id="tax-id"
                     value={config.company.taxId}
-                    onChange={(e) => updateConfig('company', 'taxId', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("company", "taxId", e.target.value)
+                    }
                     placeholder="TIN-123456789"
                   />
                 </div>
@@ -453,7 +493,9 @@ export default function SystemSettings() {
                 <Textarea
                   id="company-address"
                   value={config.company.address}
-                  onChange={(e) => updateConfig('company', 'address', e.target.value)}
+                  onChange={(e) =>
+                    updateConfig("company", "address", e.target.value)
+                  }
                   placeholder="Company address..."
                   rows={3}
                 />
@@ -465,18 +507,22 @@ export default function SystemSettings() {
                   <Input
                     id="company-phone"
                     value={config.company.phone}
-                    onChange={(e) => updateConfig('company', 'phone', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("company", "phone", e.target.value)
+                    }
                     placeholder="+256 414 123 456"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="company-email">Email</Label>
                   <Input
                     id="company-email"
                     type="email"
                     value={config.company.email}
-                    onChange={(e) => updateConfig('company', 'email', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("company", "email", e.target.value)
+                    }
                     placeholder="info@company.com"
                   />
                 </div>
@@ -488,22 +534,28 @@ export default function SystemSettings() {
                   <Input
                     id="company-website"
                     value={config.company.website}
-                    onChange={(e) => updateConfig('company', 'website', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("company", "website", e.target.value)
+                    }
                     placeholder="www.company.com"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="company-currency">Currency</Label>
-                  <Select 
-                    value={config.company.currency} 
-                    onValueChange={(value) => updateConfig('company', 'currency', value)}
+                  <Select
+                    value={config.company.currency}
+                    onValueChange={(value) =>
+                      updateConfig("company", "currency", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="UGX">Ugandan Shilling (UGX)</SelectItem>
+                      <SelectItem value="UGX">
+                        Ugandan Shilling (UGX)
+                      </SelectItem>
                       <SelectItem value="USD">US Dollar (USD)</SelectItem>
                       <SelectItem value="EUR">Euro (EUR)</SelectItem>
                       <SelectItem value="KES">Kenyan Shilling (KES)</SelectItem>
@@ -513,16 +565,22 @@ export default function SystemSettings() {
 
                 <div className="space-y-2">
                   <Label htmlFor="company-timezone">Timezone</Label>
-                  <Select 
-                    value={config.company.timezone} 
-                    onValueChange={(value) => updateConfig('company', 'timezone', value)}
+                  <Select
+                    value={config.company.timezone}
+                    onValueChange={(value) =>
+                      updateConfig("company", "timezone", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="Africa/Kampala">Africa/Kampala (EAT)</SelectItem>
-                      <SelectItem value="Africa/Nairobi">Africa/Nairobi (EAT)</SelectItem>
+                      <SelectItem value="Africa/Kampala">
+                        Africa/Kampala (EAT)
+                      </SelectItem>
+                      <SelectItem value="Africa/Nairobi">
+                        Africa/Nairobi (EAT)
+                      </SelectItem>
                       <SelectItem value="UTC">UTC</SelectItem>
                     </SelectContent>
                   </Select>
@@ -540,45 +598,68 @@ export default function SystemSettings() {
                 <Calendar className="h-5 w-5" />
                 Business Hours
               </CardTitle>
-              <CardDescription>Set your business operating hours</CardDescription>
+              <CardDescription>
+                Set your business operating hours
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {Object.entries(config.business.businessHours).map(([day, hours]) => (
-                  <div key={day} className="flex items-center gap-4">
-                    <div className="w-20 text-sm font-medium capitalize">{day}</div>
-                    <Switch
-                      checked={!hours.closed}
-                      onCheckedChange={(checked) => 
-                        updateNestedConfig('business', 'businessHours', day, { ...hours, closed: !checked })
-                      }
-                    />
-                    {!hours.closed && (
-                      <>
-                        <Input
-                          type="time"
-                          value={hours.open}
-                          onChange={(e) => 
-                            updateNestedConfig('business', 'businessHours', day, { ...hours, open: e.target.value })
-                          }
-                          className="w-32"
-                        />
-                        <span className="text-sm text-muted-foreground">to</span>
-                        <Input
-                          type="time"
-                          value={hours.close}
-                          onChange={(e) => 
-                            updateNestedConfig('business', 'businessHours', day, { ...hours, close: e.target.value })
-                          }
-                          className="w-32"
-                        />
-                      </>
-                    )}
-                    {hours.closed && (
-                      <span className="text-sm text-muted-foreground">Closed</span>
-                    )}
-                  </div>
-                ))}
+                {Object.entries(config.business.businessHours).map(
+                  ([day, hours]) => (
+                    <div key={day} className="flex items-center gap-4">
+                      <div className="w-20 text-sm font-medium capitalize">
+                        {day}
+                      </div>
+                      <Switch
+                        checked={!hours.closed}
+                        onCheckedChange={(checked) =>
+                          updateNestedConfig("business", "businessHours", day, {
+                            ...hours,
+                            closed: !checked,
+                          })
+                        }
+                      />
+                      {!hours.closed && (
+                        <>
+                          <Input
+                            type="time"
+                            value={hours.open}
+                            onChange={(e) =>
+                              updateNestedConfig(
+                                "business",
+                                "businessHours",
+                                day,
+                                { ...hours, open: e.target.value },
+                              )
+                            }
+                            className="w-32"
+                          />
+                          <span className="text-sm text-muted-foreground">
+                            to
+                          </span>
+                          <Input
+                            type="time"
+                            value={hours.close}
+                            onChange={(e) =>
+                              updateNestedConfig(
+                                "business",
+                                "businessHours",
+                                day,
+                                { ...hours, close: e.target.value },
+                              )
+                            }
+                            className="w-32"
+                          />
+                        </>
+                      )}
+                      {hours.closed && (
+                        <span className="text-sm text-muted-foreground">
+                          Closed
+                        </span>
+                      )}
+                    </div>
+                  ),
+                )}
               </div>
             </CardContent>
           </Card>
@@ -589,7 +670,9 @@ export default function SystemSettings() {
                 <Settings className="h-5 w-5" />
                 Business Defaults
               </CardTitle>
-              <CardDescription>Default values for business operations</CardDescription>
+              <CardDescription>
+                Default values for business operations
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
@@ -599,38 +682,60 @@ export default function SystemSettings() {
                     id="default-tax"
                     type="number"
                     value={config.business.defaultTaxRate}
-                    onChange={(e) => updateConfig('business', 'defaultTaxRate', Number(e.target.value))}
+                    onChange={(e) =>
+                      updateConfig(
+                        "business",
+                        "defaultTaxRate",
+                        Number(e.target.value),
+                      )
+                    }
                     placeholder="18"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="default-markup">Default Markup (%)</Label>
                   <Input
                     id="default-markup"
                     type="number"
                     value={config.business.defaultMarkup}
-                    onChange={(e) => updateConfig('business', 'defaultMarkup', Number(e.target.value))}
+                    onChange={(e) =>
+                      updateConfig(
+                        "business",
+                        "defaultMarkup",
+                        Number(e.target.value),
+                      )
+                    }
                     placeholder="25"
                   />
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="default-warranty">Default Warranty (days)</Label>
+                  <Label htmlFor="default-warranty">
+                    Default Warranty (days)
+                  </Label>
                   <Input
                     id="default-warranty"
                     type="number"
                     value={config.business.defaultWarranty}
-                    onChange={(e) => updateConfig('business', 'defaultWarranty', Number(e.target.value))}
+                    onChange={(e) =>
+                      updateConfig(
+                        "business",
+                        "defaultWarranty",
+                        Number(e.target.value),
+                      )
+                    }
                     placeholder="90"
                   />
                 </div>
 
                 <div className="space-y-2">
                   <Label htmlFor="backup-frequency">Backup Frequency</Label>
-                  <Select 
-                    value={config.business.backupFrequency} 
-                    onValueChange={(value) => updateConfig('business', 'backupFrequency', value)}
+                  <Select
+                    value={config.business.backupFrequency}
+                    onValueChange={(value) =>
+                      updateConfig("business", "backupFrequency", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
@@ -650,17 +755,21 @@ export default function SystemSettings() {
                   <Input
                     id="invoice-prefix"
                     value={config.business.invoicePrefix}
-                    onChange={(e) => updateConfig('business', 'invoicePrefix', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("business", "invoicePrefix", e.target.value)
+                    }
                     placeholder="INV"
                   />
                 </div>
-                
+
                 <div className="space-y-2">
                   <Label htmlFor="job-prefix">Job Card Prefix</Label>
                   <Input
                     id="job-prefix"
                     value={config.business.jobCardPrefix}
-                    onChange={(e) => updateConfig('business', 'jobCardPrefix', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("business", "jobCardPrefix", e.target.value)
+                    }
                     placeholder="JOB"
                   />
                 </div>
@@ -670,7 +779,9 @@ export default function SystemSettings() {
                   <Input
                     id="receipt-prefix"
                     value={config.business.receiptPrefix}
-                    onChange={(e) => updateConfig('business', 'receiptPrefix', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig("business", "receiptPrefix", e.target.value)
+                    }
                     placeholder="RCP"
                   />
                 </div>
@@ -681,7 +792,9 @@ export default function SystemSettings() {
                   <Switch
                     id="auto-backup"
                     checked={config.business.autoBackup}
-                    onCheckedChange={(checked) => updateConfig('business', 'autoBackup', checked)}
+                    onCheckedChange={(checked) =>
+                      updateConfig("business", "autoBackup", checked)
+                    }
                   />
                   <Label htmlFor="auto-backup">Enable automatic backups</Label>
                 </div>
@@ -698,40 +811,66 @@ export default function SystemSettings() {
                 <Database className="h-5 w-5" />
                 Inventory Configuration
               </CardTitle>
-              <CardDescription>Configure inventory management settings</CardDescription>
+              <CardDescription>
+                Configure inventory management settings
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="low-stock-threshold">Low Stock Threshold</Label>
+                    <Label htmlFor="low-stock-threshold">
+                      Low Stock Threshold
+                    </Label>
                     <Input
                       id="low-stock-threshold"
                       type="number"
                       value={config.inventory.lowStockThreshold}
-                      onChange={(e) => updateConfig('inventory', 'lowStockThreshold', Number(e.target.value))}
+                      onChange={(e) =>
+                        updateConfig(
+                          "inventory",
+                          "lowStockThreshold",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="10"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <Label htmlFor="auto-reorder-point">Auto Reorder Point</Label>
+                    <Label htmlFor="auto-reorder-point">
+                      Auto Reorder Point
+                    </Label>
                     <Input
                       id="auto-reorder-point"
                       type="number"
                       value={config.inventory.autoReorderPoint}
-                      onChange={(e) => updateConfig('inventory', 'autoReorderPoint', Number(e.target.value))}
+                      onChange={(e) =>
+                        updateConfig(
+                          "inventory",
+                          "autoReorderPoint",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="5"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="default-location">Default Stock Location</Label>
+                  <Label htmlFor="default-location">
+                    Default Stock Location
+                  </Label>
                   <Input
                     id="default-location"
                     value={config.inventory.defaultStockLocation}
-                    onChange={(e) => updateConfig('inventory', 'defaultStockLocation', e.target.value)}
+                    onChange={(e) =>
+                      updateConfig(
+                        "inventory",
+                        "defaultStockLocation",
+                        e.target.value,
+                      )
+                    }
                     placeholder="Main Warehouse"
                   />
                 </div>
@@ -743,16 +882,30 @@ export default function SystemSettings() {
                       <Switch
                         id="low-stock-alerts"
                         checked={config.inventory.enableLowStockAlerts}
-                        onCheckedChange={(checked) => updateConfig('inventory', 'enableLowStockAlerts', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "inventory",
+                            "enableLowStockAlerts",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="low-stock-alerts">Enable low stock alerts</Label>
+                      <Label htmlFor="low-stock-alerts">
+                        Enable low stock alerts
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="auto-reorder"
                         checked={config.inventory.enableAutoReorder}
-                        onCheckedChange={(checked) => updateConfig('inventory', 'enableAutoReorder', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "inventory",
+                            "enableAutoReorder",
+                            checked,
+                          )
+                        }
                       />
                       <Label htmlFor="auto-reorder">Enable auto reorder</Label>
                     </div>
@@ -761,27 +914,51 @@ export default function SystemSettings() {
                       <Switch
                         id="barcode-scanning"
                         checked={config.inventory.enableBarcodeScanning}
-                        onCheckedChange={(checked) => updateConfig('inventory', 'enableBarcodeScanning', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "inventory",
+                            "enableBarcodeScanning",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="barcode-scanning">Enable barcode scanning</Label>
+                      <Label htmlFor="barcode-scanning">
+                        Enable barcode scanning
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="serial-tracking"
                         checked={config.inventory.enableSerialTracking}
-                        onCheckedChange={(checked) => updateConfig('inventory', 'enableSerialTracking', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "inventory",
+                            "enableSerialTracking",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="serial-tracking">Enable serial number tracking</Label>
+                      <Label htmlFor="serial-tracking">
+                        Enable serial number tracking
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="expiry-tracking"
                         checked={config.inventory.enableExpiryTracking}
-                        onCheckedChange={(checked) => updateConfig('inventory', 'enableExpiryTracking', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "inventory",
+                            "enableExpiryTracking",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="expiry-tracking">Enable expiry date tracking</Label>
+                      <Label htmlFor="expiry-tracking">
+                        Enable expiry date tracking
+                      </Label>
                     </div>
                   </div>
                 </div>
@@ -798,7 +975,9 @@ export default function SystemSettings() {
                 <CreditCard className="h-5 w-5" />
                 Payment Methods
               </CardTitle>
-              <CardDescription>Configure accepted payment methods</CardDescription>
+              <CardDescription>
+                Configure accepted payment methods
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -807,7 +986,9 @@ export default function SystemSettings() {
                     <Switch
                       id="enable-cash"
                       checked={config.payment.enableCash}
-                      onCheckedChange={(checked) => updateConfig('payment', 'enableCash', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig("payment", "enableCash", checked)
+                      }
                     />
                     <Label htmlFor="enable-cash">Accept Cash Payments</Label>
                   </div>
@@ -816,7 +997,9 @@ export default function SystemSettings() {
                     <Switch
                       id="enable-card"
                       checked={config.payment.enableCard}
-                      onCheckedChange={(checked) => updateConfig('payment', 'enableCard', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig("payment", "enableCard", checked)
+                      }
                     />
                     <Label htmlFor="enable-card">Accept Card Payments</Label>
                   </div>
@@ -825,7 +1008,9 @@ export default function SystemSettings() {
                     <Switch
                       id="enable-mobile"
                       checked={config.payment.enableMobileMoney}
-                      onCheckedChange={(checked) => updateConfig('payment', 'enableMobileMoney', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig("payment", "enableMobileMoney", checked)
+                      }
                     />
                     <Label htmlFor="enable-mobile">Accept Mobile Money</Label>
                   </div>
@@ -834,7 +1019,9 @@ export default function SystemSettings() {
                     <Switch
                       id="enable-credit"
                       checked={config.payment.enableCredit}
-                      onCheckedChange={(checked) => updateConfig('payment', 'enableCredit', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig("payment", "enableCredit", checked)
+                      }
                     />
                     <Label htmlFor="enable-credit">Allow Credit Sales</Label>
                   </div>
@@ -843,23 +1030,37 @@ export default function SystemSettings() {
                 {config.payment.enableCredit && (
                   <div className="grid gap-4 md:grid-cols-2">
                     <div className="space-y-2">
-                      <Label htmlFor="credit-terms">Default Credit Terms (days)</Label>
+                      <Label htmlFor="credit-terms">
+                        Default Credit Terms (days)
+                      </Label>
                       <Input
                         id="credit-terms"
                         type="number"
                         value={config.payment.creditTerms}
-                        onChange={(e) => updateConfig('payment', 'creditTerms', Number(e.target.value))}
+                        onChange={(e) =>
+                          updateConfig(
+                            "payment",
+                            "creditTerms",
+                            Number(e.target.value),
+                          )
+                        }
                         placeholder="30"
                       />
                     </div>
-                    
+
                     <div className="space-y-2">
                       <Label htmlFor="credit-limit">Default Credit Limit</Label>
                       <Input
                         id="credit-limit"
                         type="number"
                         value={config.payment.creditLimit}
-                        onChange={(e) => updateConfig('payment', 'creditLimit', Number(e.target.value))}
+                        onChange={(e) =>
+                          updateConfig(
+                            "payment",
+                            "creditLimit",
+                            Number(e.target.value),
+                          )
+                        }
                         placeholder="1000000"
                       />
                     </div>
@@ -878,7 +1079,9 @@ export default function SystemSettings() {
                 <Bell className="h-5 w-5" />
                 Notification Preferences
               </CardTitle>
-              <CardDescription>Configure system notifications and alerts</CardDescription>
+              <CardDescription>
+                Configure system notifications and alerts
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
@@ -887,16 +1090,30 @@ export default function SystemSettings() {
                     <Switch
                       id="email-notifications"
                       checked={config.notifications.emailNotifications}
-                      onCheckedChange={(checked) => updateConfig('notifications', 'emailNotifications', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig(
+                          "notifications",
+                          "emailNotifications",
+                          checked,
+                        )
+                      }
                     />
-                    <Label htmlFor="email-notifications">Email Notifications</Label>
+                    <Label htmlFor="email-notifications">
+                      Email Notifications
+                    </Label>
                   </div>
 
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="sms-notifications"
                       checked={config.notifications.smsNotifications}
-                      onCheckedChange={(checked) => updateConfig('notifications', 'smsNotifications', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig(
+                          "notifications",
+                          "smsNotifications",
+                          checked,
+                        )
+                      }
                     />
                     <Label htmlFor="sms-notifications">SMS Notifications</Label>
                   </div>
@@ -905,9 +1122,17 @@ export default function SystemSettings() {
                     <Switch
                       id="push-notifications"
                       checked={config.notifications.pushNotifications}
-                      onCheckedChange={(checked) => updateConfig('notifications', 'pushNotifications', checked)}
+                      onCheckedChange={(checked) =>
+                        updateConfig(
+                          "notifications",
+                          "pushNotifications",
+                          checked,
+                        )
+                      }
                     />
-                    <Label htmlFor="push-notifications">Push Notifications</Label>
+                    <Label htmlFor="push-notifications">
+                      Push Notifications
+                    </Label>
                   </div>
                 </div>
 
@@ -918,7 +1143,9 @@ export default function SystemSettings() {
                       <Switch
                         id="order-updates"
                         checked={config.notifications.orderUpdates}
-                        onCheckedChange={(checked) => updateConfig('notifications', 'orderUpdates', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig("notifications", "orderUpdates", checked)
+                        }
                       />
                       <Label htmlFor="order-updates">Order Updates</Label>
                     </div>
@@ -927,7 +1154,13 @@ export default function SystemSettings() {
                       <Switch
                         id="inventory-alerts"
                         checked={config.notifications.inventoryAlerts}
-                        onCheckedChange={(checked) => updateConfig('notifications', 'inventoryAlerts', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "notifications",
+                            "inventoryAlerts",
+                            checked,
+                          )
+                        }
                       />
                       <Label htmlFor="inventory-alerts">Inventory Alerts</Label>
                     </div>
@@ -936,16 +1169,26 @@ export default function SystemSettings() {
                       <Switch
                         id="payment-reminders"
                         checked={config.notifications.paymentReminders}
-                        onCheckedChange={(checked) => updateConfig('notifications', 'paymentReminders', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "notifications",
+                            "paymentReminders",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="payment-reminders">Payment Reminders</Label>
+                      <Label htmlFor="payment-reminders">
+                        Payment Reminders
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="system-alerts"
                         checked={config.notifications.systemAlerts}
-                        onCheckedChange={(checked) => updateConfig('notifications', 'systemAlerts', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig("notifications", "systemAlerts", checked)
+                        }
                       />
                       <Label htmlFor="system-alerts">System Alerts</Label>
                     </div>
@@ -954,7 +1197,13 @@ export default function SystemSettings() {
                       <Switch
                         id="marketing-emails"
                         checked={config.notifications.marketingEmails}
-                        onCheckedChange={(checked) => updateConfig('notifications', 'marketingEmails', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "notifications",
+                            "marketingEmails",
+                            checked,
+                          )
+                        }
                       />
                       <Label htmlFor="marketing-emails">Marketing Emails</Label>
                     </div>
@@ -973,29 +1222,47 @@ export default function SystemSettings() {
                 <Shield className="h-5 w-5" />
                 Security Settings
               </CardTitle>
-              <CardDescription>Configure system security and access controls</CardDescription>
+              <CardDescription>
+                Configure system security and access controls
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
-                    <Label htmlFor="password-expiry">Password Expiry (days)</Label>
+                    <Label htmlFor="password-expiry">
+                      Password Expiry (days)
+                    </Label>
                     <Input
                       id="password-expiry"
                       type="number"
                       value={config.security.passwordExpiry}
-                      onChange={(e) => updateConfig('security', 'passwordExpiry', Number(e.target.value))}
+                      onChange={(e) =>
+                        updateConfig(
+                          "security",
+                          "passwordExpiry",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="90"
                     />
                   </div>
-                  
+
                   <div className="space-y-2">
-                    <Label htmlFor="session-timeout">Session Timeout (minutes)</Label>
+                    <Label htmlFor="session-timeout">
+                      Session Timeout (minutes)
+                    </Label>
                     <Input
                       id="session-timeout"
                       type="number"
                       value={config.security.sessionTimeout}
-                      onChange={(e) => updateConfig('security', 'sessionTimeout', Number(e.target.value))}
+                      onChange={(e) =>
+                        updateConfig(
+                          "security",
+                          "sessionTimeout",
+                          Number(e.target.value),
+                        )
+                      }
                       placeholder="60"
                     />
                   </div>
@@ -1008,25 +1275,39 @@ export default function SystemSettings() {
                       <Switch
                         id="strong-passwords"
                         checked={config.security.requireStrongPasswords}
-                        onCheckedChange={(checked) => updateConfig('security', 'requireStrongPasswords', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "security",
+                            "requireStrongPasswords",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="strong-passwords">Require Strong Passwords</Label>
+                      <Label htmlFor="strong-passwords">
+                        Require Strong Passwords
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="two-factor"
                         checked={config.security.enableTwoFactor}
-                        onCheckedChange={(checked) => updateConfig('security', 'enableTwoFactor', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig("security", "enableTwoFactor", checked)
+                        }
                       />
-                      <Label htmlFor="two-factor">Enable Two-Factor Authentication</Label>
+                      <Label htmlFor="two-factor">
+                        Enable Two-Factor Authentication
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="audit-log"
                         checked={config.security.enableAuditLog}
-                        onCheckedChange={(checked) => updateConfig('security', 'enableAuditLog', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig("security", "enableAuditLog", checked)
+                        }
                       />
                       <Label htmlFor="audit-log">Enable Audit Logging</Label>
                     </div>
@@ -1035,16 +1316,26 @@ export default function SystemSettings() {
                       <Switch
                         id="data-encryption"
                         checked={config.security.enableDataEncryption}
-                        onCheckedChange={(checked) => updateConfig('security', 'enableDataEncryption', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig(
+                            "security",
+                            "enableDataEncryption",
+                            checked,
+                          )
+                        }
                       />
-                      <Label htmlFor="data-encryption">Enable Data Encryption</Label>
+                      <Label htmlFor="data-encryption">
+                        Enable Data Encryption
+                      </Label>
                     </div>
 
                     <div className="flex items-center space-x-2">
                       <Switch
                         id="ip-whitelist"
                         checked={config.security.enableIpWhitelist}
-                        onCheckedChange={(checked) => updateConfig('security', 'enableIpWhitelist', checked)}
+                        onCheckedChange={(checked) =>
+                          updateConfig("security", "enableIpWhitelist", checked)
+                        }
                       />
                       <Label htmlFor="ip-whitelist">Enable IP Whitelist</Label>
                     </div>
@@ -1063,16 +1354,20 @@ export default function SystemSettings() {
                 <Zap className="h-5 w-5" />
                 System Integrations
               </CardTitle>
-              <CardDescription>Configure external service integrations</CardDescription>
+              <CardDescription>
+                Configure external service integrations
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-6">
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="email-service">Email Service</Label>
-                    <Select 
-                      value={config.integrations.emailService} 
-                      onValueChange={(value) => updateConfig('integrations', 'emailService', value)}
+                    <Select
+                      value={config.integrations.emailService}
+                      onValueChange={(value) =>
+                        updateConfig("integrations", "emailService", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -1084,18 +1379,22 @@ export default function SystemSettings() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="sms-service">SMS Service</Label>
-                    <Select 
-                      value={config.integrations.smsService} 
-                      onValueChange={(value) => updateConfig('integrations', 'smsService', value)}
+                    <Select
+                      value={config.integrations.smsService}
+                      onValueChange={(value) =>
+                        updateConfig("integrations", "smsService", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="africas_talking">Africa's Talking</SelectItem>
+                        <SelectItem value="africas_talking">
+                          Africa's Talking
+                        </SelectItem>
                         <SelectItem value="twilio">Twilio</SelectItem>
                         <SelectItem value="custom">Custom</SelectItem>
                       </SelectContent>
@@ -1106,9 +1405,11 @@ export default function SystemSettings() {
                 <div className="grid gap-4 md:grid-cols-2">
                   <div className="space-y-2">
                     <Label htmlFor="payment-gateway">Payment Gateway</Label>
-                    <Select 
-                      value={config.integrations.paymentGateway} 
-                      onValueChange={(value) => updateConfig('integrations', 'paymentGateway', value)}
+                    <Select
+                      value={config.integrations.paymentGateway}
+                      onValueChange={(value) =>
+                        updateConfig("integrations", "paymentGateway", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -1121,12 +1422,14 @@ export default function SystemSettings() {
                       </SelectContent>
                     </Select>
                   </div>
-                  
+
                   <div className="space-y-2">
                     <Label htmlFor="accounting-system">Accounting System</Label>
-                    <Select 
-                      value={config.integrations.accountingSystem} 
-                      onValueChange={(value) => updateConfig('integrations', 'accountingSystem', value)}
+                    <Select
+                      value={config.integrations.accountingSystem}
+                      onValueChange={(value) =>
+                        updateConfig("integrations", "accountingSystem", value)
+                      }
                     >
                       <SelectTrigger>
                         <SelectValue />
@@ -1143,9 +1446,11 @@ export default function SystemSettings() {
 
                 <div className="space-y-2">
                   <Label htmlFor="backup-service">Backup Service</Label>
-                  <Select 
-                    value={config.integrations.backupService} 
-                    onValueChange={(value) => updateConfig('integrations', 'backupService', value)}
+                  <Select
+                    value={config.integrations.backupService}
+                    onValueChange={(value) =>
+                      updateConfig("integrations", "backupService", value)
+                    }
                   >
                     <SelectTrigger>
                       <SelectValue />
