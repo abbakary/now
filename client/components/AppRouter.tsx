@@ -8,6 +8,7 @@ import { UserRole } from "@shared/types";
 import Dashboard from "../pages/Dashboard";
 import PlaceholderPage from "../pages/PlaceholderPage";
 import UnifiedCustomerManagement from "../pages/customers/UnifiedCustomerManagement";
+import EnhancedCustomerManagement from "../pages/customers/EnhancedCustomerManagement";
 import CustomerDetails from "../pages/customers/CustomerDetails";
 import TireServices from "../pages/services/TireServices";
 import CarServices from "../pages/services/CarServices";
@@ -18,6 +19,7 @@ import SalesManagement from "../pages/sales/SalesManagement";
 import NewSaleTransaction from "../pages/sales/NewSaleTransaction";
 import SalesAnalytics from "../pages/sales/SalesAnalytics";
 import UnifiedOrderDashboard from "../pages/orders/UnifiedOrderDashboard";
+import EnhancedOrderManagement from "../pages/orders/EnhancedOrderManagement";
 import NotFound from "../pages/NotFound";
 import Login from "../pages/Login";
 
