@@ -24,7 +24,7 @@ import Login from "../pages/Login";
 // Admin pages
 import UserManagement from "../pages/admin/UserManagement";
 import InventoryManagement from "../pages/admin/InventoryManagement";
-import Settings from "../pages/admin/Settings";
+import AdminSettings from "../pages/admin/Settings";
 
 // Icons for placeholders
 import {
@@ -341,7 +341,7 @@ export const AppRouter: React.FC = () => {
         path="/admin/settings"
         element={
           <ProtectedPage requiredRole={UserRole.ADMIN}>
-            <Settings />
+            <AdminSettings />
           </ProtectedPage>
         }
       />
