@@ -55,6 +55,8 @@ import {
   Eye,
   AlertTriangle,
   CheckCircle,
+  Star,
+  BarChart3,
 } from 'lucide-react';
 import { useFeedback } from '@/components/ui/status-popup';
 
